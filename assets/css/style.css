@@ -35,20 +35,31 @@
     margin: 0 0 0.5rem 0;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    color: #ffffff !important;
 }
 
 .wh-meta {
     color: var(--wordle-text-muted);
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     display: flex;
     justify-content: center;
-    gap: 0.75rem;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.wh-highlight {
+    color: var(--wordle-yellow);
+    font-weight: 800;
 }
 
 /* Wordle Grid */
 .wh-game-section {
+    margin-top: 2.5rem;
     margin-bottom: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--wordle-border);
 }
 
 .wh-grid {
@@ -62,6 +73,7 @@
     width: 62px;
     height: 62px;
     perspective: 1000px;
+    cursor: pointer;
 }
 
 .wh-box-inner {
@@ -170,6 +182,7 @@
     letter-spacing: 0.05em;
     border-bottom: 1px solid var(--wordle-border);
     padding-bottom: 0.5rem;
+    color: #ffffff !important;
 }
 
 .wh-hint-card {
@@ -209,6 +222,8 @@
     font-weight: 600;
     font-size: 0.85rem;
     transition: background 0.2s ease;
+    min-width: 220px;
+    text-align: center;
 }
 
 .wh-unlock-btn:hover {

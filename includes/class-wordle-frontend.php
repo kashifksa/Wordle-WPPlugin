@@ -35,34 +35,22 @@ class Wordle_Frontend {
 						<span class="wh-puzzle-num">#<?php echo esc_html( $puzzle['puzzle_number'] ); ?></span>
 						<span class="wh-separator">•</span>
 						<span class="wh-date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
+						<span class="wh-separator">•</span>
+						<span class="wh-stat-item">Vowels: <span class="wh-highlight"><?php echo esc_html( $puzzle['vowel_count'] ); ?></span></span>
+						<span class="wh-separator">•</span>
+						<span class="wh-stat-item">Starts With: <span class="wh-highlight"><?php echo esc_html( $puzzle['first_letter'] ); ?></span></span>
 					</div>
 				</div>
 
-				<div class="wh-game-section">
-					<div class="wh-grid" id="wh-answer-grid" data-word="<?php echo esc_attr( $puzzle['word'] ); ?>">
-						<?php for ( $i = 0; $i < 5; $i++ ) : ?>
-							<div class="wh-box" data-index="<?php echo $i; ?>">
-								<div class="wh-box-inner">
-									<div class="wh-box-front"></div>
-									<div class="wh-box-back"></div>
-								</div>
-							</div>
-						<?php endfor; ?>
-					</div>
-					
-					<div class="wh-reveal-controls">
-						<button id="reveal-answer-btn" class="wh-reveal-main-btn">
-							<span class="btn-text">Show Today's Answer</span>
-							<span class="btn-glow"></span>
-						</button>
-						<button id="reveal-again-btn" class="wh-secondary-btn" style="display:none;">Reveal Again</button>
-					</div>
-				</div>
+
 
 				<div class="wh-hints-section">
 					<h3 class="wh-section-title">Wordle Hints</h3>
 					
-					<div class="wh-hint-card unlocked" data-hint="1">
+					<div class="wh-hint-card locked" data-hint="1">
+						<div class="wh-hint-overlay">
+							<button class="wh-unlock-btn">Unlock Hint 1 (Vague)</button>
+						</div>
 						<div class="wh-hint-info">
 							<span class="wh-hint-label">Hint 1: Vague</span>
 							<p class="wh-hint-text"><?php echo esc_html( $puzzle['hint1'] ); ?></p>
@@ -100,14 +88,24 @@ class Wordle_Frontend {
 					</div>
 				</div>
 
-				<div class="wh-footer-stats">
-					<div class="wh-stat">
-						<span class="wh-stat-label">Vowels</span>
-						<span class="wh-stat-value"><?php echo esc_html( $puzzle['vowel_count'] ); ?></span>
+				<div class="wh-game-section">
+					<div class="wh-grid" id="wh-answer-grid" data-word="<?php echo esc_attr( $puzzle['word'] ); ?>">
+						<?php for ( $i = 0; $i < 5; $i++ ) : ?>
+							<div class="wh-box" data-index="<?php echo $i; ?>" title="Click to reveal letter">
+								<div class="wh-box-inner">
+									<div class="wh-box-front"></div>
+									<div class="wh-box-back"></div>
+								</div>
+							</div>
+						<?php endfor; ?>
 					</div>
-					<div class="wh-stat">
-						<span class="wh-stat-label">Starts With</span>
-						<span class="wh-stat-value"><?php echo esc_html( $puzzle['first_letter'] ); ?></span>
+					
+					<div class="wh-reveal-controls">
+						<button id="reveal-answer-btn" class="wh-reveal-main-btn">
+							<span class="btn-text">Show Today's Answer</span>
+							<span class="btn-glow"></span>
+						</button>
+						<button id="reveal-again-btn" class="wh-secondary-btn" style="display:none;">Reveal Again</button>
 					</div>
 				</div>
 			<?php endif; ?>
