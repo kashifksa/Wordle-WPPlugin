@@ -29,7 +29,13 @@ class Wordle_Frontend {
 					<p>No puzzle data available for today yet. Please check back later!</p>
 				</div>
 			<?php else : ?>
+				<div class="wh-theme-toggle" id="wh-theme-toggle" title="Toggle Day/Night Mode">
+					<span class="wh-toggle-icon">☀️</span>
+					<span class="wh-toggle-icon">🌙</span>
+					<div class="wh-toggle-knob"></div>
+				</div>
 				<div class="wh-header">
+
 					<h1 class="wh-main-title">Today's Wordle Hints</h1>
 					<div class="wh-meta">
 						<span class="wh-puzzle-num">#<?php echo esc_html( $puzzle['puzzle_number'] ); ?></span>
@@ -89,6 +95,7 @@ class Wordle_Frontend {
 				</div>
 
 				<div class="wh-game-section">
+					<div class="wh-answer-label">Today's Answer</div>
 					<div class="wh-grid" id="wh-answer-grid" data-word="<?php echo esc_attr( $puzzle['word'] ); ?>">
 						<?php for ( $i = 0; $i < 5; $i++ ) : ?>
 							<div class="wh-box" data-index="<?php echo $i; ?>" title="Click to reveal letter">
@@ -103,9 +110,11 @@ class Wordle_Frontend {
 					<div class="wh-reveal-controls">
 						<button id="reveal-answer-btn" class="wh-reveal-main-btn">
 							<span class="btn-text">Show Today's Answer</span>
-							<span class="btn-glow"></span>
 						</button>
-						<button id="reveal-again-btn" class="wh-secondary-btn" style="display:none;">Reveal Again</button>
+						
+						<div class="wh-post-reveal-actions">
+							<button id="reveal-again-btn" class="wh-secondary-btn">Reveal Again</button>
+						</div>
 					</div>
 				</div>
 			<?php endif; ?>

@@ -1,37 +1,50 @@
 jQuery(document).ready(function($) {
-    // Process each Wordle container independently
+    // --- Theme Toggle Logic ---
+    const $body = $('body');
+    const $themeToggle = $('#wh-theme-toggle');
+    const currentTheme = localStorage.getItem('wh-theme') || 'day';
+
+    if (currentTheme === 'dark') {
+        $body.addClass('dark-mode');
+    }
+
+    $themeToggle.on('click', function() {
+        $body.toggleClass('dark-mode');
+        const theme = $body.hasClass('dark-mode') ? 'dark' : 'day';
+        localStorage.setItem('wh-theme', theme);
+    });
+
+    // --- Wordle Hint Logic ---
     $('.wordle-hint-container').each(function() {
         const $container = $(this);
         const $grid = $container.find('#wh-answer-grid');
         
-        // Fetch the word and ensure it's a string
         let word = $grid.attr('data-word') || '';
         word = word.toString().trim().toUpperCase();
         
         const $boxes = $container.find('.wh-box');
         const $revealBtn = $container.find('#reveal-answer-btn');
+        const $postRevealActions = $container.find('.wh-post-reveal-actions');
         const $revealAgainBtn = $container.find('#reveal-again-btn');
 
-        console.log('Wordle Hint Pro: Container initialized for word:', word ? 'OK' : 'MISSING');
-
         // Function to reveal a specific box
-        function revealBox(index) {
-            if (!word || index < 0 || index >= word.length) {
-                console.warn('Wordle Hint Pro: Cannot reveal index', index, 'for word', word);
-                return;
-            }
+        function revealBox(index, isSequential = false) {
+            if (!word || index < 0 || index >= word.length) return;
 
             const letter = word[index];
             const $box = $container.find(`.wh-box[data-index="${index}"]`);
             
             if ($box.length && !$box.hasClass('revealed')) {
-                // Set the letter BEFORE adding the class to ensure it's there when it flips
                 $box.find('.wh-box-back').text(letter);
-                $box.addClass('revealed');
+                $box.addClass('revealing');
                 
                 setTimeout(() => {
-                    $box.find('.wh-box-back').css('box-shadow', '0 0 20px var(--wordle-green)');
-                }, 300);
+                    $box.addClass('revealed');
+                }, 50);
+
+                setTimeout(() => {
+                    $box.removeClass('revealing');
+                }, 600);
             }
         }
 
@@ -39,37 +52,48 @@ jQuery(document).ready(function($) {
         $container.on('click', '.wh-box', function(e) {
             e.preventDefault();
             const index = $(this).data('index');
-            console.log('Wordle Hint Pro: Box clicked', index);
             revealBox(index);
+            checkAllRevealed();
         });
+
+        function checkAllRevealed() {
+            if ($container.find('.wh-box.revealed').length === word.length) {
+                // Stabilized reveal: Use CSS classes instead of hiding elements
+                $revealBtn.addClass('wh-hidden').prop('disabled', true);
+                $postRevealActions.addClass('wh-visible');
+            }
+        }
 
         // Reveal All Answer Animation
         $revealBtn.on('click', function() {
-            if (!word) return;
+            if (!word || $(this).hasClass('wh-hidden')) return;
             
-            $(this).prop('disabled', true).find('.btn-text').text('Answer Revealed');
+            $(this).prop('disabled', true);
             
             for (let i = 0; i < word.length; i++) {
                 setTimeout(() => {
-                    revealBox(i);
-                }, i * 200);
+                    revealBox(i, true);
+                    
+                    if (i === word.length - 1) {
+                        setTimeout(() => {
+                            $revealBtn.addClass('wh-hidden');
+                            $postRevealActions.addClass('wh-visible');
+                        }, 800);
+                    }
+                }, i * 180);
             }
-
-            setTimeout(() => {
-                $revealAgainBtn.fadeIn();
-            }, (word.length * 200) + 500);
         });
 
         // Reveal Again logic
         $revealAgainBtn.on('click', function() {
-            $boxes.removeClass('revealed').find('.wh-box-back').css('box-shadow', '').text('');
-            $revealBtn.prop('disabled', false).find('.btn-text').text('Show Today\'s Answer');
-            $(this).hide();
+            $boxes.removeClass('revealed').find('.wh-box-back').text('');
+            $postRevealActions.removeClass('wh-visible');
+            $revealBtn.removeClass('wh-hidden').prop('disabled', false);
         });
 
-        // Progressive Hint Unlocking
-        $container.find('.wh-unlock-btn').on('click', function() {
-            const $card = $(this).closest('.wh-hint-card');
+        // Progressive Hint Unlocking (Click button OR entire card)
+        $container.on('click', '.wh-hint-card.locked', function(e) {
+            const $card = $(this);
             
             $card.fadeOut(200, function() {
                 $card.removeClass('locked').addClass('unlocked').fadeIn(400);
@@ -77,5 +101,5 @@ jQuery(document).ready(function($) {
         });
     });
 
-    console.log('Wordle Hint Pro: Premium UI Fully Loaded.');
+    console.log('Wordle Hint Pro: Premium Reveal UI Initialized.');
 });

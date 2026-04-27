@@ -1,45 +1,79 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
 :root {
+    /* Fixed Wordle Colors */
     --wordle-green: #6aaa64;
     --wordle-yellow: #c9b458;
+    --wordle-yellow-dark: #b89f3f; /* Slightly darker for hover */
     --wordle-gray: #787c7e;
-    --wordle-dark: #121213;
-    --wordle-card: #1a1a1b;
-    --wordle-border: #3a3a3c;
-    --wordle-text: #ffffff;
-    --wordle-text-muted: #818384;
+
+    /* Theme Variables - Day Mode (Default) */
+    --wh-bg: #ffffff;
+    --wh-text: #111111;
+    --wh-text-muted: #666666;
+    --wh-card: #f5f5f5;
+    --wh-inner-card: #ffffff;
+    --wh-border: #e0e0e0;
+    --wh-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+body.dark-mode {
+    /* Theme Variables - Night Mode */
+    --wh-bg: #121213;
+    --wh-text: #ffffff;
+    --wh-text-muted: #818384;
+    --wh-card: #1a1a1b;
+    --wh-inner-card: #121213;
+    --wh-border: #3a3a3c;
+    --wh-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* Global Reset for the container to prevent external red colors */
+.wordle-hint-container, 
+.wordle-hint-container *,
+.wordle-hint-container a,
+.wordle-hint-container button {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, opacity 0.3s ease;
+    text-decoration: none !important;
+}
+
+/* Force prevent ANY red hover color within the container */
+.wordle-hint-container *:hover {
+    color: inherit; /* Prevent theme-level red links */
 }
 
 .wordle-hint-container {
     font-family: 'Inter', 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
-    background-color: var(--wordle-dark);
-    color: var(--wordle-text);
+    background-color: var(--wh-bg);
+    color: var(--wh-text);
     max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    margin: 1rem auto;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: var(--wh-shadow);
     text-align: center;
+    position: relative;
+    border: 1px solid var(--wh-border);
 }
 
 .wh-header {
-    margin-bottom: 2.5rem;
-    border-bottom: 1px solid var(--wordle-border);
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--wh-border);
     padding-bottom: 1rem;
+    position: relative;
 }
 
 .wh-main-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 800;
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.4rem 0;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #ffffff !important;
+    color: var(--wh-text) !important;
 }
 
 .wh-meta {
-    color: var(--wordle-text-muted);
+    color: var(--wh-text-muted);
     font-weight: 600;
     font-size: 0.85rem;
     display: flex;
@@ -54,24 +88,79 @@
     font-weight: 800;
 }
 
-/* Wordle Grid */
+/* Theme Toggle Pill Switch */
+.wh-theme-toggle {
+    width: 60px;
+    height: 30px;
+    background-color: #e5e7eb;
+    border-radius: 999px;
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6px;
+    z-index: 100;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.wh-toggle-knob {
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+.wh-toggle-icon {
+    font-size: 14px;
+    z-index: 1;
+    user-select: none;
+}
+
+body.dark-mode .wh-theme-toggle {
+    background-color: #1f2937;
+}
+
+body.dark-mode .wh-toggle-knob {
+    transform: translateX(30px);
+}
+
+/* Wordle Grid (Reveal UI) */
 .wh-game-section {
-    margin-top: 2.5rem;
-    margin-bottom: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--wordle-border);
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--wh-border);
+}
+
+.wh-answer-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--wh-text-muted);
+    margin-bottom: 0.75rem;
+    opacity: 0.8;
 }
 
 .wh-grid {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-bottom: 2rem;
+    gap: 12px;
+    margin-bottom: 1.5rem;
 }
 
 .wh-box {
-    width: 62px;
-    height: 62px;
+    width: 70px;
+    height: 70px;
     perspective: 1000px;
     cursor: pointer;
 }
@@ -81,7 +170,7 @@
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.6s;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
 }
 
@@ -97,11 +186,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    font-weight: 700;
-    border: 2px solid var(--wordle-border);
-    border-radius: 4px;
+    font-size: 2.4rem;
+    font-weight: 800;
+    border: 3px solid var(--wh-border);
+    border-radius: 8px;
     text-transform: uppercase;
+}
+
+.wh-box-front {
+    background-color: var(--wh-bg);
 }
 
 .wh-box-back {
@@ -109,94 +202,139 @@
     border-color: var(--wordle-green);
     background-color: var(--wordle-green);
     color: white;
-    box-shadow: 0 0 15px rgba(106, 170, 100, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Reveal Controls */
+/* Reveal Animation Class */
+.wh-box.revealing {
+    animation: reveal-bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes reveal-bounce {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Reveal Controls & Layout Stability */
 .wh-reveal-controls {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    justify-content: center;
+    gap: 1.2rem;
+    min-height: 120px; /* Tighter reserved space */
+    position: relative;
+    margin-top: 0.5rem;
 }
 
 .wh-reveal-main-btn {
-    background-color: var(--wordle-green);
-    color: white;
-    border: none;
-    padding: 1rem 2.5rem;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border-radius: 100px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    animation: pulse 2s infinite;
+    background-color: var(--wordle-green) !important;
+    color: white !important;
+    border: none !important;
+    padding: 1.1rem 3rem !important;
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    box-shadow: 0 4px 14px rgba(106, 170, 100, 0.3) !important;
+    transition: all 0.3s ease, opacity 0.3s ease !important;
+    z-index: 5;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(106, 170, 100, 0.7); }
-    70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(106, 170, 100, 0); }
-    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(106, 170, 100, 0); }
+.wh-reveal-main-btn:hover {
+    transform: translateY(-2px) scale(1.04) !important;
+    box-shadow: 0 6px 20px rgba(201, 180, 88, 0.3) !important;
+    background-color: var(--wordle-yellow-dark) !important;
+    color: #000000 !important;
 }
 
-.wh-reveal-main-btn:disabled {
-    background-color: var(--wordle-gray);
-    cursor: default;
-    animation: none;
-    opacity: 0.7;
+.wh-reveal-main-btn.wh-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Post Reveal Actions */
+.wh-post-reveal-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease, visibility 0.4s ease !important;
+}
+
+.wh-post-reveal-actions.wh-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .wh-secondary-btn {
-    background: transparent;
-    color: var(--wordle-text-muted);
-    border: 1px solid var(--wordle-border);
-    padding: 0.5rem 1.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
+    background: transparent !important;
+    color: var(--wh-text-muted) !important;
+    border: 1px solid var(--wh-border) !important;
+    padding: 0.6rem 2rem !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+}
+
+#reveal-again-btn {
+    margin-top: 10px; /* Adjusted spacing within the stabilized container */
 }
 
 .wh-secondary-btn:hover {
-    color: white;
-    border-color: var(--wordle-text-muted);
+    color: #000000 !important;
+    border-color: var(--wordle-yellow-dark) !important;
+    background-color: var(--wordle-yellow) !important;
 }
 
 /* Hints Section */
 .wh-hints-section {
     text-align: left;
-    background-color: var(--wordle-card);
-    padding: 1.5rem;
-    border-radius: 8px;
-    border: 1px solid var(--wordle-border);
+    background-color: var(--wh-card);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--wh-border);
 }
 
 .wh-section-title {
-    font-size: 1.2rem;
-    margin: 0 0 1.5rem 0;
+    font-size: 1.1rem;
+    margin: 0 0 0.75rem 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid var(--wordle-border);
-    padding-bottom: 0.5rem;
-    color: #ffffff !important;
+    border-bottom: 1px solid var(--wh-border);
+    padding-bottom: 0.4rem;
+    color: var(--wh-text) !important;
 }
 
 .wh-hint-card {
     position: relative;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background-color: var(--wordle-dark);
-    border-radius: 6px;
-    border: 1px solid var(--wordle-border);
-    transition: all 0.4s ease;
+    margin-bottom: 0.75rem;
+    padding: 0.8rem 1rem;
+    background-color: var(--wh-inner-card);
+    border-radius: 10px;
+    border: 1px solid var(--wh-border);
+    cursor: pointer;
+}
+
+.wh-hint-card:hover {
+    border-color: var(--wordle-yellow-dark) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 6px 18px rgba(201, 180, 88, 0.15) !important;
 }
 
 .wh-hint-card.locked .wh-hint-info {
-    filter: blur(4px);
+    filter: blur(6px);
     opacity: 0.3;
 }
 
@@ -212,22 +350,28 @@
     z-index: 2;
 }
 
+/* Unlock Button UI */
 .wh-unlock-btn {
-    background: var(--wordle-border);
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.85rem;
-    transition: background 0.2s ease;
-    min-width: 220px;
-    text-align: center;
+    background-color: var(--wordle-yellow) !important;
+    color: #000000 !important;
+    border: none !important;
+    padding: 14px 24px !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    width: 90% !important;
+    max-width: 320px !important;
+    text-align: center !important;
+    box-shadow: 0 4px 12px rgba(201, 180, 88, 0.25) !important;
+    text-transform: uppercase !important;
 }
 
 .wh-unlock-btn:hover {
-    background: #4a4a4c;
+    transform: scale(1.03) !important;
+    background-color: var(--wordle-yellow-dark) !important;
+    box-shadow: 0 6px 20px rgba(201, 180, 88, 0.35) !important;
+    color: #000000 !important;
 }
 
 .wh-hint-card.unlocked .wh-hint-overlay {
@@ -249,36 +393,10 @@
     line-height: 1.4;
 }
 
-/* Footer Stats */
-.wh-footer-stats {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--wordle-border);
-}
-
-.wh-stat {
-    display: flex;
-    flex-direction: column;
-}
-
-.wh-stat-label {
-    font-size: 0.7rem;
-    color: var(--wordle-text-muted);
-    text-transform: uppercase;
-    font-weight: 700;
-}
-
-.wh-stat-value {
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--wordle-yellow);
-}
-
 @media (max-width: 480px) {
-    .wh-box { width: 50px; height: 50px; }
-    .wh-box-front, .wh-box-back { font-size: 1.5rem; }
-    .wh-grid { gap: 5px; }
+    .wh-box { width: 55px; height: 55px; }
+    .wh-box-front, .wh-box-back { font-size: 1.8rem; }
+    .wh-grid { gap: 8px; }
+    .wh-main-title { font-size: 1.5rem; }
+    .wh-unlock-btn { min-width: 180px; }
 }
