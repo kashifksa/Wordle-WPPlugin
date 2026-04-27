@@ -1,0 +1,110 @@
+<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class Wordle_API {
+
+	public static function init() {
+		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
+	}
+
+	public static function register_routes() {
+		register_rest_route( 'wordle/v1', '/data', array(
+			'methods'  => 'GET',
+			'callback' => array( __CLASS__, 'get_wordle_data' ),
+			'permission_callback' => '__return_true',
+		) );
+
+		register_rest_route( 'wordle/v1', '/solution', array(
+			'methods'  => 'GET',
+			'callback' => array( __CLASS__, 'get_wordle_solution' ),
+			'permission_callback' => array( __CLASS__, 'check_api_key' ),
+		) );
+
+		register_rest_route( 'wordle/v1', '/all', array(
+			'methods'  => 'GET',
+			'callback' => array( __CLASS__, 'get_all_wordle' ),
+			'permission_callback' => '__return_true',
+		) );
+
+		register_rest_route( 'wordle/v1', '/save', array(
+			'methods'  => 'POST',
+			'callback' => array( __CLASS__, 'save_wordle' ),
+			'permission_callback' => array( __CLASS__, 'check_api_key' ),
+		) );
+	}
+
+	public static function check_api_key( $request ) {
+		$key = $request->get_header( 'Authorization' );
+		$stored_key = get_option( 'wordle_hint_api_key' );
+		
+		if ( ! $stored_key ) return true; // If not set, allow
+		
+		return ( 'Bearer ' . $stored_key === $key );
+	}
+
+	public static function get_wordle_data( $request ) {
+		$locale = $request->get_param( 'locale' ) ?: 'global';
+		$latest = Wordle_DB::get_latest_puzzles( 3, $locale );
+		
+		return new WP_REST_Response( array(
+			'success' => true,
+			'data'    => $latest,
+		), 200 );
+	}
+
+	public static function get_wordle_solution( $request ) {
+		$locale = $request->get_param( 'locale' ) ?: 'global';
+		$today = current_time( 'Y-m-d' );
+		$puzzle = Wordle_DB::get_puzzle_by_date( $today, $locale );
+
+		if ( ! $puzzle ) {
+			return new WP_REST_Response( array( 'success' => false, 'message' => 'No puzzle found' ), 404 );
+		}
+
+		return new WP_REST_Response( array(
+			'success'       => true,
+			'word'          => $puzzle['word'],
+			'puzzle_number' => $puzzle['puzzle_number'],
+			'date'          => $puzzle['date'],
+		), 200 );
+	}
+
+	public static function get_all_wordle( $request ) {
+		$page = $request->get_param( 'page' ) ?: 1;
+		$limit = $request->get_param( 'limit' ) ?: 20;
+		$locale = $request->get_param( 'locale' ) ?: 'global';
+		
+		global $wpdb;
+		$table = Wordle_DB::get_table_name();
+		$offset = ( $page - 1 ) * $limit;
+		
+		$results = $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM $table WHERE locale = %s ORDER BY date DESC LIMIT %d OFFSET %d",
+			$locale,
+			$limit,
+			$offset
+		) );
+		
+		return new WP_REST_Response( array(
+			'success' => true,
+			'page'    => (int)$page,
+			'data'    => $results,
+		), 200 );
+	}
+
+	public static function save_wordle( $request ) {
+		$params = $request->get_params();
+		$inserted = Wordle_DB::insert_puzzle( $params );
+		
+		if ( $inserted ) {
+			return new WP_REST_Response( array( 'success' => true, 'message' => 'Saved' ), 200 );
+		}
+		
+		return new WP_REST_Response( array( 'success' => false, 'message' => 'Duplicate or error' ), 400 );
+	}
+}
+
+Wordle_API::init();
