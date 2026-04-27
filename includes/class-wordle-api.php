@@ -47,11 +47,20 @@ class Wordle_API {
 
 	public static function get_wordle_data( $request ) {
 		$locale = $request->get_param( 'locale' ) ?: 'global';
-		$latest = Wordle_DB::get_latest_puzzles( 3, $locale );
+		$date   = $request->get_param( 'date' ) ?: current_time( 'Y-m-d' );
+		
+		$puzzle = Wordle_DB::get_puzzle_by_date( $date, $locale );
+
+		if ( ! $puzzle ) {
+			return new WP_REST_Response( array(
+				'success' => false,
+				'message' => 'No puzzle found for this date',
+			), 404 );
+		}
 		
 		return new WP_REST_Response( array(
 			'success' => true,
-			'data'    => $latest,
+			'data'    => $puzzle,
 		), 200 );
 	}
 

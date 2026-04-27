@@ -46,7 +46,8 @@ body.dark-mode {
     font-family: 'Inter', 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--wh-bg);
     color: var(--wh-text);
-    max-width: 600px;
+    max-width: 700px; /* Increased for better desktop layout */
+    width: 95%; /* Responsive width */
     margin: 1rem auto;
     padding: 1.5rem 2rem;
     border-radius: 16px;
@@ -54,6 +55,8 @@ body.dark-mode {
     text-align: center;
     position: relative;
     border: 1px solid var(--wh-border);
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .wh-header {
@@ -61,6 +64,7 @@ body.dark-mode {
     border-bottom: 1px solid var(--wh-border);
     padding-bottom: 1rem;
     position: relative;
+    padding-top: 15px; /* Space for the toggle above */
 }
 
 .wh-main-title {
@@ -90,25 +94,25 @@ body.dark-mode {
 
 /* Theme Toggle Pill Switch */
 .wh-theme-toggle {
-    width: 60px;
-    height: 30px;
+    width: 50px;
+    height: 26px;
     background-color: #e5e7eb;
     border-radius: 999px;
     position: absolute;
-    top: 12px;
-    right: 20px;
+    top: -5px;
+    right: 0;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 6px;
+    padding: 0 5px;
     z-index: 100;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .wh-toggle-knob {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     background: white;
     border-radius: 50%;
     position: absolute;
@@ -130,7 +134,7 @@ body.dark-mode .wh-theme-toggle {
 }
 
 body.dark-mode .wh-toggle-knob {
-    transform: translateX(30px);
+    transform: translateX(24px);
 }
 
 /* Wordle Grid (Reveal UI) */
@@ -223,7 +227,7 @@ body.dark-mode .wh-toggle-knob {
     align-items: center;
     justify-content: center;
     gap: 1.2rem;
-    min-height: 120px; /* Tighter reserved space */
+    min-height: 120px;
     position: relative;
     margin-top: 0.5rem;
 }
@@ -289,7 +293,7 @@ body.dark-mode .wh-toggle-knob {
 }
 
 #reveal-again-btn {
-    margin-top: 10px; /* Adjusted spacing within the stabilized container */
+    margin-top: 10px;
 }
 
 .wh-secondary-btn:hover {
@@ -393,10 +397,66 @@ body.dark-mode .wh-toggle-knob {
     line-height: 1.4;
 }
 
-@media (max-width: 480px) {
-    .wh-box { width: 55px; height: 55px; }
-    .wh-box-front, .wh-box-back { font-size: 1.8rem; }
-    .wh-grid { gap: 8px; }
-    .wh-main-title { font-size: 1.5rem; }
-    .wh-unlock-btn { min-width: 180px; }
+/* 📱 Mobile Responsiveness (Critical) */
+@media (max-width: 768px) {
+    .wordle-hint-container {
+        padding: 1rem; /* Tighter padding on mobile */
+    }
+
+    .wh-main-title {
+        font-size: 22px;
+        text-align: center;
+    }
+
+    .wh-meta {
+        font-size: 13px;
+        line-height: 1.4;
+        text-align: center;
+        gap: 0.4rem;
+    }
+
+    .wh-hint-card {
+        padding: 10px;
+    }
+
+    .wh-unlock-btn {
+        width: 100% !important;
+        font-size: 14px !important;
+        padding: 12px !important;
+        max-width: none !important;
+    }
+
+    .wh-grid {
+        gap: 6px;
+    }
+
+    .wh-box {
+        width: 42px;
+        height: 42px;
+    }
+
+    .wh-box-front, .wh-box-back {
+        font-size: 18px;
+        border-width: 2px;
+    }
+
+    .wh-reveal-main-btn {
+        width: 100% !important;
+        padding: 14px !important;
+        font-size: 15px !important;
+    }
+
+    .wh-theme-toggle {
+        top: 8px;
+        right: 12px;
+        transform: scale(0.9);
+    }
+}
+
+/* Prevent layout jump on orientation change */
+@media (max-height: 600px) {
+    .wordle-hint-container {
+        margin: 0.5rem auto;
+    }
+    .wh-header { margin-bottom: 0.5rem; }
 }

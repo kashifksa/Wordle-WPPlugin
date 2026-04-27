@@ -1,4 +1,27 @@
 jQuery(document).ready(function($) {
+    // --- Timezone & Date Logic (CRITICAL) ---
+    const $container = $('.wordle-hint-container');
+    if ($container.length) {
+        const getLocalDate = () => {
+            const d = new Date();
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        const localDate = getLocalDate();
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlDate = urlParams.get('wh_date');
+
+        // Automatically sync to local date if no specific date is requested
+        if (!urlDate) {
+            urlParams.set('wh_date', localDate);
+            window.location.search = urlParams.toString();
+            return; 
+        }
+    }
+
     // --- Theme Toggle Logic ---
     const $body = $('body');
     const $themeToggle = $('#wh-theme-toggle');

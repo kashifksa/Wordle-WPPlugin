@@ -11,9 +11,9 @@ class Wordle_Frontend {
 			'locale' => 'global',
 		), $atts, 'wordle_hints' );
 
-		// Get today's puzzle
-		$today = current_time( 'Y-m-d' );
-		$puzzle = Wordle_DB::get_puzzle_by_date( $today, $atts['locale'] );
+		// Get target date (Prioritize URL param for user timezone accuracy)
+		$target_date = isset( $_GET['wh_date'] ) ? sanitize_text_field( $_GET['wh_date'] ) : current_time( 'Y-m-d' );
+		$puzzle      = Wordle_DB::get_puzzle_by_date( $target_date, $atts['locale'] );
 
 		if ( ! $puzzle ) {
 			// Try getting the latest one if today's is missing
@@ -29,13 +29,12 @@ class Wordle_Frontend {
 					<p>No puzzle data available for today yet. Please check back later!</p>
 				</div>
 			<?php else : ?>
-				<div class="wh-theme-toggle" id="wh-theme-toggle" title="Toggle Day/Night Mode">
-					<span class="wh-toggle-icon">☀️</span>
-					<span class="wh-toggle-icon">🌙</span>
-					<div class="wh-toggle-knob"></div>
-				</div>
 				<div class="wh-header">
-
+					<div class="wh-theme-toggle" id="wh-theme-toggle" title="Toggle Day/Night Mode">
+						<span class="wh-toggle-icon">☀️</span>
+						<span class="wh-toggle-icon">🌙</span>
+						<div class="wh-toggle-knob"></div>
+					</div>
 					<h1 class="wh-main-title">Today's Wordle Hints</h1>
 					<div class="wh-meta">
 						<span class="wh-puzzle-num">#<?php echo esc_html( $puzzle['puzzle_number'] ); ?></span>
