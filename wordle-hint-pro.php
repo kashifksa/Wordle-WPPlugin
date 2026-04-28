@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define constants
-define( 'WORDLE_HINT_VERSION', '1.0.0' );
+define( 'WORDLE_HINT_VERSION', '1.0.1' );
 define( 'WORDLE_HINT_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WORDLE_HINT_URL', plugin_dir_url( __FILE__ ) );
 
@@ -86,8 +86,9 @@ class Wordle_Hint_Pro {
 		wp_enqueue_script( 'wordle-hint-script', WORDLE_HINT_URL . 'assets/js/script.js', array( 'jquery' ), WORDLE_HINT_VERSION, true );
 		
 		wp_localize_script( 'wordle-hint-script', 'wordleHintData', array(
-			'apiUrl' => get_rest_url( null, 'wordle/v1/' ),
-			'nonce'  => wp_create_nonce( 'wp_rest' ),
+			'apiUrl'    => get_rest_url( null, 'wordle/v1/' ),
+			'nonce'     => wp_create_nonce( 'wp_rest' ),
+			'pluginUrl' => WORDLE_HINT_URL,
 		) );
 	}
 }

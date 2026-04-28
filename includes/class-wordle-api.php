@@ -17,6 +17,12 @@ class Wordle_API {
 			'permission_callback' => '__return_true',
 		) );
 
+		register_rest_route( 'wordle/v1', '/today', array(
+			'methods'  => 'GET',
+			'callback' => array( __CLASS__, 'get_today_wordle' ),
+			'permission_callback' => '__return_true',
+		) );
+
 		register_rest_route( 'wordle/v1', '/solution', array(
 			'methods'  => 'GET',
 			'callback' => array( __CLASS__, 'get_wordle_solution' ),
@@ -61,6 +67,33 @@ class Wordle_API {
 		return new WP_REST_Response( array(
 			'success' => true,
 			'data'    => $puzzle,
+		), 200 );
+	}
+
+	public static function get_today_wordle( $request ) {
+		$locale = $request->get_param( 'locale' ) ?: 'global';
+		$date   = current_time( 'Y-m-d' );
+		
+		$puzzle = Wordle_DB::get_puzzle_by_date( $date, $locale );
+
+		if ( ! $puzzle ) {
+			return new WP_REST_Response( array(
+				'error' => 'No puzzle found for today',
+			), 404 );
+		}
+		
+		return new WP_REST_Response( array(
+			'date'        => $puzzle['date'],
+			'number'      => (int) $puzzle['puzzle_number'],
+			'word'        => $puzzle['word'],
+			'vowels'      => (int) $puzzle['vowel_count'],
+			'starts_with' => $puzzle['first_letter'],
+			'hints'       => array(
+				'vague'    => $puzzle['hint1'],
+				'category' => $puzzle['hint2'],
+				'specific' => $puzzle['hint3'],
+				'final'    => $puzzle['final_hint'],
+			),
 		), 200 );
 	}
 

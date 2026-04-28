@@ -21,14 +21,23 @@ class Wordle_Frontend {
 			$puzzle = ! empty( $latest ) ? $latest[0] : null;
 		}
 
+		if ( ! $puzzle ) {
+			$puzzle = array(
+				'puzzle_number' => '---',
+				'date'          => current_time( 'Y-m-d' ),
+				'vowel_count'   => '-',
+				'first_letter'  => '-',
+				'hint1'         => 'Loading...',
+				'hint2'         => 'Loading...',
+				'hint3'         => 'Loading...',
+				'final_hint'    => 'Loading...',
+				'word'          => '     ',
+			);
+		}
+
 		ob_start();
 		?>
 		<div class="wordle-hint-container" id="wordle-hint-pro">
-			<?php if ( ! $puzzle ) : ?>
-				<div class="wh-no-data">
-					<p>No puzzle data available for today yet. Please check back later!</p>
-				</div>
-			<?php else : ?>
 				<div class="wh-header">
 					<div class="wh-theme-toggle" id="wh-theme-toggle" title="Toggle Day/Night Mode">
 						<span class="wh-toggle-icon">☀️</span>
@@ -116,7 +125,6 @@ class Wordle_Frontend {
 						</div>
 					</div>
 				</div>
-			<?php endif; ?>
 		</div>
 		<?php
 		return ob_get_clean();
