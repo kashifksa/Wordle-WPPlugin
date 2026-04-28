@@ -1,11 +1,10 @@
 <?php
-require_once('wp-load.php');
+require_once('../wp-load.php');
 global $wpdb;
 $table = $wpdb->prefix . 'wordle_data';
-$today = current_time('Y-m-d');
-$row = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE date = %s", $today));
-if ($row) {
-    echo "FOUND TODAY: " . $row->word . " (#" . $row->puzzle_number . ")\n";
-} else {
-    echo "NOT FOUND FOR TODAY ($today)\n";
+$results = $wpdb->get_results("SELECT date, word, puzzle_number FROM $table ORDER BY date DESC LIMIT 10");
+
+echo "LAST 10 PUZZLES:\n";
+foreach ($results as $row) {
+    echo $row->date . " | " . $row->word . " (#" . $row->puzzle_number . ")\n";
 }

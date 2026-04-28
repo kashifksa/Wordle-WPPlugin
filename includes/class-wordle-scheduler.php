@@ -35,12 +35,18 @@ class Wordle_Scheduler {
 		
 		error_log( "Wordle Scraper: Starting job. Attempt " . ($attempt + 1) );
 
-		// 1. Scrape for Today
-		$today = current_time( 'Y-m-d' );
+		$now_ts = current_time( 'timestamp' );
+		$yesterday = date( 'Y-m-d', strtotime( '-1 day', $now_ts ) );
+		$today     = date( 'Y-m-d', $now_ts );
+		$tomorrow  = date( 'Y-m-d', strtotime( '+1 day', $now_ts ) );
+
+		// 1. Scrape for Yesterday (Gap filler)
+		Wordle_Scraper::fetch_and_process( $yesterday );
+
+		// 2. Scrape for Today
 		$result_today = Wordle_Scraper::fetch_and_process( $today );
 
-		// 2. Scrape for Tomorrow (Early release capture)
-		$tomorrow = date( 'Y-m-d', strtotime( '+1 day', current_time( 'timestamp' ) ) );
+		// 3. Scrape for Tomorrow (Early capture)
 		$result_tomorrow = Wordle_Scraper::fetch_and_process( $tomorrow );
 
 		// We consider success if at least today was processed or already exists
@@ -51,6 +57,8 @@ class Wordle_Scheduler {
 			
 			$msg = "Today: " . ( is_wp_error( $result_today ) ? $result_today->get_error_message() : "Success" );
 			$msg .= " | Tomorrow: " . ( is_wp_error( $result_tomorrow ) ? $result_tomorrow->get_error_message() : "Success" );
+			// 3. Update JSON cache
+			Wordle_API::refresh_json_cache();
 			
 			return array( 'success' => true, 'message' => $msg );
 		}

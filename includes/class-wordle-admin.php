@@ -97,33 +97,23 @@ class Wordle_Admin {
 				$('#fetch-save-json').click(function() {
 					var $btn = $(this);
 					var $log = $('#scraper-log');
-					$btn.prop('disabled', true).text('Fetching...');
-					$log.show().html('Starting JSON fetch...');
+					$btn.prop('disabled', true).text('Refreshing...');
+					$log.show().html('Starting JSON cache generation...');
 					
-					// Step 1: GET today's data
-					$.get('<?php echo get_rest_url(null, "wordle/v1/today"); ?>', function(data) {
-						// Step 2 & 3: POST to save-json
-						$.ajax({
-							url: '<?php echo get_rest_url(null, "wordle/v1/save-json"); ?>',
-							method: 'POST',
-							beforeSend: function(xhr) {
-								xhr.setRequestHeader('X-WP-Nonce', '<?php echo wp_create_nonce("wp_rest"); ?>');
-							},
-							data: JSON.stringify(data),
-							contentType: 'application/json',
-							success: function(response) {
-								$log.append('<br>Success: ' + response.message);
-							},
-							error: function() {
-								$log.append('<br>Error: Failed to fetch or save JSON');
-							},
-							complete: function() {
-								$btn.prop('disabled', false).text('Fetch & Save JSON');
-							}
-						});
-					}).fail(function() {
-						$log.append('<br>Error: Failed to fetch today\'s data. Make sure the scraper has run.');
-						$btn.prop('disabled', false).text('Fetch & Save JSON');
+					$.post({
+						url: '<?php echo get_rest_url(null, "wordle/v1/refresh-json"); ?>',
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader('X-WP-Nonce', '<?php echo wp_create_nonce("wp_rest"); ?>');
+						},
+						success: function(response) {
+							$log.append('<br>Success: ' + response.message);
+						},
+						error: function() {
+							$log.append('<br>Error: Failed to refresh JSON cache');
+						},
+						complete: function() {
+							$btn.prop('disabled', false).text('Fetch & Save JSON');
+						}
 					});
 				});
 			});

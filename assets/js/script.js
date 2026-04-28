@@ -1,26 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Fetching Wordle data from API...");
+    // 1. CENTRALIZE DATE LOGIC
+    // 1. CENTRALIZE DATE LOGIC (Robust extraction for non-standard URLs)
+    const dateMatch = window.location.search.match(/[?&]date=(\d{4}-\d{2}-\d{2})/);
+    const testDate = dateMatch ? dateMatch[1] : null;
+    
+    // Get user's local date (YYYY-MM-DD)
+    const d = new Date();
+    const today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    
+    const finalDate = testDate || today;
 
-    // Determine the API path dynamically
-    const apiUrl = typeof wordleHintData !== 'undefined' ? wordleHintData.apiUrl + 'today' : '/wp-json/wordle/v1/today';
+    // 6. DEBUG LOG
+    console.log("FINAL DATE:", finalDate);
 
-    fetch(apiUrl)
+    const jsonUrl = typeof wordleHintData !== 'undefined' ? wordleHintData.pluginUrl + 'wordle-data.json' : '/wp-content/plugins/wordle-hint-pro/wordle-data.json';
+
+    fetch(jsonUrl + '?v=' + new Date().getTime())
         .then(response => {
             if (!response.ok) {
-                throw new Error('API response was not ok: ' + response.statusText);
+                throw new Error('JSON cache not found: ' + response.statusText);
             }
             return response.json();
         })
         .then(data => {
-            console.log("API DATA LOADED:", data);
+            // 3. DATA SELECTION
+            const entry = data[finalDate];
+            
+            // 6. DEBUG LOG
+            console.log("ENTRY DATA:", entry);
 
-            // Data mapping from API response
-            if (data && data.word) {
-                populateUI(data);
+            if (entry) {
+                // 4. UI BINDING
+                populateUI(entry);
+            } else {
+                console.error("No data found for date:", finalDate);
             }
         })
         .catch(error => {
-            console.error("API FETCH ERROR:", error);
+            console.error("DATA LOAD ERROR:", error);
+            console.warn("Wordle Hint Pro: JSON cache file (wordle-data.json) not found or inaccessible. Please go to the Admin Panel and click 'Fetch & Save JSON' to generate it.");
         });
 
     function populateUI(data) {

@@ -48,6 +48,14 @@ class Wordle_API {
 				return current_user_can( 'manage_options' );
 			},
 		) );
+
+		register_rest_route( 'wordle/v1', '/refresh-json', array(
+			'methods'  => 'POST',
+			'callback' => array( __CLASS__, 'handle_refresh_json' ),
+			'permission_callback' => function() {
+				return current_user_can( 'manage_options' );
+			},
+		) );
 	}
 
 	public static function check_api_key( $request ) {
@@ -171,6 +179,62 @@ class Wordle_API {
 		} else {
 			return new WP_REST_Response( array( 'success' => false, 'message' => 'Error saving JSON' ), 500 );
 		}
+	}
+
+	public static function handle_refresh_json( $request ) {
+		$result = self::refresh_json_cache();
+		if ( $result !== false ) {
+			return new WP_REST_Response( array( 'success' => true, 'message' => '3-day JSON cache generated successfully' ), 200 );
+		} else {
+			return new WP_REST_Response( array( 'success' => false, 'message' => 'Error generating JSON cache' ), 500 );
+		}
+	}
+
+	public static function refresh_json_cache() {
+		$locale = 'global';
+		$tz_string = get_option( 'wordle_hint_timezone', 'Asia/Karachi' );
+		$timezone = new DateTimeZone( $tz_string );
+		$now = new DateTime( 'now', $timezone );
+		
+		$dates = array(
+			'yesterday' => (clone $now)->modify('-1 day')->format('Y-m-d'),
+			'today'     => $now->format('Y-m-d'),
+			'tomorrow'  => (clone $now)->modify('+1 day')->format('Y-m-d'),
+		);
+
+		$cache_data = array();
+		foreach ( $dates as $key => $date ) {
+			$puzzle = Wordle_DB::get_puzzle_by_date( $date, $locale );
+			
+			// If missing from DB, try to scrape it now
+			if ( ! $puzzle ) {
+				Wordle_Scraper::fetch_and_process( $date );
+				$puzzle = Wordle_DB::get_puzzle_by_date( $date, $locale );
+			}
+
+			if ( $puzzle ) {
+				$cache_data[$date] = array(
+					'date'        => $puzzle['date'],
+					'number'      => (int) $puzzle['puzzle_number'],
+					'word'        => $puzzle['word'],
+					'vowels'      => (int) $puzzle['vowel_count'],
+					'starts_with' => $puzzle['first_letter'],
+					'hints'       => array(
+						'vague'    => $puzzle['hint1'],
+						'category' => $puzzle['hint2'],
+						'specific' => $puzzle['hint3'],
+						'final'    => $puzzle['final_hint'],
+					),
+				);
+			}
+		}
+
+		if ( empty( $cache_data ) ) {
+			return false;
+		}
+
+		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
+		return file_put_contents( $file_path, json_encode( $cache_data, JSON_PRETTY_PRINT ) );
 	}
 }
 

@@ -11,12 +11,25 @@ class Wordle_Frontend {
 			'locale' => 'global',
 		), $atts, 'wordle_hints' );
 
-		// Get target date (Prioritize URL param for user timezone accuracy)
-		$target_date = isset( $_GET['wh_date'] ) ? sanitize_text_field( $_GET['wh_date'] ) : current_time( 'Y-m-d' );
+		// Get target date (Prioritize 'date' or 'wh_date' URL param)
+		$target_date = current_time( 'Y-m-d' );
+		
+		if ( isset( $_GET['date'] ) ) {
+			$target_date = sanitize_text_field( $_GET['date'] );
+		} elseif ( isset( $_GET['wh_date'] ) ) {
+			$target_date = sanitize_text_field( $_GET['wh_date'] );
+		} elseif ( strpos( $_SERVER['REQUEST_URI'], 'date=' ) !== false ) {
+			// Robust fallback for non-standard URLs like ?page?date=YYYY-MM-DD
+			preg_match( '/date=(\d{4}-\d{2}-\d{2})/', $_SERVER['REQUEST_URI'], $matches );
+			if ( ! empty( $matches[1] ) ) {
+				$target_date = $matches[1];
+			}
+		}
 		$puzzle      = Wordle_DB::get_puzzle_by_date( $target_date, $atts['locale'] );
+		$is_archive_request = isset( $_GET['date'] ) || isset( $_GET['wh_date'] );
 
-		if ( ! $puzzle ) {
-			// Try getting the latest one if today's is missing
+		if ( ! $puzzle && ! $is_archive_request ) {
+			// Try getting the latest one if today's is missing and NO specific date was requested
 			$latest = Wordle_DB::get_latest_puzzles( 1, $atts['locale'] );
 			$puzzle = ! empty( $latest ) ? $latest[0] : null;
 		}
