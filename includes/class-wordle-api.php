@@ -40,6 +40,14 @@ class Wordle_API {
 			'callback' => array( __CLASS__, 'save_wordle' ),
 			'permission_callback' => array( __CLASS__, 'check_api_key' ),
 		) );
+
+		register_rest_route( 'wordle/v1', '/save-json', array(
+			'methods'  => 'POST',
+			'callback' => array( __CLASS__, 'save_json_to_file' ),
+			'permission_callback' => function() {
+				return current_user_can( 'manage_options' );
+			},
+		) );
 	}
 
 	public static function check_api_key( $request ) {
@@ -146,6 +154,23 @@ class Wordle_API {
 		}
 		
 		return new WP_REST_Response( array( 'success' => false, 'message' => 'Duplicate or error' ), 400 );
+	}
+
+	public static function save_json_to_file( $request ) {
+		$data = $request->get_json_params();
+		
+		if ( empty( $data ) ) {
+			return new WP_REST_Response( array( 'success' => false, 'message' => 'No data received' ), 400 );
+		}
+
+		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
+		$json_content = json_encode( $data, JSON_PRETTY_PRINT );
+
+		if ( file_put_contents( $file_path, $json_content ) !== false ) {
+			return new WP_REST_Response( array( 'success' => true, 'message' => 'JSON updated successfully' ), 200 );
+		} else {
+			return new WP_REST_Response( array( 'success' => false, 'message' => 'Error saving JSON' ), 500 );
+		}
 	}
 }
 

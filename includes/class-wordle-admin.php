@@ -74,6 +74,7 @@ class Wordle_Admin {
 			<hr>
 			<h2>Actions</h2>
 			<button id="run-scraper-now" class="button button-primary">Run Scraper Now</button>
+			<button id="fetch-save-json" class="button button-primary">Fetch & Save JSON</button>
 			<div id="scraper-log" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; display:none;"></div>
 			
 			<script>
@@ -90,6 +91,39 @@ class Wordle_Admin {
 					}, function(response) {
 						$log.append('<br>' + response.data.message);
 						$btn.prop('disabled', false).text('Run Scraper Now');
+					});
+				});
+
+				$('#fetch-save-json').click(function() {
+					var $btn = $(this);
+					var $log = $('#scraper-log');
+					$btn.prop('disabled', true).text('Fetching...');
+					$log.show().html('Starting JSON fetch...');
+					
+					// Step 1: GET today's data
+					$.get('<?php echo get_rest_url(null, "wordle/v1/today"); ?>', function(data) {
+						// Step 2 & 3: POST to save-json
+						$.ajax({
+							url: '<?php echo get_rest_url(null, "wordle/v1/save-json"); ?>',
+							method: 'POST',
+							beforeSend: function(xhr) {
+								xhr.setRequestHeader('X-WP-Nonce', '<?php echo wp_create_nonce("wp_rest"); ?>');
+							},
+							data: JSON.stringify(data),
+							contentType: 'application/json',
+							success: function(response) {
+								$log.append('<br>Success: ' + response.message);
+							},
+							error: function() {
+								$log.append('<br>Error: Failed to fetch or save JSON');
+							},
+							complete: function() {
+								$btn.prop('disabled', false).text('Fetch & Save JSON');
+							}
+						});
+					}).fail(function() {
+						$log.append('<br>Error: Failed to fetch today\'s data. Make sure the scraper has run.');
+						$btn.prop('disabled', false).text('Fetch & Save JSON');
 					});
 				});
 			});
