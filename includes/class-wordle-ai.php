@@ -7,20 +7,47 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Wordle_AI {
 
 	public static function generate_hints( $word ) {
-		$api_key = get_option( 'wordle_hint_ai_api_key' );
-		$model   = get_option( 'wordle_hint_ai_model', 'gpt-3.5-turbo' );
-		$prompt  = get_option( 'wordle_hint_ai_prompt' );
+		// Try Primary AI
+		$primary_key   = get_option( 'wordle_hint_ai_api_key' );
+		$primary_model = get_option( 'wordle_hint_ai_model', 'llama-3.1-8b-instant' );
+		
+		$result = self::execute_ai_request( $word, $primary_key, $primary_model );
 
-		if ( ! $api_key || ! $prompt ) {
-			return new WP_Error( 'ai_config_missing', 'AI API key or prompt missing' );
+		if ( ! is_wp_error( $result ) ) {
+			return $result;
 		}
 
-		$full_prompt = str_replace( '{{WORD}}', $word, $prompt );
+		// Try Fallback AI if primary failed
+		$fallback_key   = get_option( 'wordle_hint_ai_api_key_fallback' );
+		$fallback_model = get_option( 'wordle_hint_ai_model_fallback' );
+
+		if ( $fallback_key ) {
+			$fallback_result = self::execute_ai_request( $word, $fallback_key, $fallback_model );
+			if ( ! is_wp_error( $fallback_result ) ) {
+				return $fallback_result;
+			}
+			return new WP_Error( 'ai_all_failed', 'Both Primary and Fallback AI failed. Primary: ' . $result->get_error_message() . ' | Fallback: ' . $fallback_result->get_error_message() );
+		}
+
+		return $result; // Return original primary error if no fallback set
+	}
+
+	private static function execute_ai_request( $word, $api_key, $model ) {
+		$prompt_template = get_option( 'wordle_hint_ai_prompt' );
+
+		if ( ! $api_key || ! $prompt_template ) {
+			return new WP_Error( 'ai_config_missing', 'API key or prompt missing' );
+		}
+
+		$full_prompt = str_replace( '{{WORD}}', $word, $prompt_template );
 		$full_prompt .= "\nReturn results in JSON format with keys: hint1, hint2, hint3, final_hint. No direct reveal. Max 12 words per hint.";
 
-		// Basic support for OpenAI-compatible APIs (including Gemini if using a proxy or direct OpenAI)
-		// For simplicity, I'll implement the OpenAI Chat Completion format.
-		// Auto-detect endpoint based on key
+		// Support for Gemini native API if key starts with AIza
+		if ( strpos( $api_key, 'AIza' ) === 0 ) {
+			return self::generate_hints_gemini( $word, $api_key, $model, $full_prompt );
+		}
+
+		// Basic support for OpenAI-compatible APIs
 		$endpoint = 'https://api.openai.com/v1/chat/completions';
 		if ( strpos( $api_key, 'gsk_' ) === 0 ) {
 			$endpoint = 'https://api.groq.com/openai/v1/chat/completions';
@@ -34,7 +61,7 @@ class Wordle_AI {
 			),
 		);
 
-		// Only add response_format if not using Groq (some Groq models might be picky, though they mostly support it)
+		// Only add response_format if not using Groq
 		if ( strpos( $api_key, 'gsk_' ) === false ) {
 			$body_args['response_format'] = array( 'type' => 'json_object' );
 		}
@@ -67,5 +94,50 @@ class Wordle_AI {
 		}
 
 		return new WP_Error( 'ai_invalid_data', 'AI returned empty or invalid JSON hints' );
+	}
+
+	private static function generate_hints_gemini( $word, $api_key, $model, $prompt ) {
+		$endpoint = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$api_key}";
+		
+		$body_args = array(
+			'contents' => array(
+				array(
+					'parts' => array(
+						array( 'text' => $prompt )
+					)
+				)
+			),
+			'generationConfig' => array(
+				'responseMimeType' => 'application/json',
+			)
+		);
+
+		$response = wp_remote_post( $endpoint, array(
+			'headers' => array(
+				'Content-Type' => 'application/json',
+			),
+			'body'    => json_encode( $body_args ),
+			'timeout' => 30,
+		) );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+		
+		if ( isset( $body['candidates'][0]['content']['parts'][0]['text'] ) ) {
+			$json_content = json_decode( $body['candidates'][0]['content']['parts'][0]['text'], true );
+			if ( $json_content && ( ! empty( $json_content['hint1'] ) || ! empty( $json_content['final_hint'] ) ) ) {
+				return array(
+					'hint1'      => $json_content['hint1'] ?? '',
+					'hint2'      => $json_content['hint2'] ?? '',
+					'hint3'      => $json_content['hint3'] ?? '',
+					'final_hint' => $json_content['final_hint'] ?? '',
+				);
+			}
+		}
+
+		return new WP_Error( 'gemini_invalid_data', 'Gemini returned invalid response format' );
 	}
 }

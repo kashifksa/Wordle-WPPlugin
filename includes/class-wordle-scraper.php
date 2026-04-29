@@ -82,7 +82,7 @@ class Wordle_Scraper {
 		return $data;
 	}
 
-	private static function analyze_word( $word ) {
+	public static function analyze_word( $word ) {
 		$word = strtoupper( $word );
 		$letters = str_split( $word );
 		$vowels = array( 'A', 'E', 'I', 'O', 'U' );
@@ -111,7 +111,7 @@ class Wordle_Scraper {
 		);
 	}
 
-	private static function generate_fallback_hints( $word ) {
+	public static function generate_fallback_hints( $word ) {
 		$first = substr( $word, 0, 1 );
 		$last = substr( $word, -1 );
 		return array(

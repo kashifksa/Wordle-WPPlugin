@@ -47,22 +47,19 @@ class Wordle_DB {
 		global $wpdb;
 		$table_name = self::get_table_name();
 		
-		// Check if exists
+		// Check if exists by puzzle_number
 		$existing = $wpdb->get_row( $wpdb->prepare(
-			"SELECT id, hint1 FROM $table_name WHERE puzzle_number = %d",
-			$data['puzzle_number']
+			"SELECT id FROM $table_name WHERE puzzle_number = %d OR date = %s",
+			$data['puzzle_number'],
+			$data['date']
 		), ARRAY_A );
 
 		if ( $existing ) {
-			// If hints are missing, update them
-			if ( empty( $existing['hint1'] ) && ! empty( $data['hint1'] ) ) {
-				return $wpdb->update( 
-					$table_name, 
-					$data, 
-					array( 'id' => $existing['id'] ) 
-				);
-			}
-			return false; // Already exists and has hints
+			return $wpdb->update( 
+				$table_name, 
+				$data, 
+				array( 'id' => $existing['id'] ) 
+			);
 		}
 
 		return $wpdb->insert( $table_name, $data );
