@@ -49,7 +49,7 @@ body.dark-mode {
     max-width: 700px; /* Increased for better desktop layout */
     width: 95%; /* Responsive width */
     margin: 1rem auto;
-    padding: 1.5rem 2rem;
+    padding: 0.3rem 2rem 1.2rem 2rem;
     border-radius: 16px;
     box-shadow: var(--wh-shadow);
     text-align: center;
@@ -60,17 +60,18 @@ body.dark-mode {
 }
 
 .wh-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.8rem;
     border-bottom: 1px solid var(--wh-border);
-    padding-bottom: 1rem;
+    padding-bottom: 0.4rem;
     position: relative;
-    padding-top: 15px; /* Space for the toggle above */
+    padding-top: 30px; /* Space for toggle to sit closer to title */
 }
 
 .wh-main-title {
     font-size: 1.75rem;
     font-weight: 800;
-    margin: 0 0 0.4rem 0;
+    margin: 0;
+    line-height: 1.1;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--wh-text) !important;
@@ -99,7 +100,7 @@ body.dark-mode {
     background-color: #121213 !important;
     border-radius: 999px;
     position: absolute;
-    top: -5px;
+    top: 4px;
     right: 0;
     cursor: pointer;
     display: flex;
@@ -409,7 +410,7 @@ body.dark-mode .wh-toggle-knob {
 /* 📱 Mobile Responsiveness (Critical) */
 @media (max-width: 768px) {
     .wordle-hint-container {
-        padding: 1rem; /* Tighter padding on mobile */
+        padding: 0.6rem 1rem 1.2rem 1rem; /* Tighter padding on mobile */
     }
 
     .wh-main-title {

@@ -8,6 +8,35 @@ class Wordle_API {
 
 	public static function init() {
 		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
+		add_action( 'init', array( __CLASS__, 'maybe_refresh_cache' ) );
+	}
+
+	/**
+	 * Automatically generates or refreshes the JSON cache if missing or expired.
+	 * Triggered on 'init' hook.
+	 */
+	public static function maybe_refresh_cache() {
+		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
+		$regenerate = false;
+
+		if ( ! file_exists( $file_path ) ) {
+			$regenerate = true;
+		} else {
+			// Check if file is older than 24 hours
+			$file_time = filemtime( $file_path );
+			$one_day   = 24 * 60 * 60;
+			if ( ( time() - $file_time ) > $one_day ) {
+				$regenerate = true;
+			}
+		}
+
+		if ( $regenerate ) {
+			// Throttle to once every 15 minutes to prevent page load delays if scraping fails
+			if ( false === get_transient( 'wordle_cache_refresh_lock' ) ) {
+				set_transient( 'wordle_cache_refresh_lock', '1', 15 * MINUTE_IN_SECONDS );
+				self::refresh_json_cache();
+			}
+		}
 	}
 
 	public static function register_routes() {
