@@ -89,7 +89,10 @@ class Wordle_Admin {
 					</tr>
 					<tr valign="top">
 						<th scope="row">AI Prompt Template</th>
-						<td><textarea name="wordle_hint_ai_prompt" rows="5" class="large-text"><?php echo esc_textarea( get_option( 'wordle_hint_ai_prompt', 'Generate 4 Wordle hints for the word {{WORD}}. Hint 1: vague, Hint 2: category, Hint 3: specific, Hint 4: final strong hint.' ) ); ?></textarea></td>
+						<td>
+							<textarea name="wordle_hint_ai_prompt" rows="6" class="large-text"><?php echo esc_textarea( get_option( 'wordle_hint_ai_prompt', "Generate 4 progressive Wordle hints for the word {{WORD}}.\n\nRules:\n- FORBIDDEN: Do NOT use the word '{{WORD}}' or its plural.\n- FORBIDDEN: Do NOT use direct synonyms.\n- FORBIDDEN: Do NOT mention it has 5 letters (this is implied).\n- FORBIDDEN: Do NOT use rhymes.\n\nHint 1: Cryptic/Vague\nHint 2: Category/Context\nHint 3: Definition-style clue\nHint 4: Strong final hint" ) ); ?></textarea>
+							<p class="description">Use {{WORD}} as a placeholder. Be strict with the AI rules for better clues.</p>
+						</td>
 					</tr>
 					<tr valign="top">
 						<th scope="row">Internal API Key (for protection)</th>
@@ -107,6 +110,7 @@ class Wordle_Admin {
 			<h2>Actions</h2>
 			<button id="run-scraper-now" class="button button-primary">Run Scraper Now</button>
 			<button id="fetch-save-json" class="button button-primary">Fetch & Save JSON</button>
+			<button id="regenerate-fallbacks" class="button button-secondary">Regenerate Fallback Hints</button>
 			<button id="test-ai-connection" class="button button-secondary">Test AI Connection</button>
 			<div id="scraper-log" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; display:none;"></div>
 			
@@ -188,6 +192,24 @@ class Wordle_Admin {
 							$status.css('color', 'red').text('❌ ' + response.data.message);
 						}
 						$btn.prop('disabled', false).text('Save Wordle Entry');
+					});
+				});
+
+				$('#regenerate-fallbacks').click(function() {
+					var $btn = $(this);
+					var $log = $('#scraper-log');
+					$btn.prop('disabled', true).text('Regenerating...');
+					$log.show().html('Scanning for low-quality fallback hints...');
+					
+					$.post(ajaxurl, {
+						action: 'regenerate_wordle_fallbacks',
+						nonce: '<?php echo wp_create_nonce("wordle_regen_nonce"); ?>'
+					}, function(response) {
+						$log.append('<br>' + response.data.message);
+						if (response.success) {
+							$('#fetch-save-json').click(); // Refresh JSON too
+						}
+						$btn.prop('disabled', false).text('Regenerate Fallback Hints');
 					});
 				});
 
@@ -286,6 +308,50 @@ add_action( 'wp_ajax_save_manual_wordle', function() {
 	} else {
 		wp_send_json_error( array( 'message' => 'Database error or no changes made' ) );
 	}
+} );
+
+// AJAX handler to regenerate fallbacks
+add_action( 'wp_ajax_regenerate_wordle_fallbacks', function() {
+	check_ajax_referer( 'wordle_regen_nonce', 'nonce' );
+	
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+	}
+
+	global $wpdb;
+	$table = Wordle_DB::get_table_name();
+	
+	// Find entries with the old basic fallback pattern
+	$fallbacks = $wpdb->get_results( "SELECT * FROM $table WHERE hint1 LIKE 'The word starts with the letter%'" );
+	
+	if ( empty( $fallbacks ) ) {
+		wp_send_json_success( array( 'message' => 'No low-quality fallbacks found.' ) );
+	}
+
+	$count = 0;
+	foreach ( $fallbacks as $puzzle ) {
+		$puzzle_data = (array) $puzzle;
+		$word = $puzzle_data['word'];
+		
+		// Try AI again
+		$hints = Wordle_AI::generate_hints( $word );
+		
+		if ( ! is_wp_error( $hints ) ) {
+			$puzzle_data = array_merge( $puzzle_data, $hints );
+		} else {
+			// Try Advanced Static Fallback
+			$puzzle_data = array_merge( $puzzle_data, Wordle_Scraper::generate_fallback_hints( $word ) );
+		}
+		
+		// Remove 'id' and 'created_at' to allow clean update via insert_puzzle logic
+		unset($puzzle_data['id']);
+		unset($puzzle_data['created_at']);
+		
+		Wordle_DB::insert_puzzle( $puzzle_data );
+		$count++;
+	}
+
+	wp_send_json_success( array( 'message' => "Successfully regenerated hints for $count puzzles." ) );
 } );
 
 // AJAX handler to test AI

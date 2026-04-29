@@ -1,0 +1,145 @@
+{
+    "2026-04-26": {
+        "date": "2026-04-26",
+        "number": 1772,
+        "word": "GLOSS",
+        "vowels": 1,
+        "starts_with": "G",
+        "hints": {
+            "vague": "The word starts with the letter G.",
+            "category": "It has 5 letters.",
+            "specific": "The word ends with the letter S.",
+            "final": "It is a common 5-letter English word."
+        }
+    },
+    "2026-04-27": {
+        "date": "2026-04-27",
+        "number": 1773,
+        "word": "EERIE",
+        "vowels": 4,
+        "starts_with": "E",
+        "hints": {
+            "vague": "A quality often associated with spooky settings",
+            "category": "Something you might find in a list of horror movie plots",
+            "specific": "A characteristic of a place where something supernatural is said to occur",
+            "final": "You might hear this word used to describe a creepy abandoned mansion"
+        }
+    },
+    "2026-04-28": {
+        "date": "2026-04-28",
+        "number": 1774,
+        "word": "QUACK",
+        "vowels": 2,
+        "starts_with": "Q",
+        "hints": {
+            "vague": "Something you might find coming from a bird's beak.",
+            "category": "Associated with a type of entertainment often found at circuses and zoos.",
+            "specific": "This sound is made when a duck is on the ground or in the air, and its pitch can change depending on its mood.",
+            "final": "If you can imagine the sharp, loud noise a specific waterfowl makes, this word should come to you."
+        }
+    },
+    "2026-04-29": {
+        "date": "2026-04-29",
+        "number": 1775,
+        "word": "RURAL",
+        "vowels": 2,
+        "starts_with": "R",
+        "hints": {
+            "vague": "Relating to the countryside rather than the town.",
+            "category": "The opposite of 'urban' or 'city-like'.",
+            "specific": "Evokes images of farms, fields, and open spaces.",
+            "final": "Life away from the hustle and bustle of a metropolitan area."
+        }
+    },
+    "2026-04-30": {
+        "date": "2026-04-30",
+        "number": 1776,
+        "word": "CROCK",
+        "vowels": 1,
+        "starts_with": "C",
+        "hints": {
+            "vague": "An earthenware pot or jar used for cooking or storage.",
+            "category": "Also used informally to describe something nonsensical or false.",
+            "specific": "You might find one filled with butter or slow-cooking soup.",
+            "final": "Think of a heavy ceramic container or a '____' of lies."
+        }
+    },
+    "2026-05-01": {
+        "date": "2026-05-01",
+        "number": 1777,
+        "word": "PLUME",
+        "vowels": 2,
+        "starts_with": "P",
+        "hints": {
+            "vague": "A delicate yet elegant presence in many artistic expressions.",
+            "category": "A common feature found in certain types of birds and their courtship displays.",
+            "specific": "The ornamental part of a horse's saddle, typically made of feathers and fabric.",
+            "final": "If you're thinking of something that symbolizes both beauty and victory, this might be the one you're looking for."
+        }
+    },
+    "2026-05-02": {
+        "date": "2026-05-02",
+        "number": 1778,
+        "word": "BRING",
+        "vowels": 1,
+        "starts_with": "B",
+        "hints": {
+            "vague": "It can be a cause for excitement on certain special days.",
+            "category": "Something you'd find on a 'Gift Registry' before a wedding.",
+            "specific": "Imagine attending a music festival and waiting eagerly for this.",
+            "final": "The first item a bride might receive from her guests on her wedding day, often accompanied by a thoughtful note."
+        }
+    },
+    "2026-05-03": {
+        "date": "2026-05-03",
+        "number": 1779,
+        "word": "PUFFY",
+        "vowels": 1,
+        "starts_with": "P",
+        "hints": {
+            "vague": "Something you might feel after eating a heavy meal",
+            "category": "A characteristic often associated with a cartoon character's belly",
+            "specific": "A trait commonly found in soft and downy textures",
+            "final": "Imagine holding a feather pillow on a cold winter morning"
+        }
+    },
+    "2026-05-04": {
+        "date": "2026-05-04",
+        "number": 1780,
+        "word": "RISER",
+        "vowels": 2,
+        "starts_with": "R",
+        "hints": {
+            "vague": "This word might evoke a feeling of movement or progression.",
+            "category": "People in this word often work in entertainment, performing in front of an audience.",
+            "specific": "In ballet, this word refers to the upward movement from a demi-pli\u00e9.",
+            "final": "You're probably thinking of someone rising to fame, specifically a male pop sensation."
+        }
+    },
+    "2026-05-05": {
+        "date": "2026-05-05",
+        "number": 1781,
+        "word": "LATCH",
+        "vowels": 1,
+        "starts_with": "L",
+        "hints": {
+            "vague": "Something you might hold onto for safety.",
+            "category": "Furniture item often found near a door.",
+            "specific": "A mechanical device used in sailing and other watercraft.",
+            "final": "In a window, it secures the sash in place."
+        }
+    },
+    "2026-05-06": {
+        "date": "2026-05-06",
+        "number": 1782,
+        "word": "LIKEN",
+        "vowels": 2,
+        "starts_with": "L",
+        "hints": {
+            "vague": "This word is used when you want to compare one thing to another.",
+            "category": "It functions as a verb that highlights similarities.",
+            "specific": "Often used in literature to create metaphors or analogies.",
+            "final": "To say that something is 'like' something else is to do this."
+        }
+    }
+}

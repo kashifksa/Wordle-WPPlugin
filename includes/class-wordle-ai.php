@@ -12,8 +12,21 @@ class Wordle_AI {
 		$primary_model = get_option( 'wordle_hint_ai_model', 'llama-3.1-8b-instant' );
 		
 		$result = self::execute_ai_request( $word, $primary_key, $primary_model );
+		
+		// If Rate Limited, wait 10s and try once more before giving up
+		if ( is_wp_error( $result ) && strpos( $result->get_error_message(), '429' ) !== false ) {
+			error_log( "Wordle AI: Rate limited. Cooling off for 10s..." );
+			sleep( 10 );
+			$result = self::execute_ai_request( $word, $primary_key, $primary_model );
+		}
 
 		if ( ! is_wp_error( $result ) ) {
+			// Safety Check: Ensure the word isn't in the hints
+			if ( self::is_word_in_hints( $word, $result ) ) {
+				error_log( "Wordle AI Safety: Word '{$word}' found in hints. Retrying after 5s..." );
+				sleep( 5 ); // Give the API a longer moment
+				$result = self::execute_ai_request( $word, $primary_key, $primary_model );
+			}
 			return $result;
 		}
 
@@ -40,7 +53,7 @@ class Wordle_AI {
 		}
 
 		$full_prompt = str_replace( '{{WORD}}', $word, $prompt_template );
-		$full_prompt .= "\nReturn results in JSON format with keys: hint1, hint2, hint3, final_hint. No direct reveal. Max 12 words per hint.";
+		$full_prompt .= "\n\nCRITICAL: Return results in JSON format with keys: hint1, hint2, hint3, final_hint. NEVER reveal the word '{$word}' in any hint.";
 
 		// Support for Gemini native API if key starts with AIza
 		if ( strpos( $api_key, 'AIza' ) === 0 ) {
@@ -56,7 +69,7 @@ class Wordle_AI {
 		$body_args = array(
 			'model'    => $model,
 			'messages' => array(
-				array( 'role' => 'system', 'content' => 'You are a Wordle hint generator. Output JSON only.' ),
+				array( 'role' => 'system', 'content' => "You are an elite Wordle hint generator. Your goal is to provide helpful clues for the word '{$word}' without ever using the word itself, its synonyms, or mentioning its length. You MUST output strictly valid JSON." ),
 				array( 'role' => 'user', 'content' => $full_prompt ),
 			),
 		);
@@ -79,7 +92,14 @@ class Wordle_AI {
 			return $response;
 		}
 
+		$status_code = wp_remote_retrieve_response_code( $response );
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+		
+		if ( $status_code !== 200 ) {
+			$error_msg = $body['error']['message'] ?? 'Unknown API Error';
+			error_log( "Wordle AI API Error ({$status_code}): " . $error_msg );
+			return new WP_Error( 'ai_api_error', "API Error {$status_code}: {$error_msg}" );
+		}
 		
 		if ( isset( $body['choices'][0]['message']['content'] ) ) {
 			$json_content = json_decode( $body['choices'][0]['message']['content'], true );
@@ -139,5 +159,14 @@ class Wordle_AI {
 		}
 
 		return new WP_Error( 'gemini_invalid_data', 'Gemini returned invalid response format' );
+	}
+	private static function is_word_in_hints( $word, $hints ) {
+		$word = strtolower( $word );
+		foreach ( $hints as $hint ) {
+			if ( strpos( strtolower( $hint ), $word ) !== false ) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

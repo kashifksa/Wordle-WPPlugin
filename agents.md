@@ -1,20 +1,20 @@
-# AGENTS.md — Wordle Backend App (Scalable)
+# AGENTS.md — Wordle Hint Pro (WordPress Architecture)
 
 ## 0) Objective
 
-Build a reliable backend service that:
+Build a robust WordPress plugin that:
 
-* Fetches Wordle data once daily (safe scraping)
-* Generates unique hints (AI-assisted)
+* Fetches Wordle data automatically (daily/pre-emptive scraping)
+* Generates unique hints using AI (Groq/Llama integration)
 * Computes letter analytics locally
-* Stores structured records
-* Serves a clean API for multiple frontends (WordPress plugin, future apps)
+* Stores structured records in the WordPress database
+* Serves a clean JSON API and interactive shortcodes for the frontend
 
 Primary goals:
 
 * No hardcoded domains/keys
-* Easy migration (temp → production)
-* Multi-site & multi-locale ready
+* Native WordPress integration (Shortcodes, Admin UI, WP Cron)
+* High performance via static JSON caching
 * Fault-tolerant & observable
 
 ---
@@ -22,109 +22,46 @@ Primary goals:
 ## 1) High-Level Architecture
 
 Flow:
-Scheduler → Scraper → Validator → Analyzer → Hint Generator → Storage → API
+WP Cron → Scraper → Validator → Analyzer → AI Hint Generator → DB Storage → JSON Cache → Frontend Shortcode
 
 Components:
 
-* Scheduler (cron + retry)
-* Scraper (HTML fetch + parse)
-* Analyzer (local logic)
-* Hint Generator (AI)
-* Storage (MySQL preferred)
-* API Server (HTTP/JSON)
-* Cache Layer (optional)
-* Logger
-
-Separation:
-
-* Backend handles data & API only
-* Frontend (WordPress plugin) handles UI & user timezone
+* **Scheduler**: WordPress Cron (`wp_schedule_event`) with retry logic via transients.
+* **Scraper**: PHP-based HTML fetching (`wp_remote_get`) and parsing.
+* **Analyzer**: Pure PHP logic for letter/vowel/consonant counts.
+* **Hint Generator**: Groq API integration (Llama models) with local pattern fallbacks.
+* **Storage**: Custom WP database table (`wp_wordle_data`).
+* **Cache**: Static JSON file (`wordle-data.json`) for zero-DB-hit frontend delivery.
+* **Admin UI**: Plugin settings page for configuration and manual data entry.
 
 ---
 
-## 2) Configuration (ENV-FIRST, NO HARDCODING)
+## 2) Configuration (WordPress Options)
 
-All values must be configurable via environment variables or a config file.
+All values are stored in the WordPress `options` table and manageable via the Admin UI.
 
-Required ENV:
+Required Settings:
 
-# Server
-
-PORT=3000
-API_BASE_URL=
-CORS_ORIGIN=*
-
-# Time & Scheduling
-
-TIMEZONE=Asia/Karachi
-CRON_SCHEDULE=35 15 * * *     # 03:35 PM PKT
-RETRY_INTERVAL_MIN=5
-RETRY_MAX_ATTEMPTS=12        # ~1 hour window
-
-# Scraper
-
-SCRAPE_URL=
-SCRAPE_TIMEOUT_MS=10000
-SCRAPE_USER_AGENT=
-
-# AI (Hints)
-
-AI_API_KEY=
-AI_MODEL=
-AI_PROMPT_TEMPLATE=
-
-# Security
-
-API_KEY=                     # for protected endpoints
-
-# Database (MySQL)
-
-DB_HOST=
-DB_PORT=3306
-DB_USER=
-DB_PASS=
-DB_NAME=
-DB_POOL_SIZE=5
-
-# Feature Flags
-
-ENABLE_CACHE=true
-ENABLE_FALLBACK_HINTS=true
+* **API Keys**: Groq AI API Key, Scraper Source URL.
+* **Time & Scheduling**: Scrape time (default 03:35 PM PKT), retry intervals.
+* **AI Tuning**: Model choice (llama-3.1-8b), custom prompt templates.
+* **Security**: API key for restricted manual endpoints (if any).
 
 Rules:
 
-* Never embed domains, keys, or prompts in code
-* All endpoints must derive from API_BASE_URL when needed
+* Use `get_option()` for all configurations.
+* Provide defaults for all settings.
+* Never hardcode secrets in code.
 
 ---
 
-## 3) Scheduler
+## 3) Scheduler (WP Cron)
 
 Responsibilities:
 
-* Trigger job daily at CRON_SCHEDULE (PKT)
-* If job fails → retry every RETRY_INTERVAL_MIN
-* Stop retry after success or RETRY_MAX_ATTEMPTS
-
-Pseudo:
-run_job():
-if latest_puzzle_exists_for_today():
-log("Already exists → skip")
-return
-
-attempt = 0
-while attempt < RETRY_MAX_ATTEMPTS:
-result = fetch_and_process()
-if result.success:
-log("Success")
-break
-sleep(RETRY_INTERVAL_MIN)
-attempt++
-
-Observability:
-
-* Log each attempt with timestamp
-* Emit success/failure metrics
+* Trigger `wordle_daily_scrape` daily.
+* Implement "Pre-emptive Scraping": Fetch 3–7 days in advance if available.
+* If a day is missing: Attempt retry every 15–30 minutes via a temporary cron schedule.
 
 ---
 
@@ -132,356 +69,100 @@ Observability:
 
 Responsibilities:
 
-* Fetch HTML from SCRAPE_URL
-* Extract:
-
-  * date (ISO)
-  * puzzle_number (INT)
-  * word (UPPERCASE)
-
-Requirements:
-
-* Set headers (User-Agent from config)
-* Respect timeouts
-* Add 2–5s jitter delay before request
-* Max 1–3 requests/day
-
-Failure Handling:
-
-* Throw retriable error on network/parse failure
-* Validate extracted fields strictly
+* Fetch HTML from configured source.
+* Extract: `date`, `puzzle_number`, and `word`.
+* Requirements: Respect robots.txt (implied), use realistic User-Agents, and implement request jitter.
 
 ---
 
 ## 5) Validation & Deduplication
 
-Before insert:
+Before Database Insert:
 
-* Ensure all fields present
-* Ensure puzzle_number is integer and valid
-* Check DB for existing puzzle_number
-
-Rule:
-
-* If exists → skip (idempotent)
-
-DB Constraint:
-
-* UNIQUE(puzzle_number)
+* Validate `puzzle_number` is unique.
+* Sanitize all text fields.
+* Ensure `word` is a valid 5-letter uppercase string.
 
 ---
 
-## 6) Analyzer (Local Only, No API)
+## 6) Analyzer (Local PHP)
 
-Input: WORD
+Input: `WORD`
 
 Compute:
 
-* letter_count
-* vowel_count (A,E,I,O,U)
-* consonant_count
-* repeated_letters (array or comma string)
-* first_letter
-
-Implementation:
-
-* Pure function
-* Deterministic
-* Unit-testable
+* `vowel_count` (A, E, I, O, U)
+* `starts_with` (First letter)
+* `ends_with` (Last letter)
+* `repeated_letters` (Array of duplicates)
 
 ---
 
-## 7) Hint Generator (AI)
+## 7) Hint Generator (Groq AI)
 
-Input:
-
-* WORD only
+Input: `WORD`
 
 Output:
 
-* hint1 (vague)
-* hint2 (category)
-* hint3 (specific)
-* final_hint (strong)
+* `hint1` (Vague/Thematic)
+* `hint2` (Category/Usage)
+* `hint3` (Specific/Mechanical)
+* `final_hint` (Strong/Conceptual)
 
 Rules:
 
-* No direct reveal
-* No copying from sources
-* Each hint ≤ 12 words
-* Simple English
-
-Prompt Template:
-
-* Stored in AI_PROMPT_TEMPLATE (config)
-* Uses {{WORD}} placeholder
-
-Fallback:
-If AI fails or times out:
-
-* Generate basic hints locally (pattern-based)
+* **Safety Filter**: Never include the actual word in any hint.
+* **Length**: Max 12 words per hint.
+* **Fallback**: If AI fails, use "Advanced Fallback Clues" (Pattern-based: "Starts with X", "Ends with Y", etc.).
 
 ---
 
 ## 8) Data Model
 
-Table: wordle_data
+Table: `wp_wordle_data`
 
 Columns:
 
-* id INT PK AUTO_INCREMENT
-* date DATE (indexed)
-* puzzle_number INT UNIQUE (indexed)
-* word VARCHAR(10)
-* hint1 TEXT
-* hint2 TEXT
-* hint3 TEXT
-* final_hint TEXT
-* vowel_count INT
-* repeated_letters VARCHAR(32)
-* locale VARCHAR(16) DEFAULT 'global'
-* created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-
-Indexes:
-
-* UNIQUE(puzzle_number)
-* INDEX(date)
-* INDEX(locale, date)
+* `id`: BIGINT(20) PK AUTO_INCREMENT
+* `puzzle_date`: DATE
+* `puzzle_number`: INT UNIQUE
+* `word`: VARCHAR(10)
+* `hint1`, `hint2`, `hint3`, `final_hint`: TEXT
+* `vowel_count`: INT
+* `starts_with`: VARCHAR(1)
+* `created_at`: TIMESTAMP
 
 ---
 
-## 9) Storage Layer
+## 9) JSON Cache Layer
 
-Preferred: MySQL (connection pool)
+To ensure < 50ms frontend loads:
 
-Responsibilities:
-
-* insert(record)
-* exists(puzzle_number)
-* fetch_latest(limit, locale)
-* fetch_by_date(date, locale)
-
-Rules:
-
-* Use parameterized queries
-* Handle connection retries
-* Keep queries minimal
-
-Dev Mode:
-
-* JSON file allowed (feature-flagged)
+* Every DB update triggers a rewrite of `wordle-data.json`.
+* The frontend JS fetches this static file directly.
+* Fallback: If JSON is missing, the plugin regenerates it on the `init` hook.
 
 ---
 
-## 10) API Design
+## 10) Shortcodes & UI
 
-Base: /api/wordle
-
-### GET /api/wordle
-
-Query (optional):
-
-* locale=global
-
-Response:
-{
-"today": {...},
-"yesterday": {...},
-"tomorrow": {...}
-}
-
-Behavior:
-
-* Fetch latest 2–3 records by date
-* Map to today/yesterday/tomorrow (server-side ordering only)
-* Keep payload small
-
-Cache:
-
-* Cache response (e.g., 60–300s) if ENABLE_CACHE=true
+* `[wordle_hint]`: Main interactive UI for daily hints.
+* `[wordle_archive]`: (Planned) List of past puzzles.
+* `[wordle_timer]`: (Planned) Countdown to next puzzle.
 
 ---
 
-### GET /api/wordle/all
+## 11) Performance & Security
 
-Response:
-
-* List of all records (paginated)
-
-Query:
-
-* page, limit, locale
+* **Caching**: Use WordPress Object Cache where available.
+* **Security**: Nonces for all admin actions, capability checks (`manage_options`).
+* **Rate Limiting**: (Planned) IP-based limiting for manual regeneration triggers.
 
 ---
 
-### POST /api/wordle/save (optional/manual)
+## 12) Testing & Maintenance
 
-Headers:
-Authorization: Bearer {API_KEY}
+* **Dry Run**: Admin button to test scraper/AI without saving.
+* **Log Viewer**: View recent scraper/AI activity in the admin dashboard.
+* **Export/Import**: Utility to move data between sites.
 
-Body:
-
-* date
-* puzzle_number
-* word
-* hints[]
-* vowel_count
-* repeated_letters
-* locale
-
-Behavior:
-
-* Validate + sanitize
-* Check duplicate
-* Insert if new
-
----
-
-## 11) Time Handling
-
-* Store dates in ISO (UTC-safe)
-* Do NOT implement user timezone logic here
-* Frontend/plugin decides which day to show
-
----
-
-## 12) Security
-
-* Protect POST routes with API_KEY
-* Sanitize all inputs
-* Escape outputs
-* Basic rate limiting (per IP)
-* Do not expose secrets in responses
-
----
-
-## 13) CORS
-
-* Allow CORS_ORIGIN
-* Default: *
-* Production: restrict to site domains
-
----
-
-## 14) Caching (Optional but Recommended)
-
-* In-memory cache for GET /api/wordle
-* TTL: 60–300 seconds
-* Invalidate on new insert
-
----
-
-## 15) Logging & Monitoring
-
-Log:
-
-* job start/end
-* fetch success/failure
-* retries
-* AI success/failure
-* DB insert/skip
-* API hits/errors
-
-Format:
-
-* timestamp + level + message
-
-Optional:
-
-* expose /health endpoint
-
----
-
-## 16) Error Handling
-
-* Distinguish retriable vs fatal errors
-* Retry only retriable (network/parse)
-* Graceful degradation if AI fails
-* API always returns valid JSON
-
----
-
-## 17) Performance
-
-* Target API response < 100ms (cached)
-* Use DB indexes
-* Limit fields in responses
-* Avoid N+1 queries
-
----
-
-## 18) Deployment
-
-Runtime:
-
-* Node.js (Express or Fastify)
-
-Environment:
-
-* Hostinger Node (temporary domain)
-* Support .env config
-
-Startup:
-
-* Initialize DB pool
-* Register routes
-* Start scheduler
-
----
-
-## 19) Migration Strategy
-
-To move temp → production:
-
-Change ONLY:
-
-* API_BASE_URL
-* CORS_ORIGIN
-* (optional) DB credentials
-
-No code changes.
-
----
-
-## 20) Scalability Roadmap
-
-Design for:
-
-* multiple frontends (WP sites per country)
-* locale-based data (locale column)
-* future central API domain (api.yourdomain.com)
-* mobile apps
-
-Rule:
-
-* Backend = single source of truth
-
----
-
-## 21) Testing
-
-Must include:
-
-* unit tests (analyzer)
-* integration tests (API)
-* dry-run mode for scraper
-
----
-
-## 22) Do NOT
-
-* Do NOT scrape multiple times/day
-* Do NOT store data in WP pages
-* Do NOT hardcode URLs/keys/prompts
-* Do NOT mix frontend logic here
-* Do NOT rely solely on AI
-
----
-
-## 23) Success Criteria
-
-* Runs daily without manual intervention
-* No duplicate entries
-* API returns correct structured data
-* Works after domain change without edits
-* Supports multiple sites via same backend

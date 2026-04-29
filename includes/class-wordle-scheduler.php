@@ -33,43 +33,70 @@ class Wordle_Scheduler {
 		$attempt = get_transient( 'wordle_scrape_attempt' ) ?: 0;
 		$max_attempts = 12;
 		
-		error_log( "Wordle Scraper: Starting job. Attempt " . ($attempt + 1) );
+		error_log( "Wordle Scraper: Starting daily job. Attempt " . ($attempt + 1) );
 
 		$now_ts = current_time( 'timestamp' );
-		$yesterday = date( 'Y-m-d', strtotime( '-1 day', $now_ts ) );
-		$today     = date( 'Y-m-d', $now_ts );
-		$tomorrow  = date( 'Y-m-d', strtotime( '+1 day', $now_ts ) );
-
-		// 1. Scrape for Yesterday (Gap filler)
-		Wordle_Scraper::fetch_and_process( $yesterday );
-
-		// 2. Scrape for Today
-		$result_today = Wordle_Scraper::fetch_and_process( $today );
-
-		// 3. Scrape for Tomorrow (Early capture)
-		$result_tomorrow = Wordle_Scraper::fetch_and_process( $tomorrow );
-
-		// We consider success if at least today was processed or already exists
-		if ( ! is_wp_error( $result_today ) || $result_today->get_error_code() === 'db_error' ) {
-			error_log( "Wordle Scraper: Today's processing finished (Success or Duplicate)." );
-			delete_transient( 'wordle_scrape_attempt' );
-			self::schedule_next_run(); // Schedule for next scheduled time
-			
-			$msg = "Today: " . ( is_wp_error( $result_today ) ? $result_today->get_error_message() : "Success" );
-			$msg .= " | Tomorrow: " . ( is_wp_error( $result_tomorrow ) ? $result_tomorrow->get_error_message() : "Success" );
-			// 3. Update JSON cache
-			Wordle_API::refresh_json_cache();
-			
-			return array( 'success' => true, 'message' => $msg );
+		
+		// Dates to ensure we have data for: Yesterday, Today, and next 7 days
+		$dates_to_check = array();
+		$dates_to_check[] = date( 'Y-m-d', strtotime( '-1 day', $now_ts ) );
+		$dates_to_check[] = date( 'Y-m-d', $now_ts );
+		for ( $i = 1; $i <= 7; $i++ ) {
+			$dates_to_check[] = date( 'Y-m-d', strtotime( "+$i days", $now_ts ) );
 		}
 
-		// Fail logic for today's puzzle (Retry)
+		$today = date( 'Y-m-d', $now_ts );
+		$success_count = 0;
+		$skipped_count = 0;
+		$error_occurred = false;
+		$today_error = null;
+
+		foreach ( $dates_to_check as $date ) {
+			$existing = Wordle_DB::get_puzzle_by_date( $date );
+			
+			// Database-First: Skip if entry exists
+			if ( $existing ) {
+				error_log( "Wordle Scraper: Skipped date $date: already exists" );
+				$skipped_count++;
+				if ( $date === $today ) $success_count++; // Today is considered "handled" if it exists
+				continue;
+			}
+
+			// Conditional Scraping: Scrape if missing
+			error_log( "Wordle Scraper: Scraped date $date: missing entry" );
+			$result = Wordle_Scraper::fetch_and_process( $date );
+
+			if ( is_wp_error( $result ) ) {
+				error_log( "Wordle Scraper: Error scraping $date: " . $result->get_error_message() );
+				if ( $date === $today ) {
+					$error_occurred = true;
+					$today_error = $result->get_error_message();
+				}
+			} else {
+				$success_count++;
+				// Jitter delay for consecutive scrapes (5-8s)
+				sleep( rand( 5, 8 ) );
+			}
+		}
+
+		// Rebuild JSON cache after all processing
+		Wordle_API::refresh_json_cache();
+
+		// Handle Cron/Retry logic based on Today's success
+		if ( ! $error_occurred ) {
+			error_log( "Wordle Scraper: Job completed. Skipped: $skipped_count, New: " . ($success_count - $skipped_count) );
+			delete_transient( 'wordle_scrape_attempt' );
+			self::schedule_next_run();
+			return array( 'success' => true, 'message' => "Job finished. Total handled: $success_count" );
+		}
+
+		// Fail logic for today (Retry)
 		$attempt++;
 		if ( $attempt < $max_attempts ) {
 			set_transient( 'wordle_scrape_attempt', $attempt, HOUR_IN_SECONDS );
 			wp_schedule_single_event( time() + ( 5 * MINUTE_IN_SECONDS ), 'wordle_daily_scrape_cron' );
-			error_log( "Wordle Scraper: Today failed. Retrying in 5 mins. Error: " . $result_today->get_error_message() );
-			return array( 'success' => false, 'message' => 'Today failed, retrying: ' . $result_today->get_error_message() );
+			error_log( "Wordle Scraper: Today's scrape failed. Retrying in 5 mins. Error: " . $today_error );
+			return array( 'success' => false, 'message' => 'Today failed, retrying: ' . $today_error );
 		} else {
 			delete_transient( 'wordle_scrape_attempt' );
 			self::schedule_next_run(); 

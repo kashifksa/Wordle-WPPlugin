@@ -225,11 +225,22 @@ class Wordle_API {
 		$timezone = new DateTimeZone( $tz_string );
 		$now = new DateTime( 'now', $timezone );
 		
-		$dates = array(
-			'yesterday' => (clone $now)->modify('-1 day')->format('Y-m-d'),
-			'today'     => $now->format('Y-m-d'),
-			'tomorrow'  => (clone $now)->modify('+1 day')->format('Y-m-d'),
-		);
+		$dates = array();
+		
+		// Cache 3 days in the past
+		for ( $i = 3; $i >= 1; $i-- ) {
+			$date = (clone $now)->modify("-$i days")->format('Y-m-d');
+			$dates[] = $date;
+		}
+		
+		// Cache today
+		$dates[] = $now->format('Y-m-d');
+		
+		// Cache 7 days in the future
+		for ( $i = 1; $i <= 7; $i++ ) {
+			$date = (clone $now)->modify("+$i days")->format('Y-m-d');
+			$dates[] = $date;
+		}
 
 		$cache_data = array();
 		foreach ( $dates as $key => $date ) {

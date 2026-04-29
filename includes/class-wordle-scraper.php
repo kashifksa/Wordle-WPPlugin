@@ -112,6 +112,15 @@ class Wordle_Scraper {
 	}
 
 	public static function generate_fallback_hints( $word ) {
+		// Try Advanced Static Fallback first
+		if ( class_exists( 'Wordle_Static_Hints' ) ) {
+			$static = Wordle_Static_Hints::get_hints( $word );
+			if ( $static ) {
+				return $static;
+			}
+		}
+
+		// Tertiary Fallback: Pattern-based
 		$first = substr( $word, 0, 1 );
 		$last = substr( $word, -1 );
 		return array(
