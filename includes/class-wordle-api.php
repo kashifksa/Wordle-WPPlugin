@@ -211,9 +211,9 @@ class Wordle_API {
 	}
 
 	public static function handle_refresh_json( $request ) {
-		$result = self::refresh_json_cache();
-		if ( $result !== false ) {
-			return new WP_REST_Response( array( 'success' => true, 'message' => '3-day JSON cache generated successfully' ), 200 );
+		$count = self::refresh_json_cache();
+		if ( $count !== false ) {
+			return new WP_REST_Response( array( 'success' => true, 'message' => "{$count}-day JSON cache generated successfully" ), 200 );
 		} else {
 			return new WP_REST_Response( array( 'success' => false, 'message' => 'Error generating JSON cache' ), 500 );
 		}
@@ -274,7 +274,9 @@ class Wordle_API {
 		}
 
 		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
-		return file_put_contents( $file_path, json_encode( $cache_data, JSON_PRETTY_PRINT ) );
+		$success = file_put_contents( $file_path, json_encode( $cache_data, JSON_PRETTY_PRINT ) );
+		
+		return $success !== false ? count( $cache_data ) : false;
 	}
 }
 

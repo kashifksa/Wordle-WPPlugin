@@ -45,6 +45,17 @@ class Wordle_AI {
 		return $result; // Return original primary error if no fallback set
 	}
 
+	public static function test_fallback_connection( $word ) {
+		$fallback_key   = get_option( 'wordle_hint_ai_api_key_fallback' );
+		$fallback_model = get_option( 'wordle_hint_ai_model_fallback' );
+
+		if ( ! $fallback_key ) {
+			return new WP_Error( 'fallback_missing', 'No fallback API key configured' );
+		}
+
+		return self::execute_ai_request( $word, $fallback_key, $fallback_model );
+	}
+
 	private static function execute_ai_request( $word, $api_key, $model ) {
 		$prompt_template = get_option( 'wordle_hint_ai_prompt' );
 
@@ -102,7 +113,7 @@ class Wordle_AI {
 		}
 		
 		if ( isset( $body['choices'][0]['message']['content'] ) ) {
-			$json_content = json_decode( $body['choices'][0]['message']['content'], true );
+			$json_content = self::extract_json( $body['choices'][0]['message']['content'] );
 			if ( $json_content && ( ! empty( $json_content['hint1'] ) || ! empty( $json_content['final_hint'] ) ) ) {
 				return array(
 					'hint1'      => $json_content['hint1'] ?? '',
@@ -117,6 +128,7 @@ class Wordle_AI {
 	}
 
 	private static function generate_hints_gemini( $word, $api_key, $model, $prompt ) {
+		$model = trim( $model );
 		$endpoint = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$api_key}";
 		
 		$body_args = array(
@@ -127,9 +139,6 @@ class Wordle_AI {
 					)
 				)
 			),
-			'generationConfig' => array(
-				'responseMimeType' => 'application/json',
-			)
 		);
 
 		$response = wp_remote_post( $endpoint, array(
@@ -144,10 +153,20 @@ class Wordle_AI {
 			return $response;
 		}
 
-		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+		$status_code = wp_remote_retrieve_response_code( $response );
+		$response_body = wp_remote_retrieve_body( $response );
+		$body = json_decode( $response_body, true );
 		
+		if ( $status_code !== 200 ) {
+			$error_msg = $body['error']['message'] ?? 'Unknown Gemini Error';
+			error_log( "Wordle AI: Gemini API Error ({$status_code}): " . $error_msg );
+			return new WP_Error( 'gemini_api_error', "Gemini API Error {$status_code}: {$error_msg}" );
+		}
+
 		if ( isset( $body['candidates'][0]['content']['parts'][0]['text'] ) ) {
-			$json_content = json_decode( $body['candidates'][0]['content']['parts'][0]['text'], true );
+			$text = $body['candidates'][0]['content']['parts'][0]['text'];
+			$json_content = self::extract_json( $text );
+			
 			if ( $json_content && ( ! empty( $json_content['hint1'] ) || ! empty( $json_content['final_hint'] ) ) ) {
 				return array(
 					'hint1'      => $json_content['hint1'] ?? '',
@@ -158,7 +177,37 @@ class Wordle_AI {
 			}
 		}
 
-		return new WP_Error( 'gemini_invalid_data', 'Gemini returned invalid response format' );
+		error_log( "Wordle AI: Gemini invalid format. Body: " . substr( $response_body, 0, 500 ) );
+		return new WP_Error( 'gemini_invalid_data', 'Gemini returned invalid response format or empty hints' );
+	}
+
+	private static function extract_json( $string ) {
+		// Remove markdown code blocks if present
+		$string = preg_replace( '/^```json\s*/i', '', $string );
+		$string = preg_replace( '/^```\s*/i', '', $string );
+		$string = preg_replace( '/\s*```$/', '', $string );
+		$string = trim( $string );
+
+		// Try direct decode
+		$json = json_decode( $string, true );
+		if ( json_last_error() === JSON_ERROR_NONE ) {
+			return $json;
+		}
+
+		// Fallback: Try to find the first '{' and last '}'
+		$start_pos = strpos( $string, '{' );
+		$end_pos   = strrpos( $string, '}' );
+
+		if ( $start_pos !== false && $end_pos !== false && $end_pos > $start_pos ) {
+			$json_part = substr( $string, $start_pos, $end_pos - $start_pos + 1 );
+			$json = json_decode( $json_part, true );
+			if ( json_last_error() === JSON_ERROR_NONE ) {
+				return $json;
+			}
+		}
+
+		error_log( "Wordle AI: Failed to parse JSON from string: " . substr( $string, 0, 100 ) . "..." );
+		return null;
 	}
 	private static function is_word_in_hints( $word, $hints ) {
 		$word = strtolower( $word );

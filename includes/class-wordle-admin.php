@@ -111,7 +111,8 @@ class Wordle_Admin {
 			<button id="run-scraper-now" class="button button-primary">Run Scraper Now</button>
 			<button id="fetch-save-json" class="button button-primary">Fetch & Save JSON</button>
 			<button id="regenerate-fallbacks" class="button button-secondary">Regenerate Fallback Hints</button>
-			<button id="test-ai-connection" class="button button-secondary">Test AI Connection</button>
+			<button id="test-ai-connection" class="button button-secondary">Test Primary AI</button>
+			<button id="test-fallback-ai" class="button button-secondary">Test Fallback AI</button>
 			<div id="scraper-log" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; display:none;"></div>
 			
 			<script>
@@ -217,18 +218,37 @@ class Wordle_Admin {
 					var $btn = $(this);
 					var $log = $('#scraper-log');
 					$btn.prop('disabled', true).text('Testing...');
-					$log.show().html('Testing AI connection with model: ' + $('input[name="wordle_hint_ai_model"]').val() + '...');
+					$log.show().html('Testing Primary AI connection with model: ' + $('input[name="wordle_hint_ai_model"]').val() + '...');
 					
 					$.post(ajaxurl, {
 						action: 'test_wordle_ai',
 						nonce: '<?php echo wp_create_nonce("wordle_test_ai_nonce"); ?>'
 					}, function(response) {
 						if (response.success) {
-							$log.append('<br><span style="color:green;">✔ Success!</span> AI hints generated: ' + JSON.stringify(response.data.hints));
+							$log.append('<br><span style="color:green;">✔ Primary Success!</span> AI hints generated: ' + JSON.stringify(response.data.hints));
 						} else {
-							$log.append('<br><span style="color:red;">❌ Error:</span> ' + response.data.message);
+							$log.append('<br><span style="color:red;">❌ Primary Error:</span> ' + response.data.message);
 						}
-						$btn.prop('disabled', false).text('Test AI Connection');
+						$btn.prop('disabled', false).text('Test Primary AI');
+					});
+				});
+				
+				$('#test-fallback-ai').click(function() {
+					var $btn = $(this);
+					var $log = $('#scraper-log');
+					$btn.prop('disabled', true).text('Testing...');
+					$log.show().html('Testing Fallback AI connection with model: ' + $('input[name="wordle_hint_ai_model_fallback"]').val() + '...');
+					
+					$.post(ajaxurl, {
+						action: 'test_wordle_fallback_ai',
+						nonce: '<?php echo wp_create_nonce("wordle_test_fallback_nonce"); ?>'
+					}, function(response) {
+						if (response.success) {
+							$log.append('<br><span style="color:green;">✔ Fallback Success!</span> AI hints generated: ' + JSON.stringify(response.data.hints));
+						} else {
+							$log.append('<br><span style="color:red;">❌ Fallback Error:</span> ' + response.data.message);
+						}
+						$btn.prop('disabled', false).text('Test Fallback AI');
 					});
 				});
 			});
@@ -364,6 +384,24 @@ add_action( 'wp_ajax_test_wordle_ai', function() {
 
 	$test_word = 'APPLE';
 	$hints = Wordle_AI::generate_hints( $test_word );
+
+	if ( is_wp_error( $hints ) ) {
+		wp_send_json_error( array( 'message' => $hints->get_error_message() ) );
+	} else {
+		wp_send_json_success( array( 'hints' => $hints ) );
+	}
+} );
+
+// AJAX handler to test Fallback AI
+add_action( 'wp_ajax_test_wordle_fallback_ai', function() {
+	check_ajax_referer( 'wordle_test_fallback_nonce', 'nonce' );
+	
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+	}
+
+	$test_word = 'GRAPE';
+	$hints = Wordle_AI::test_fallback_connection( $test_word );
 
 	if ( is_wp_error( $hints ) ) {
 		wp_send_json_error( array( 'message' => $hints->get_error_message() ) );

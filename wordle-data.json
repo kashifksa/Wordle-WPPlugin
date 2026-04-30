@@ -1,17 +1,4 @@
 {
-    "2026-04-26": {
-        "date": "2026-04-26",
-        "number": 1772,
-        "word": "GLOSS",
-        "vowels": 1,
-        "starts_with": "G",
-        "hints": {
-            "vague": "The word starts with the letter G.",
-            "category": "It has 5 letters.",
-            "specific": "The word ends with the letter S.",
-            "final": "It is a common 5-letter English word."
-        }
-    },
     "2026-04-27": {
         "date": "2026-04-27",
         "number": 1773,
@@ -19,10 +6,10 @@
         "vowels": 4,
         "starts_with": "E",
         "hints": {
-            "vague": "A quality often associated with spooky settings",
-            "category": "Something you might find in a list of horror movie plots",
-            "specific": "A characteristic of a place where something supernatural is said to occur",
-            "final": "You might hear this word used to describe a creepy abandoned mansion"
+            "vague": "Mysterious presence",
+            "category": "A quality of a haunted mansion",
+            "specific": "Frighteningly unsettling atmosphere",
+            "final": "Something that chills the spine"
         }
     },
     "2026-04-28": {
@@ -32,10 +19,10 @@
         "vowels": 2,
         "starts_with": "Q",
         "hints": {
-            "vague": "Something you might find coming from a bird's beak.",
-            "category": "Associated with a type of entertainment often found at circuses and zoos.",
-            "specific": "This sound is made when a duck is on the ground or in the air, and its pitch can change depending on its mood.",
-            "final": "If you can imagine the sharp, loud noise a specific waterfowl makes, this word should come to you."
+            "vague": "Sounds associated with waterfowl.",
+            "category": "Found in nature, often near ponds.",
+            "specific": "This vocalization is often heard in early morning hours.",
+            "final": "A common call made by a certain water-dwelling bird before dawn."
         }
     },
     "2026-04-29": {
@@ -71,10 +58,10 @@
         "vowels": 2,
         "starts_with": "P",
         "hints": {
-            "vague": "A delicate yet elegant presence in many artistic expressions.",
-            "category": "A common feature found in certain types of birds and their courtship displays.",
-            "specific": "The ornamental part of a horse's saddle, typically made of feathers and fabric.",
-            "final": "If you're thinking of something that symbolizes both beauty and victory, this might be the one you're looking for."
+            "vague": "Whispers of the past",
+            "category": "Found in an artist's studio",
+            "specific": "Something that's shed, left behind like a shadow",
+            "final": "A delicate reminder of flight"
         }
     },
     "2026-05-02": {
@@ -84,10 +71,10 @@
         "vowels": 1,
         "starts_with": "B",
         "hints": {
-            "vague": "It can be a cause for excitement on certain special days.",
-            "category": "Something you'd find on a 'Gift Registry' before a wedding.",
-            "specific": "Imagine attending a music festival and waiting eagerly for this.",
-            "final": "The first item a bride might receive from her guests on her wedding day, often accompanied by a thoughtful note."
+            "vague": "It can be an action that causes excitement on certain special occasions.",
+            "category": "Something you'd find on a 'Gift Registry' before a wedding or party.",
+            "specific": "Imagine attending a gathering and being asked to contribute something.",
+            "final": "The first thing a host might ask you to do with a gift or a dish."
         }
     },
     "2026-05-03": {
@@ -97,10 +84,10 @@
         "vowels": 1,
         "starts_with": "P",
         "hints": {
-            "vague": "Something you might feel after eating a heavy meal",
-            "category": "A characteristic often associated with a cartoon character's belly",
-            "specific": "A trait commonly found in soft and downy textures",
-            "final": "Imagine holding a feather pillow on a cold winter morning"
+            "vague": "Something you might feel or look like after eating a very heavy meal.",
+            "category": "A characteristic often associated with a cartoon cloud or a marshmallow.",
+            "specific": "A trait commonly found in soft, downy textures and winter jackets.",
+            "final": "Imagine holding a feather pillow or looking at a cumulus cloud."
         }
     },
     "2026-05-04": {
@@ -111,9 +98,9 @@
         "starts_with": "R",
         "hints": {
             "vague": "This word might evoke a feeling of movement or progression.",
-            "category": "People in this word often work in entertainment, performing in front of an audience.",
-            "specific": "In ballet, this word refers to the upward movement from a demi-pli\u00e9.",
-            "final": "You're probably thinking of someone rising to fame, specifically a male pop sensation."
+            "category": "People described by this word often work in entertainment or construction.",
+            "specific": "In architecture or ballet, this word refers to an upward step or movement.",
+            "final": "You're probably thinking of someone rising to fame or a step in a staircase."
         }
     },
     "2026-05-05": {
@@ -123,10 +110,10 @@
         "vowels": 1,
         "starts_with": "L",
         "hints": {
-            "vague": "Something you might hold onto for safety.",
-            "category": "Furniture item often found near a door.",
-            "specific": "A mechanical device used in sailing and other watercraft.",
-            "final": "In a window, it secures the sash in place."
+            "vague": "Something you might hold onto or engage for safety.",
+            "category": "A hardware item often found near a door or a gate.",
+            "specific": "A mechanical device used in sailing, cabinetry, and security.",
+            "final": "In a window or door, it secures the moving part in place."
         }
     },
     "2026-05-06": {
@@ -140,6 +127,19 @@
             "category": "It functions as a verb that highlights similarities.",
             "specific": "Often used in literature to create metaphors or analogies.",
             "final": "To say that something is 'like' something else is to do this."
+        }
+    },
+    "2026-05-07": {
+        "date": "2026-05-07",
+        "number": 1783,
+        "word": "BUDGE",
+        "vowels": 2,
+        "starts_with": "B",
+        "hints": {
+            "vague": "Silent companion to progress",
+            "category": "Something that often occurs after a pause",
+            "specific": "A motion, often accompanied by exertion, to alter one's stance or trajectory",
+            "final": "The action required to get back into a task after taking a break"
         }
     }
 }
