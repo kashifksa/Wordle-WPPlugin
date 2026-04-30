@@ -407,59 +407,106 @@ body.dark-mode .wh-toggle-knob {
     line-height: 1.4;
 }
 
-/* 📱 Mobile Responsiveness (Critical) */
+/* 📱 Mobile Responsiveness (Optimized) */
 @media (max-width: 768px) {
     .wordle-hint-container {
-        padding: 0.6rem 1rem 1.2rem 1rem; /* Tighter padding on mobile */
+        padding: 0.8rem 1rem 1rem 1rem !important;
+        margin: 0.5rem auto !important;
+        width: 96% !important;
+        border-radius: 12px !important;
+    }
+
+    .wh-header {
+        margin-bottom: 0.5rem !important;
+        padding-top: 25px !important;
     }
 
     .wh-main-title {
-        font-size: 22px;
-        text-align: center;
+        font-size: 1.4rem !important;
+        letter-spacing: 0.05em !important;
     }
 
     .wh-meta {
-        font-size: 13px;
-        line-height: 1.4;
-        text-align: center;
-        gap: 0.4rem;
-    }
-
-    .wh-hint-card {
-        padding: 10px;
-    }
-
-    .wh-unlock-btn {
-        width: 100% !important;
-        font-size: 14px !important;
-        padding: 12px !important;
-        max-width: none !important;
-    }
-
-    .wh-grid {
-        gap: 6px;
-    }
-
-    .wh-box {
-        width: 42px;
-        height: 42px;
-    }
-
-    .wh-box-front, .wh-box-back {
-        font-size: 18px;
-        border-width: 2px;
-    }
-
-    .wh-reveal-main-btn {
-        width: 100% !important;
-        padding: 14px !important;
-        font-size: 15px !important;
+        font-size: 0.75rem !important;
+        gap: 0.3rem !important;
+        margin-top: 0.2rem !important;
     }
 
     .wh-theme-toggle {
-        top: 8px;
-        right: 12px;
-        transform: scale(0.9);
+        top: 6px !important;
+        right: 8px !important;
+        transform: scale(0.85) !important;
+    }
+
+    .wh-game-section {
+        margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
+        padding-top: 0.8rem !important;
+    }
+
+    .wh-grid {
+        gap: 6px !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .wh-box {
+        width: 48px !important;
+        height: 48px !important;
+    }
+
+    .wh-box-front, .wh-box-back {
+        font-size: 1.5rem !important;
+        border-width: 2px !important;
+    }
+
+    .wh-reveal-controls {
+        min-height: 100px !important;
+        gap: 0.8rem !important;
+    }
+
+    .wh-reveal-main-btn {
+        padding: 0.9rem 2rem !important;
+        font-size: 1rem !important;
+        width: 100% !important;
+    }
+
+    .wh-post-reveal-actions {
+        gap: 0.8rem !important;
+    }
+
+    .wh-secondary-btn {
+        padding: 0.5rem 1.5rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .wh-hints-section {
+        padding: 0.75rem !important;
+    }
+
+    .wh-section-title {
+        font-size: 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .wh-hint-card {
+        padding: 0.6rem 0.8rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .wh-hint-label {
+        font-size: 0.7rem !important;
+        margin-bottom: 0.2rem !important;
+    }
+
+    .wh-hint-text {
+        font-size: 0.9rem !important;
+    }
+
+    .wh-unlock-btn {
+        padding: 12px 18px !important;
+        font-size: 0.9rem !important;
+        width: 100% !important;
+        max-width: none !important;
     }
 }
 
