@@ -23,6 +23,7 @@ This document outlines the roadmap for upcoming features and optimizations for t
 
 ## 4. Technical Performance & Security
 - [ ] **API Rate Limiting**: Implement basic IP-based rate limiting for REST endpoints using WordPress transients.
+- [x] **Smart Cache-Busting**: Implement versioned JSON fetching (`?v=YYYY-MM-DD`) based on user local date to prevent stale data while maintaining high performance.
 - [ ] **Object Cache Integration**: Utilize `wp_cache_get`/`set` to complement the static JSON cache for even faster API responses.
 - [ ] **Telemetry/Alerting**: (Optional) Send an email notification to the site admin if the daily scraper fails after all retries.
 
