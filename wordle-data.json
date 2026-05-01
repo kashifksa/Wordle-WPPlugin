@@ -1,17 +1,4 @@
 {
-    "2026-04-27": {
-        "date": "2026-04-27",
-        "number": 1773,
-        "word": "EERIE",
-        "vowels": 4,
-        "starts_with": "E",
-        "hints": {
-            "vague": "Mysterious presence",
-            "category": "A quality of a haunted mansion",
-            "specific": "Frighteningly unsettling atmosphere",
-            "final": "Something that chills the spine"
-        }
-    },
     "2026-04-28": {
         "date": "2026-04-28",
         "number": 1774,
@@ -140,6 +127,19 @@
             "category": "Something that often occurs after a pause",
             "specific": "A motion, often accompanied by exertion, to alter one's stance or trajectory",
             "final": "The action required to get back into a task after taking a break"
+        }
+    },
+    "2026-05-08": {
+        "date": "2026-05-08",
+        "number": 1784,
+        "word": "UMBRA",
+        "vowels": 2,
+        "starts_with": "U",
+        "hints": {
+            "vague": "A shadowy figure lurks in the darkness.",
+            "category": "A celestial phenomenon often seen in space exploration.",
+            "specific": "A term used to describe a dark region, void of stars.",
+            "final": "It's what you're left with when light from a star takes a detour around an object"
         }
     }
 }

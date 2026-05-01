@@ -1,21 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. CENTRALIZE DATE LOGIC
-    // 1. CENTRALIZE DATE LOGIC (Robust extraction for non-standard URLs)
-    const dateMatch = window.location.search.match(/[?&]date=(\d{4}-\d{2}-\d{2})/);
-    const testDate = dateMatch ? dateMatch[1] : null;
+    // 1. CENTRALIZE DATE LOGIC (User Browser Time)
+    const params = new URLSearchParams(window.location.search);
+    const testDate = params.get('date');
     
-    // Get user's local date (YYYY-MM-DD)
+    // Get user's local date (YYYY-MM-DD) in their own timezone
     const d = new Date();
     const today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     
     const finalDate = testDate || today;
-
+    
     // 6. DEBUG LOG
-    console.log("FINAL DATE:", finalDate);
+    console.log("Wordle Hint Pro - Target Date:", finalDate);
 
-    const jsonUrl = typeof wordleHintData !== 'undefined' ? wordleHintData.pluginUrl + 'wordle-data.json' : '/wp-content/plugins/wordle-hint-pro/wordle-data.json';
+    const jsonUrl = typeof wordleHintData !== 'undefined' ? wordleHintData.pluginUrl + 'wordle-data.json' : '/wp-content/plugins/WordleHintPro/wordle-data.json';
 
-    fetch(jsonUrl + '?v=' + new Date().getTime())
+    // 2. VERSIONED FETCH (Intelligent Cache Busting)
+    // Using finalDate as version ensures fresh data every day while allowing caching within the day
+    fetch(jsonUrl + '?v=' + finalDate)
         .then(response => {
             if (!response.ok) {
                 throw new Error('JSON cache not found: ' + response.statusText);

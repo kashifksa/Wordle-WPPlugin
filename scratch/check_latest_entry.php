@@ -1,6 +1,19 @@
 <?php
-require_once( 'C:/xampp/htdocs/Wordlehint2/wp-load.php' );
-require_once( 'C:/xampp/htdocs/Wordlehint2/includes/class-wordle-db.php' );
+// Dynamically find wp-load.php
+$path = dirname(__FILE__);
+while ($path !== dirname($path)) {
+    if (file_exists($path . '/wp-load.php')) {
+        require_once($path . '/wp-load.php');
+        break;
+    }
+    $path = dirname($path);
+}
+
+if (!defined('ABSPATH')) {
+    die("Could not find wp-load.php");
+}
+
+require_once( ABSPATH . 'wp-content/plugins/WordleHintPro/includes/class-wordle-db.php' );
 
 global $wpdb;
 $table = Wordle_DB::get_table_name();

@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) {
 }
 
 echo "Generating JSON cache...\n";
-require_once(ABSPATH . 'wp-content/plugins/Wordlehint2/includes/class-wordle-api.php');
-require_once(ABSPATH . 'wp-content/plugins/Wordlehint2/includes/class-wordle-db.php');
+require_once(ABSPATH . 'wp-content/plugins/WordleHintPro/includes/class-wordle-api.php');
+require_once(ABSPATH . 'wp-content/plugins/WordleHintPro/includes/class-wordle-db.php');
 
 $result = Wordle_API::refresh_json_cache();
 if ($result) {
