@@ -1,0 +1,126 @@
+{
+    "meta": {
+        "last_updated": "2026-05-01T12:01:31Z",
+        "plugin": "Wordle Hint Pro",
+        "version": "1.0.1"
+    },
+    "data": {
+        "2026-04-30": {
+            "date": "2026-04-30",
+            "number": 1776,
+            "word": "CROCK",
+            "vowels": 1,
+            "starts_with": "C",
+            "hints": {
+                "vague": "An earthenware pot or jar used for cooking or storage.",
+                "category": "Also used informally to describe something nonsensical or false.",
+                "specific": "You might find one filled with butter or slow-cooking soup.",
+                "final": "Think of a heavy ceramic container or a '____' of lies."
+            }
+        },
+        "2026-05-01": {
+            "date": "2026-05-01",
+            "number": 1777,
+            "word": "PLUME",
+            "vowels": 2,
+            "starts_with": "P",
+            "hints": {
+                "vague": "Whispers of the past",
+                "category": "Found in an artist's studio",
+                "specific": "Something that's shed, left behind like a shadow",
+                "final": "A delicate reminder of flight"
+            }
+        },
+        "2026-05-02": {
+            "date": "2026-05-02",
+            "number": 1778,
+            "word": "BRING",
+            "vowels": 1,
+            "starts_with": "B",
+            "hints": {
+                "vague": "It can be an action that causes excitement on certain special occasions.",
+                "category": "Something you'd find on a 'Gift Registry' before a wedding or party.",
+                "specific": "Imagine attending a gathering and being asked to contribute something.",
+                "final": "The first thing a host might ask you to do with a gift or a dish."
+            }
+        },
+        "2026-05-03": {
+            "date": "2026-05-03",
+            "number": 1779,
+            "word": "PUFFY",
+            "vowels": 1,
+            "starts_with": "P",
+            "hints": {
+                "vague": "Something you might feel or look like after eating a very heavy meal.",
+                "category": "A characteristic often associated with a cartoon cloud or a marshmallow.",
+                "specific": "A trait commonly found in soft, downy textures and winter jackets.",
+                "final": "Imagine holding a feather pillow or looking at a cumulus cloud."
+            }
+        },
+        "2026-05-04": {
+            "date": "2026-05-04",
+            "number": 1780,
+            "word": "RISER",
+            "vowels": 2,
+            "starts_with": "R",
+            "hints": {
+                "vague": "This word might evoke a feeling of movement or progression.",
+                "category": "People described by this word often work in entertainment or construction.",
+                "specific": "In architecture or ballet, this word refers to an upward step or movement.",
+                "final": "You're probably thinking of someone rising to fame or a step in a staircase."
+            }
+        },
+        "2026-05-05": {
+            "date": "2026-05-05",
+            "number": 1781,
+            "word": "LATCH",
+            "vowels": 1,
+            "starts_with": "L",
+            "hints": {
+                "vague": "Something you might hold onto or engage for safety.",
+                "category": "A hardware item often found near a door or a gate.",
+                "specific": "A mechanical device used in sailing, cabinetry, and security.",
+                "final": "In a window or door, it secures the moving part in place."
+            }
+        },
+        "2026-05-06": {
+            "date": "2026-05-06",
+            "number": 1782,
+            "word": "LIKEN",
+            "vowels": 2,
+            "starts_with": "L",
+            "hints": {
+                "vague": "This word is used when you want to compare one thing to another.",
+                "category": "It functions as a verb that highlights similarities.",
+                "specific": "Often used in literature to create metaphors or analogies.",
+                "final": "To say that something is 'like' something else is to do this."
+            }
+        },
+        "2026-05-07": {
+            "date": "2026-05-07",
+            "number": 1783,
+            "word": "BUDGE",
+            "vowels": 2,
+            "starts_with": "B",
+            "hints": {
+                "vague": "Silent companion to progress",
+                "category": "Something that often occurs after a pause",
+                "specific": "A motion, often accompanied by exertion, to alter one's stance or trajectory",
+                "final": "The action required to get back into a task after taking a break"
+            }
+        },
+        "2026-05-08": {
+            "date": "2026-05-08",
+            "number": 1784,
+            "word": "UMBRA",
+            "vowels": 2,
+            "starts_with": "U",
+            "hints": {
+                "vague": "A shadowy figure lurks in the darkness.",
+                "category": "A celestial phenomenon often seen in space exploration.",
+                "specific": "A term used to describe a dark region, void of stars.",
+                "final": "It's what you're left with when light from a star takes a detour around an object"
+            }
+        }
+    }
+}

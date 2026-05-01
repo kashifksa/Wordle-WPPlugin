@@ -16,7 +16,7 @@ class Wordle_API {
 	 * Triggered on 'init' hook.
 	 */
 	public static function maybe_refresh_cache() {
-		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
+		$file_path = WORDLE_HINT_PATH . 'wordle-cache.json';
 		$regenerate = false;
 
 		if ( ! file_exists( $file_path ) ) {
@@ -200,7 +200,7 @@ class Wordle_API {
 			return new WP_REST_Response( array( 'success' => false, 'message' => 'No data received' ), 400 );
 		}
 
-		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
+		$file_path = WORDLE_HINT_PATH . 'wordle-cache.json';
 		$json_content = json_encode( $data, JSON_PRETTY_PRINT );
 
 		if ( file_put_contents( $file_path, $json_content ) !== false ) {
@@ -227,23 +227,20 @@ class Wordle_API {
 		
 		$dates = array();
 		
-		// Cache 3 days in the past
-		for ( $i = 3; $i >= 1; $i-- ) {
-			$date = (clone $now)->modify("-$i days")->format('Y-m-d');
-			$dates[] = $date;
-		}
+		// Yesterday
+		$dates[] = (clone $now)->modify("-1 day")->format('Y-m-d');
 		
-		// Cache today
+		// Today
 		$dates[] = $now->format('Y-m-d');
 		
-		// Cache 7 days in the future
+		// Next 7 days
 		for ( $i = 1; $i <= 7; $i++ ) {
 			$date = (clone $now)->modify("+$i days")->format('Y-m-d');
 			$dates[] = $date;
 		}
 
-		$cache_data = array();
-		foreach ( $dates as $key => $date ) {
+		$puzzles_data = array();
+		foreach ( $dates as $date ) {
 			$puzzle = Wordle_DB::get_puzzle_by_date( $date, $locale );
 			
 			// If missing from DB, try to scrape it now
@@ -253,7 +250,7 @@ class Wordle_API {
 			}
 
 			if ( $puzzle ) {
-				$cache_data[$date] = array(
+				$puzzles_data[$date] = array(
 					'date'        => $puzzle['date'],
 					'number'      => (int) $puzzle['puzzle_number'],
 					'word'        => $puzzle['word'],
@@ -269,14 +266,24 @@ class Wordle_API {
 			}
 		}
 
-		if ( empty( $cache_data ) ) {
+		if ( empty( $puzzles_data ) ) {
 			return false;
 		}
 
-		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
-		$success = file_put_contents( $file_path, json_encode( $cache_data, JSON_PRETTY_PRINT ) );
+		// Standardized structure for future Client plugins
+		$final_output = array(
+			'meta' => array(
+				'last_updated' => gmdate( 'Y-m-d\TH:i:s\Z' ),
+				'plugin'       => 'Wordle Hint Pro',
+				'version'      => WORDLE_HINT_VERSION
+			),
+			'data' => $puzzles_data
+		);
+
+		$file_path = WORDLE_HINT_PATH . 'wordle-cache.json';
+		$success = file_put_contents( $file_path, json_encode( $final_output, JSON_PRETTY_PRINT ) );
 		
-		return $success !== false ? count( $cache_data ) : false;
+		return $success !== false ? count( $puzzles_data ) : false;
 	}
 }
 

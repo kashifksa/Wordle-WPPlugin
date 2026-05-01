@@ -68,6 +68,7 @@ class Wordle_Hint_Pro {
 		register_activation_hook( __FILE__, array( 'Wordle_DB', 'create_table' ) );
 		
 		add_action( 'init', array( $this, 'register_shortcodes' ) );
+		add_action( 'init', array( 'Wordle_Frontend', 'init_seo_hooks' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}
 

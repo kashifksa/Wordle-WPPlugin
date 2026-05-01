@@ -1,46 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. CENTRALIZE DATE LOGIC
+
+    // --- Restore Dark Mode Theme from localStorage ---
+    const savedTheme = localStorage.getItem('wh-theme');
+    if (savedTheme === 'dark') {
+        jQuery('body').addClass('dark-mode');
+    }
+
     // 1. CENTRALIZE DATE LOGIC (User Browser Time)
     const params = new URLSearchParams(window.location.search);
     const testDate = params.get('date');
     
-    // Get user's local date (YYYY-MM-DD) in their own timezone
+    // IMPORTANT: Do NOT use toISOString() — it returns UTC, not user local time.
+    // A user in UTC+5 at 11 PM would get yesterday's UTC date, showing the wrong Wordle.
     const d = new Date();
     const today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     
     const finalDate = testDate || today;
     
-    // 6. DEBUG LOG
     console.log("Wordle Hint Pro - Target Date:", finalDate);
 
-    const jsonUrl = typeof wordleHintData !== 'undefined' ? wordleHintData.pluginUrl + 'wordle-data.json' : '/wp-content/plugins/WordleHintPro/wordle-data.json';
+    const jsonUrl = typeof wordleHintData !== 'undefined'
+        ? wordleHintData.pluginUrl + 'wordle-cache.json'
+        : '/wp-content/plugins/WordleHintPro/wordle-cache.json';
 
-    // 2. VERSIONED FETCH (Intelligent Cache Busting)
-    // Using finalDate as version ensures fresh data every day while allowing caching within the day
-    fetch(jsonUrl + '?v=' + finalDate)
+    // 2. VERSIONED FETCH (date-based cache busting: fresh each day, cached within the day)
+    fetch(jsonUrl + '?v=' + today)
         .then(response => {
             if (!response.ok) {
                 throw new Error('JSON cache not found: ' + response.statusText);
             }
             return response.json();
         })
-        .then(data => {
-            // 3. DATA SELECTION
-            const entry = data[finalDate];
+        .then(json => {
+            // 3. DATA SELECTION — access via standardized data.data[date] structure
+            const entry = (json.data && json.data[finalDate]) ? json.data[finalDate] : null;
             
-            // 6. DEBUG LOG
-            console.log("ENTRY DATA:", entry);
-
             if (entry) {
-                // 4. UI BINDING
+                console.log("Wordle Hint Pro - Entry Found:", entry);
                 populateUI(entry);
             } else {
-                console.error("No data found for date:", finalDate);
+                console.warn("Wordle Hint Pro - No data available for date:", finalDate);
             }
         })
         .catch(error => {
-            console.error("DATA LOAD ERROR:", error);
-            console.warn("Wordle Hint Pro: JSON cache file (wordle-data.json) not found or inaccessible. Please go to the Admin Panel and click 'Fetch & Save JSON' to generate it.");
+            console.error("Wordle Hint Pro - DATA LOAD ERROR:", error);
         });
 
     function populateUI(data) {
@@ -95,6 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const theme = $body.hasClass('dark-mode') ? 'dark' : 'day';
             localStorage.setItem('wh-theme', theme);
         });
+        
+        // Sync toggle knob visual state with current body class
+        // (dark-mode may already be set from the top-of-page restoration)
+        // CSS handles the knob position via body.dark-mode selector — no JS needed here.
 
         const $grid = $container.find('#wh-answer-grid');
         let word = $grid.attr('data-word') || '';

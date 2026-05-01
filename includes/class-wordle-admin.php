@@ -107,6 +107,24 @@ class Wordle_Admin {
 			</form>
 			
 			<hr>
+			<h2>System Status</h2>
+			<table class="wp-list-table widefat fixed striped">
+				<tr>
+					<td><strong>JSON Cache Status:</strong></td>
+					<td>
+						<?php 
+						$file = WORDLE_HINT_PATH . 'wordle-cache.json';
+						if (file_exists($file)) {
+							echo '✔ Last updated: ' . date('F j, Y, g:i a', filemtime($file));
+						} else {
+							echo '❌ Cache missing. Click "Fetch & Save JSON" below.';
+						}
+						?>
+					</td>
+				</tr>
+			</table>
+
+			<hr>
 			<h2>Actions</h2>
 			<button id="run-scraper-now" class="button button-primary">Run Scraper Now</button>
 			<button id="fetch-save-json" class="button button-primary">Fetch & Save JSON</button>

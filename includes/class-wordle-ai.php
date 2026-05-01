@@ -24,8 +24,17 @@ class Wordle_AI {
 			// Safety Check: Ensure the word isn't in the hints
 			if ( self::is_word_in_hints( $word, $result ) ) {
 				error_log( "Wordle AI Safety: Word '{$word}' found in hints. Retrying after 5s..." );
-				sleep( 5 ); // Give the API a longer moment
-				$result = self::execute_ai_request( $word, $primary_key, $primary_model );
+				sleep( 5 );
+				$retry = self::execute_ai_request( $word, $primary_key, $primary_model );
+
+				// Validate the retry result too before accepting it
+				if ( ! is_wp_error( $retry ) && ! self::is_word_in_hints( $word, $retry ) ) {
+					return $retry;
+				}
+
+				// If retry also contains the word or failed, log it and fall through to fallback
+				error_log( "Wordle AI Safety: Retry also unsafe or failed for '{$word}'. Falling back." );
+				return new WP_Error( 'ai_safety_fail', "AI hints unsafe for word '{$word}' after retry." );
 			}
 			return $result;
 		}
