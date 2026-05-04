@@ -6,52 +6,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Wordle_AI {
 
-	public static function generate_hints( $word ) {
-		// Try Primary AI
+	public static function generate_hints( $word, $engine = 'default' ) {
 		$primary_key   = get_option( 'wordle_hint_ai_api_key' );
 		$primary_model = get_option( 'wordle_hint_ai_model', 'llama-3.1-8b-instant' );
-		
-		$result = self::execute_ai_request( $word, $primary_key, $primary_model );
-		
-		// If Rate Limited, wait 10s and try once more before giving up
-		if ( is_wp_error( $result ) && strpos( $result->get_error_message(), '429' ) !== false ) {
-			error_log( "Wordle AI: Rate limited. Cooling off for 10s..." );
-			sleep( 10 );
-			$result = self::execute_ai_request( $word, $primary_key, $primary_model );
-		}
-
-		if ( ! is_wp_error( $result ) ) {
-			// Safety Check: Ensure the word isn't in the hints
-			if ( self::is_word_in_hints( $word, $result ) ) {
-				error_log( "Wordle AI Safety: Word '{$word}' found in hints. Retrying after 5s..." );
-				sleep( 5 );
-				$retry = self::execute_ai_request( $word, $primary_key, $primary_model );
-
-				// Validate the retry result too before accepting it
-				if ( ! is_wp_error( $retry ) && ! self::is_word_in_hints( $word, $retry ) ) {
-					return $retry;
-				}
-
-				// If retry also contains the word or failed, log it and fall through to fallback
-				error_log( "Wordle AI Safety: Retry also unsafe or failed for '{$word}'. Falling back." );
-				return new WP_Error( 'ai_safety_fail', "AI hints unsafe for word '{$word}' after retry." );
-			}
-			return $result;
-		}
-
-		// Try Fallback AI if primary failed
 		$fallback_key   = get_option( 'wordle_hint_ai_api_key_fallback' );
 		$fallback_model = get_option( 'wordle_hint_ai_model_fallback' );
 
-		if ( $fallback_key ) {
+		$result = new WP_Error( 'init', 'No attempts made' );
+
+		// Try Primary AI if selected or default
+		if ( $engine === 'default' || $engine === 'primary' ) {
+			$result = self::execute_ai_request( $word, $primary_key, $primary_model );
+			
+			// If Rate Limited, wait 10s and try once more before giving up
+			if ( is_wp_error( $result ) && strpos( $result->get_error_message(), '429' ) !== false ) {
+				error_log( "Wordle AI: Rate limited. Cooling off for 10s..." );
+				sleep( 10 );
+				$result = self::execute_ai_request( $word, $primary_key, $primary_model );
+			}
+
+			if ( ! is_wp_error( $result ) ) {
+				// Safety Check: Ensure the word isn't in the hints
+				if ( self::is_word_in_hints( $word, $result ) ) {
+					error_log( "Wordle AI Safety: Word '{$word}' found in hints. Retrying after 5s..." );
+					sleep( 5 );
+					$retry = self::execute_ai_request( $word, $primary_key, $primary_model );
+
+					if ( ! is_wp_error( $retry ) && ! self::is_word_in_hints( $word, $retry ) ) {
+						return $retry;
+					}
+					error_log( "Wordle AI Safety: Retry also unsafe or failed for '{$word}'. Falling back." );
+					$result = new WP_Error( 'ai_safety_fail', "AI hints unsafe for word '{$word}' after retry." );
+				} else {
+					return $result;
+				}
+			}
+			
+			// If we are strictly Primary, return whatever we have (error or result)
+			if ( $engine === 'primary' ) {
+				return $result;
+			}
+		}
+
+		// Try Fallback AI if selected or if primary failed in default mode
+		if ( $engine === 'fallback' || ( $engine === 'default' && $fallback_key ) ) {
 			$fallback_result = self::execute_ai_request( $word, $fallback_key, $fallback_model );
 			if ( ! is_wp_error( $fallback_result ) ) {
 				return $fallback_result;
 			}
-			return new WP_Error( 'ai_all_failed', 'Both Primary and Fallback AI failed. Primary: ' . $result->get_error_message() . ' | Fallback: ' . $fallback_result->get_error_message() );
+			
+			// If both failed in default mode, combine errors
+			if ( $engine === 'default' ) {
+				return new WP_Error( 'ai_all_failed', 'Both Primary and Fallback AI failed. Primary: ' . $result->get_error_message() . ' | Fallback: ' . $fallback_result->get_error_message() );
+			}
+			
+			return $fallback_result;
 		}
 
-		return $result; // Return original primary error if no fallback set
+		return $result; 
 	}
 
 	public static function test_fallback_connection( $word ) {

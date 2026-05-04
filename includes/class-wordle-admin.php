@@ -140,9 +140,24 @@ class Wordle_Admin {
 			<button id="run-scraper-now" class="button button-primary">Run Scraper Now</button>
 			<button id="fetch-save-json" class="button button-primary">Fetch & Save JSON</button>
 			<button id="regenerate-fallbacks" class="button button-secondary">Regenerate Fallback Hints</button>
-			<button id="batch-generate-ai" class="button button-primary" style="background: #2271b1; border-color: #2271b1;">Batch Generate AI Hints (Archive)</button>
 			<button id="test-ai-connection" class="button button-secondary">Test Primary AI</button>
 			<button id="test-fallback-ai" class="button button-secondary">Test Fallback AI</button>
+			<div style="background: #fff; border: 1px solid #ccd0d4; padding: 15px; margin: 20px 0; border-radius: 4px; display: block; max-width: 800px; box-shadow: 0 1px 1px rgba(0,0,0,.04);">
+				<h4 style="margin-top: 0; margin-bottom: 10px; color: #1d2327;">Bulk AI Hint Generator</h4>
+				<span class="description" style="margin-right: 5px;">AI Engine:</span>
+				<select id="batch_ai_engine" style="vertical-align: middle; margin-right: 15px;">
+					<option value="default">Default (Primary + Fallback)</option>
+					<option value="primary">Primary AI Only</option>
+					<option value="fallback">Fallback AI Only</option>
+				</select>
+				
+				<span class="description" style="margin-right: 5px;">Batch Size:</span>
+				<input type="number" id="batch_size_input" value="10" min="1" max="100" style="width: 70px; height: 30px; vertical-align: middle; margin-right: 15px;" title="Records per batch" />
+				
+				<button id="batch-generate-ai" class="button button-primary" style="background: #2271b1; border-color: #2271b1;">Batch Generate AI Hints (Archive)</button>
+				<button id="stop-batch-ai" class="button button-link-delete" style="display:none; vertical-align: middle; margin-left: 10px;">Stop Generation</button>
+				<p class="description" style="margin-top: 10px; margin-bottom: 0;">Processes records missing hints in chunks. Recommended: 10-20 for stability.</p>
+			</div>
 			<div id="scraper-log" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; display:none;"></div>
 			
 			<script>
@@ -322,40 +337,71 @@ class Wordle_Admin {
 				});
 
 				// Batch AI Generation
+				var isBatchRunning = false;
+
+				$('#stop-batch-ai').click(function() {
+					isBatchRunning = false;
+					$(this).hide();
+					$('#batch-generate-ai').prop('disabled', false).text('Batch Generate AI Hints (Archive)');
+					$('#scraper-log').append('<span style="color:red;"><strong>✔ Generation stopped by user.</strong></span><br>');
+				});
+
 				$('#batch-generate-ai').click(function() {
 					if (!confirm('This will call the AI for all records missing hints. Depending on your archive size, this may take a while. Continue?')) return;
 					
+					isBatchRunning = true;
 					var $btn = $(this);
 					var $log = $('#scraper-log');
+					var $stopBtn = $('#stop-batch-ai');
+
 					$btn.prop('disabled', true).text('Processing Batch...');
+					$stopBtn.show();
 					$log.show().html('<strong>Starting Batch AI Generation...</strong><br>');
 
 					function processNextBatch() {
+						if (!isBatchRunning) return;
+
 						$.ajax({
 							url: ajaxurl,
 							type: 'POST',
 							data: {
 								action: 'batch_generate_ai_hints',
-								nonce: '<?php echo wp_create_nonce("wordle_batch_ai_nonce"); ?>'
+								nonce: '<?php echo wp_create_nonce("wordle_batch_ai_nonce"); ?>',
+								batch_size: $('#batch_size_input').val(),
+								engine: $('#batch_ai_engine').val()
 							},
 							success: function(response) {
+								if (!isBatchRunning) return;
+
 								if (response.success) {
 									$log.append(response.data.message + '<br>');
 									$log.scrollTop($log[0].scrollHeight);
 									
 									if (response.data.remaining > 0) {
-										processNextBatch(); // Recursively call for next batch
+										if (response.data.paused) {
+											$log.append('<span style="color:orange;">⚠ Batch paused to avoid rate limits. Resuming in 30 seconds...</span><br>');
+											setTimeout(processNextBatch, 30000); // 30s delay if paused
+										} else if (parseInt(response.data.processed) === 0 && parseInt(response.data.errors) > 0) {
+											$log.append('<span style="color:red;">❌ Multiple failures. Stopping to prevent loop. Please check your API keys or quota.</span><br>');
+											$btn.prop('disabled', false).text('Batch Generate AI Hints (Archive)');
+											$stopBtn.hide();
+										} else {
+											processNextBatch(); // Recursively call for next batch
+										}
 									} else {
 										$log.append('<strong>✔ All AI hints generated successfully!</strong>');
 										$btn.prop('disabled', false).text('Batch Generate AI Hints (Archive)');
+										$stopBtn.hide();
 										$('#fetch-save-json').click(); // Final cache refresh
 									}
 								} else {
 									$log.append('<span style="color:red;">❌ Error: ' + response.data.message + '</span><br>');
 									$btn.prop('disabled', false).text('Batch Generate AI Hints (Archive)');
+									$stopBtn.hide();
 								}
 							},
 							error: function() {
+								if (!isBatchRunning) return;
 								$log.append('<span style="color:red;">❌ Connection error. Retrying in 5 seconds...</span><br>');
 								setTimeout(processNextBatch, 5000);
 							}
@@ -625,8 +671,8 @@ add_action( 'wp_ajax_batch_generate_ai_hints', function() {
 	global $wpdb;
 	$table = Wordle_DB::get_table_name();
 	
-	// How many to process per request
-	$batch_size = 5; 
+	// How many to process per request (default 5, max 100)
+	$batch_size = isset($_POST['batch_size']) ? min(100, max(1, intval($_POST['batch_size']))) : 5; 
 
 	// Find records where hints are missing (hint1 is usually the indicator)
 	$missing = $wpdb->get_results( $wpdb->prepare(
@@ -646,16 +692,35 @@ add_action( 'wp_ajax_batch_generate_ai_hints', function() {
 
 	$processed = 0;
 	$errors = 0;
+	$consecutive_errors = 0;
+	$engine = isset($_POST['engine']) ? sanitize_text_field($_POST['engine']) : 'default';
 
 	foreach ( $missing as $record ) {
-		$hints = Wordle_AI::generate_hints( $record->word );
+		// Small delay to prevent hitting rate limits too fast (especially for Gemini)
+		if ( $processed > 0 || $errors > 0 ) {
+			sleep( 2 ); 
+		}
+
+		$hints = Wordle_AI::generate_hints( $record->word, $engine );
 
 		if ( ! is_wp_error( $hints ) ) {
 			$wpdb->update( $table, $hints, array( 'id' => $record->id ) );
 			$processed++;
+			$consecutive_errors = 0;
 		} else {
-			// If AI fails, we don't want to get stuck. Log it and move on.
 			$errors++;
+			$consecutive_errors++;
+			error_log( "Wordle Batch AI Error for #{$record->puzzle_number} ({$record->word}): " . $hints->get_error_message() );
+			
+			// If we hit 3 consecutive errors (likely rate limit or API down), stop this batch early
+			if ( $consecutive_errors >= 3 ) {
+				wp_send_json_success( array( 
+					'message'   => "Batch paused due to consecutive errors: " . $hints->get_error_message() . ". ($total_missing remaining)", 
+					'remaining' => $total_missing - $processed,
+					'errors'    => $errors,
+					'paused'    => true
+				) );
+			}
 		}
 	}
 
