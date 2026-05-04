@@ -1,49 +1,10 @@
 {
     "meta": {
-        "last_updated": "2026-05-01T12:01:31Z",
+        "last_updated": "2026-05-04T14:02:12Z",
         "plugin": "Wordle Hint Pro",
         "version": "1.0.1"
     },
     "data": {
-        "2026-04-30": {
-            "date": "2026-04-30",
-            "number": 1776,
-            "word": "CROCK",
-            "vowels": 1,
-            "starts_with": "C",
-            "hints": {
-                "vague": "An earthenware pot or jar used for cooking or storage.",
-                "category": "Also used informally to describe something nonsensical or false.",
-                "specific": "You might find one filled with butter or slow-cooking soup.",
-                "final": "Think of a heavy ceramic container or a '____' of lies."
-            }
-        },
-        "2026-05-01": {
-            "date": "2026-05-01",
-            "number": 1777,
-            "word": "PLUME",
-            "vowels": 2,
-            "starts_with": "P",
-            "hints": {
-                "vague": "Whispers of the past",
-                "category": "Found in an artist's studio",
-                "specific": "Something that's shed, left behind like a shadow",
-                "final": "A delicate reminder of flight"
-            }
-        },
-        "2026-05-02": {
-            "date": "2026-05-02",
-            "number": 1778,
-            "word": "BRING",
-            "vowels": 1,
-            "starts_with": "B",
-            "hints": {
-                "vague": "It can be an action that causes excitement on certain special occasions.",
-                "category": "Something you'd find on a 'Gift Registry' before a wedding or party.",
-                "specific": "Imagine attending a gathering and being asked to contribute something.",
-                "final": "The first thing a host might ask you to do with a gift or a dish."
-            }
-        },
         "2026-05-03": {
             "date": "2026-05-03",
             "number": 1779,
@@ -120,6 +81,45 @@
                 "category": "A celestial phenomenon often seen in space exploration.",
                 "specific": "A term used to describe a dark region, void of stars.",
                 "final": "It's what you're left with when light from a star takes a detour around an object"
+            }
+        },
+        "2026-05-09": {
+            "date": "2026-05-09",
+            "number": 1785,
+            "word": "SATIN",
+            "vowels": 2,
+            "starts_with": "S",
+            "hints": {
+                "vague": "A quiet, peaceful quality found in luxurious fabrics.",
+                "category": "Frequently associated with high-end textiles, especially silk and velvet.",
+                "specific": "Describes the smooth, soft surface of expensive clothing or home furnishings.",
+                "final": "The characteristic feel of fine, high-quality fabric, often prized for its luxurious texture."
+            }
+        },
+        "2026-05-10": {
+            "date": "2026-05-10",
+            "number": 1786,
+            "word": "PARKA",
+            "vowels": 2,
+            "starts_with": "P",
+            "hints": {
+                "vague": "Something to wrap your worries in.",
+                "category": "You'd want it at your favorite winter sport.",
+                "specific": "A layer of protection from the elements.",
+                "final": "An essential for keeping you warm at a snowy festival."
+            }
+        },
+        "2026-05-11": {
+            "date": "2026-05-11",
+            "number": 1787,
+            "word": "NEWLY",
+            "vowels": 1,
+            "starts_with": "N",
+            "hints": {
+                "vague": "A fleeting quality, ever-present yet brief.",
+                "category": "Concepts tied to new beginnings.",
+                "specific": "A condition that accompanies fresh experiences.",
+                "final": "Something that accompanies every new start."
             }
         }
     }

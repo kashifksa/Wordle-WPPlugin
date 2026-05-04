@@ -71,6 +71,17 @@ class Wordle_Admin {
 							</div>
 						</td>
 					</tr>
+					<tr valign="top" style="background: #fff; border-bottom: 1px solid #ddd;">
+						<th scope="row"><h3>Bulk CSV Upload (Archive)</h3></th>
+						<td>
+							<div class="csv-upload-container" style="padding: 10px 0;">
+								<input type="file" id="wordle_csv_file" accept=".csv" />
+								<button type="button" id="upload-wordle-csv" class="button button-secondary">Upload CSV Archive</button>
+								<p class="description">Upload a CSV with headers: Date, Wordle_Number, Answer, Vowel_Count, Consonant_Count, Repeated_Letters, First_Letter</p>
+								<div id="csv-status-msg" style="margin-top: 10px; font-weight: bold;"></div>
+							</div>
+						</td>
+					</tr>
 					<tr valign="top">
 						<th scope="row">Primary AI API Key (Groq/OpenAI/Gemini)</th>
 						<td><input type="password" name="wordle_hint_ai_api_key" value="<?php echo esc_attr( get_option( 'wordle_hint_ai_api_key' ) ); ?>" class="large-text" /></td>
@@ -129,6 +140,7 @@ class Wordle_Admin {
 			<button id="run-scraper-now" class="button button-primary">Run Scraper Now</button>
 			<button id="fetch-save-json" class="button button-primary">Fetch & Save JSON</button>
 			<button id="regenerate-fallbacks" class="button button-secondary">Regenerate Fallback Hints</button>
+			<button id="batch-generate-ai" class="button button-primary" style="background: #2271b1; border-color: #2271b1;">Batch Generate AI Hints (Archive)</button>
 			<button id="test-ai-connection" class="button button-secondary">Test Primary AI</button>
 			<button id="test-fallback-ai" class="button button-secondary">Test Fallback AI</button>
 			<div id="scraper-log" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; display:none;"></div>
@@ -268,6 +280,89 @@ class Wordle_Admin {
 						}
 						$btn.prop('disabled', false).text('Test Fallback AI');
 					});
+				});
+
+				$('#upload-wordle-csv').click(function() {
+					var file_data = $('#wordle_csv_file').prop('files')[0];
+					if (!file_data) {
+						alert('Please select a CSV file.');
+						return;
+					}
+
+					var $btn = $(this);
+					var $status = $('#csv-status-msg');
+					var form_data = new FormData();
+					form_data.append('file', file_data);
+					form_data.append('action', 'upload_wordle_csv');
+					form_data.append('nonce', '<?php echo wp_create_nonce("wordle_csv_nonce"); ?>');
+
+					$btn.prop('disabled', true).text('Uploading...');
+					$status.css('color', 'blue').text('Processing CSV... This may take a moment.');
+
+					$.ajax({
+						url: ajaxurl,
+						type: 'POST',
+						data: form_data,
+						contentType: false,
+						processData: false,
+						success: function(response) {
+							if (response.success) {
+								$status.css('color', 'green').text('✔ ' + response.data.message);
+								$('#fetch-save-json').click(); // Refresh JSON too
+							} else {
+								$status.css('color', 'red').text('❌ ' + response.data.message);
+							}
+							$btn.prop('disabled', false).text('Upload CSV Archive');
+						},
+						error: function() {
+							$status.css('color', 'red').text('❌ Upload failed.');
+							$btn.prop('disabled', false).text('Upload CSV Archive');
+						}
+					});
+				});
+
+				// Batch AI Generation
+				$('#batch-generate-ai').click(function() {
+					if (!confirm('This will call the AI for all records missing hints. Depending on your archive size, this may take a while. Continue?')) return;
+					
+					var $btn = $(this);
+					var $log = $('#scraper-log');
+					$btn.prop('disabled', true).text('Processing Batch...');
+					$log.show().html('<strong>Starting Batch AI Generation...</strong><br>');
+
+					function processNextBatch() {
+						$.ajax({
+							url: ajaxurl,
+							type: 'POST',
+							data: {
+								action: 'batch_generate_ai_hints',
+								nonce: '<?php echo wp_create_nonce("wordle_batch_ai_nonce"); ?>'
+							},
+							success: function(response) {
+								if (response.success) {
+									$log.append(response.data.message + '<br>');
+									$log.scrollTop($log[0].scrollHeight);
+									
+									if (response.data.remaining > 0) {
+										processNextBatch(); // Recursively call for next batch
+									} else {
+										$log.append('<strong>✔ All AI hints generated successfully!</strong>');
+										$btn.prop('disabled', false).text('Batch Generate AI Hints (Archive)');
+										$('#fetch-save-json').click(); // Final cache refresh
+									}
+								} else {
+									$log.append('<span style="color:red;">❌ Error: ' + response.data.message + '</span><br>');
+									$btn.prop('disabled', false).text('Batch Generate AI Hints (Archive)');
+								}
+							},
+							error: function() {
+								$log.append('<span style="color:red;">❌ Connection error. Retrying in 5 seconds...</span><br>');
+								setTimeout(processNextBatch, 5000);
+							}
+						});
+					}
+
+					processNextBatch();
 				});
 			});
 			</script>
@@ -426,4 +521,147 @@ add_action( 'wp_ajax_test_wordle_fallback_ai', function() {
 	} else {
 		wp_send_json_success( array( 'hints' => $hints ) );
 	}
+} );
+
+// AJAX handler for CSV upload
+add_action( 'wp_ajax_upload_wordle_csv', function() {
+	check_ajax_referer( 'wordle_csv_nonce', 'nonce' );
+	
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+	}
+
+	if ( empty( $_FILES['file']['tmp_name'] ) ) {
+		wp_send_json_error( array( 'message' => 'No file uploaded' ) );
+	}
+
+	$file = $_FILES['file']['tmp_name'];
+	$handle = fopen( $file, 'r' );
+	
+	if ( ! $handle ) {
+		wp_send_json_error( array( 'message' => 'Cannot open file' ) );
+	}
+
+	// Read header
+	$header = fgetcsv( $handle );
+	if ( ! $header ) {
+		fclose( $handle );
+		wp_send_json_error( array( 'message' => 'Empty CSV' ) );
+	}
+
+	// Map headers to DB columns
+	// Flexible mapping for different CSV formats
+	$map = array();
+	foreach ( $header as $index => $col ) {
+		// Remove BOM and hidden characters
+		$col = strtolower(preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', trim($col)));
+		
+		if ( $col === 'date' ) $map['date'] = $index;
+		if ( in_array( $col, array( 'wordle_number', 'puzzle_number', 'number', 'puzzlenumber' ) ) ) $map['puzzle_number'] = $index;
+		if ( in_array( $col, array( 'answer', 'word' ) ) ) $map['word'] = $index;
+		if ( in_array( $col, array( 'vowel_count', 'vowels' ) ) ) $map['vowel_count'] = $index;
+		if ( in_array( $col, array( 'consonant_count', 'consonants' ) ) ) $map['consonant_count'] = $index;
+		if ( in_array( $col, array( 'repeated_letters', 'repeated' ) ) ) $map['repeated_letters'] = $index;
+		if ( in_array( $col, array( 'first_letter', 'starts_with' ) ) ) $map['first_letter'] = $index;
+	}
+
+	// Validate minimal mapping
+	if ( ! isset( $map['date'] ) || ! isset( $map['puzzle_number'] ) || ! isset( $map['word'] ) ) {
+		fclose( $handle );
+		$found_headers = implode( ', ', $header );
+		wp_send_json_error( array( 'message' => "Missing required headers. Found: [$found_headers]. Expected: Date, Wordle_Number, Answer" ) );
+	}
+
+	$count_inserted = 0;
+	$count_updated = 0;
+	$errors = 0;
+
+	while ( ( $row = fgetcsv( $handle ) ) !== false ) {
+		if ( empty( $row ) || !isset($row[ $map['word'] ]) || empty( $row[ $map['word'] ] ) ) continue;
+
+		$data = array(
+			'date'          => date('Y-m-d', strtotime(sanitize_text_field( $row[ $map['date'] ] ))),
+			'puzzle_number' => intval( $row[ $map['puzzle_number'] ] ),
+			'word'          => strtoupper( sanitize_text_field( $row[ $map['word'] ] ) ),
+			'entry_source'  => 'csv_archive',
+		);
+
+		// Add optional fields if they exist in CSV
+		if ( isset( $map['vowel_count'] ) ) $data['vowel_count'] = intval( $row[ $map['vowel_count'] ] );
+		if ( isset( $map['consonant_count'] ) ) $data['consonant_count'] = intval( $row[ $map['consonant_count'] ] );
+		if ( isset( $map['repeated_letters'] ) ) $data['repeated_letters'] = sanitize_text_field( $row[ $map['repeated_letters'] ] );
+		if ( isset( $map['first_letter'] ) ) $data['first_letter'] = sanitize_text_field( $row[ $map['first_letter'] ] );
+
+		// Check if exists to track insert vs update
+		global $wpdb;
+		$table = Wordle_DB::get_table_name();
+		$exists = $wpdb->get_var($wpdb->prepare("SELECT id FROM $table WHERE puzzle_number = %d OR date = %s", $data['puzzle_number'], $data['date']));
+
+		$result = Wordle_DB::insert_puzzle( $data );
+		
+		if ( $result !== false ) {
+			if ($exists) $count_updated++;
+			else $count_inserted++;
+		} else {
+			$errors++;
+		}
+	}
+
+	fclose( $handle );
+
+	wp_send_json_success( array( 
+		'message' => "Archive upload complete! New records: $count_inserted | Updated: $count_updated."
+	) );
+} );
+
+// AJAX handler for Batch AI Hint Generation
+add_action( 'wp_ajax_batch_generate_ai_hints', function() {
+	check_ajax_referer( 'wordle_batch_ai_nonce', 'nonce' );
+	
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+	}
+
+	global $wpdb;
+	$table = Wordle_DB::get_table_name();
+	
+	// How many to process per request
+	$batch_size = 5; 
+
+	// Find records where hints are missing (hint1 is usually the indicator)
+	$missing = $wpdb->get_results( $wpdb->prepare(
+		"SELECT id, word, puzzle_number FROM $table WHERE hint1 IS NULL OR hint1 = '' OR hint1 = 'Generating...' LIMIT %d",
+		$batch_size
+	) );
+
+	if ( empty( $missing ) ) {
+		wp_send_json_success( array( 
+			'message'   => 'No records missing hints.', 
+			'remaining' => 0 
+		) );
+	}
+
+	// Get total remaining for progress reporting
+	$total_missing = $wpdb->get_var( "SELECT COUNT(*) FROM $table WHERE hint1 IS NULL OR hint1 = '' OR hint1 = 'Generating...'" );
+
+	$processed = 0;
+	$errors = 0;
+
+	foreach ( $missing as $record ) {
+		$hints = Wordle_AI::generate_hints( $record->word );
+
+		if ( ! is_wp_error( $hints ) ) {
+			$wpdb->update( $table, $hints, array( 'id' => $record->id ) );
+			$processed++;
+		} else {
+			// If AI fails, we don't want to get stuck. Log it and move on.
+			$errors++;
+		}
+	}
+
+	wp_send_json_success( array( 
+		'message'   => "Processed $processed words. ($total_missing remaining)", 
+		'remaining' => $total_missing - $processed,
+		'errors'    => $errors
+	) );
 } );
