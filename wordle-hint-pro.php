@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define constants
-define( 'WORDLE_HINT_VERSION', '1.0.1' );
+define( 'WORDLE_HINT_VERSION', '1.0.6' );
 define( 'WORDLE_HINT_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WORDLE_HINT_URL', plugin_dir_url( __FILE__ ) );
 
@@ -58,6 +58,7 @@ class Wordle_Hint_Pro {
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-api.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-admin.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-frontend.php';
+		require_once WORDLE_HINT_PATH . 'includes/class-wordle-archive.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-scheduler.php';
 	}
 
@@ -78,6 +79,8 @@ class Wordle_Hint_Pro {
 	public function register_shortcodes() {
 		add_shortcode( 'wordle_hints', array( 'Wordle_Frontend', 'render_hints' ) );
 		add_shortcode( 'wordle-hints', array( 'Wordle_Frontend', 'render_hints' ) );
+		add_shortcode( 'wordle_archive', array( 'Wordle_Archive', 'render_archive' ) );
+		add_shortcode( 'wordle-archive', array( 'Wordle_Archive', 'render_archive' ) );
 	}
 
 	/**
@@ -85,7 +88,12 @@ class Wordle_Hint_Pro {
 	 */
 	public function enqueue_assets() {
 		wp_enqueue_style( 'wordle-hint-style', WORDLE_HINT_URL . 'assets/css/style.css', array(), WORDLE_HINT_VERSION );
-		wp_enqueue_script( 'wordle-hint-script', WORDLE_HINT_URL . 'assets/js/script.js', array( 'jquery' ), WORDLE_HINT_VERSION, true );
+		
+		// Use unique handles to avoid conflicts with other plugins
+		wp_enqueue_style( 'wh-flatpickr-css', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css' );
+		wp_enqueue_script( 'wh-flatpickr-js', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js', array(), '4.6.13', true );
+
+		wp_enqueue_script( 'wordle-hint-script', WORDLE_HINT_URL . 'assets/js/script.js', array( 'jquery', 'wh-flatpickr-js' ), WORDLE_HINT_VERSION, true );
 		
 		wp_localize_script( 'wordle-hint-script', 'wordleHintData', array(
 			'apiUrl'    => get_rest_url( null, 'wordle/v1/' ),

@@ -86,4 +86,39 @@ class Wordle_DB {
 			$locale
 		), ARRAY_A );
 	}
+
+	public static function get_paginated_puzzles( $page = 1, $limit = 24, $locale = 'global', $max_date = null ) {
+		global $wpdb;
+		$table_name = self::get_table_name();
+		$offset = ( $page - 1 ) * $limit;
+		
+		$query = "SELECT * FROM $table_name WHERE locale = %s";
+		$params = array( $locale );
+
+		if ( $max_date ) {
+			$query .= " AND date <= %s";
+			$params[] = $max_date;
+		}
+
+		$query .= " ORDER BY date DESC LIMIT %d OFFSET %d";
+		$params[] = $limit;
+		$params[] = $offset;
+
+		return $wpdb->get_results( $wpdb->prepare( $query, $params ), ARRAY_A );
+	}
+
+	public static function get_total_puzzles_count( $locale = 'global', $max_date = null ) {
+		global $wpdb;
+		$table_name = self::get_table_name();
+		
+		$query = "SELECT COUNT(*) FROM $table_name WHERE locale = %s";
+		$params = array( $locale );
+
+		if ( $max_date ) {
+			$query .= " AND date <= %s";
+			$params[] = $max_date;
+		}
+
+		return (int) $wpdb->get_var( $wpdb->prepare( $query, $params ) );
+	}
 }

@@ -200,7 +200,12 @@ class Wordle_Frontend {
 					<div class="wh-meta">
 						<span class="wh-puzzle-num">#<?php echo esc_html( $puzzle['puzzle_number'] ); ?></span>
 						<span class="wh-separator">•</span>
-						<span class="wh-date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
+						<div class="wh-date-nav">
+							<button id="wh-prev-date" class="wh-nav-btn" title="Previous Day">←</button>
+							<span class="wh-date" id="wh-calendar-trigger" title="Click to select date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
+							<input type="text" id="wh-date-picker" style="position:absolute; opacity:0; width:0; height:0; border:none; padding:0; pointer-events:none;" readonly>
+							<button id="wh-next-date" class="wh-nav-btn" title="Next Day">→</button>
+						</div>
 						<span class="wh-separator">•</span>
 						<span class="wh-stat-item">Vowels: <span class="wh-highlight"><?php echo esc_html( $puzzle['vowel_count'] ); ?></span></span>
 						<span class="wh-separator">•</span>

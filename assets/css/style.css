@@ -94,6 +94,69 @@ body.dark-mode {
     font-weight: 800;
 }
 
+/* Date Navigation */
+.wh-date-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: var(--wh-card);
+    padding: 4px 12px;
+    border-radius: 99px;
+    border: 1px solid var(--wh-border);
+}
+
+.wh-nav-btn {
+    background: var(--wh-inner-card) !important;
+    color: var(--wh-text) !important;
+    border: 1px solid var(--wh-border) !important;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 800;
+    transition: all 0.2s ease;
+    padding: 0 !important;
+    line-height: 1;
+}
+
+.wh-nav-btn:hover {
+    background: var(--wordle-yellow) !important;
+    color: #000 !important;
+    border-color: var(--wordle-yellow) !important;
+    transform: scale(1.1);
+}
+
+.wh-nav-btn:active {
+    transform: scale(0.9);
+}
+
+body.dark-mode .wh-nav-btn:hover {
+    color: #000 !important;
+}
+
+.wh-date {
+    min-width: 130px;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 2px 10px;
+    border-radius: 8px;
+}
+
+.wh-date:hover {
+    background-color: var(--wh-inner-card);
+    color: var(--wordle-yellow) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+body.dark-mode .wh-date:hover {
+    background-color: var(--wh-bg);
+}
+
 /* Theme Toggle Pill Switch */
 .wh-theme-toggle {
     width: 50px;
@@ -557,10 +620,236 @@ body.dark-mode .wh-toggle-knob {
     }
 }
 
+/* 📚 Wordle Archive Styles */
+.wordle-archive-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    color: var(--wh-text);
+}
+
+.wh-archive-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.wh-archive-title {
+    font-size: 2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+    color: var(--wh-text);
+}
+
+.wh-archive-subtitle {
+    color: var(--wh-text-muted);
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.wh-archive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.wh-archive-card {
+    background-color: var(--wh-card);
+    border: 1px solid var(--wh-border);
+    border-radius: 12px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.wh-archive-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-color: var(--wordle-yellow);
+}
+
+.wh-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.wh-card-num {
+    font-weight: 800;
+    color: var(--wordle-green);
+    font-size: 1.1rem;
+}
+
+.wh-card-date {
+    font-size: 0.8rem;
+    color: var(--wh-text-muted);
+    font-weight: 600;
+}
+
+.wh-card-body {
+    flex-grow: 1;
+    margin-bottom: 1.2rem;
+}
+
+.wh-card-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+}
+
+.wh-stat {
+    color: var(--wh-text-muted);
+}
+
+.wh-stat strong {
+    color: var(--wh-text);
+}
+
+.wh-card-footer {
+    border-top: 1px solid var(--wh-border);
+    padding-top: 1rem;
+}
+
+.wh-archive-link {
+    display: block;
+    background-color: var(--wh-bg);
+    color: var(--wh-text) !important;
+    border: 1px solid var(--wh-border);
+    text-align: center;
+    padding: 0.6rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.wh-archive-link:hover {
+    background-color: var(--wordle-yellow) !important;
+    color: #000 !important;
+    border-color: var(--wordle-yellow) !important;
+}
+
+/* Pagination */
+.wh-archive-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.wh-pag-btn {
+    background-color: var(--wh-card);
+    border: 1px solid var(--wh-border);
+    color: var(--wh-text) !important;
+    padding: 0.7rem 1.5rem;
+    border-radius: 99px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.wh-pag-btn:hover {
+    background-color: var(--wordle-green);
+    color: white !important;
+    border-color: var(--wordle-green);
+}
+
+.wh-pag-info {
+    color: var(--wh-text-muted);
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .wh-archive-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+    }
+    .wh-archive-card {
+        padding: 0.8rem;
+    }
+    .wh-archive-title {
+        font-size: 1.5rem;
+    }
+}
+
 /* Prevent layout jump on orientation change */
 @media (max-height: 600px) {
     .wordle-hint-container {
         margin: 0.5rem auto;
     }
     .wh-header { margin-bottom: 0.5rem; }
+}
+/* 📅 Premium Flatpickr Theming */
+.flatpickr-calendar.wh-premium-calendar {
+    background: var(--wh-bg);
+    border: 1px solid var(--wh-border);
+    box-shadow: var(--wh-shadow);
+    border-radius: 16px;
+    font-family: 'Inter', sans-serif;
+    padding: 10px;
+    width: 320px;
+    z-index: 999999 !important; /* Ensure it's above everything */
+}
+
+.wh-premium-calendar .flatpickr-months .flatpickr-month {
+    background: transparent;
+    color: var(--wh-text);
+}
+
+.wh-premium-calendar .flatpickr-current-month .flatpickr-monthDropdown-months {
+    font-weight: 700;
+    color: var(--wh-text);
+}
+
+.wh-premium-calendar .flatpickr-weekday {
+    color: var(--wh-text-muted);
+    font-weight: 600;
+}
+
+.wh-premium-calendar .flatpickr-day {
+    color: var(--wh-text);
+    border-radius: 8px;
+    margin: 2px;
+}
+
+.wh-premium-calendar .flatpickr-day:hover {
+    background: var(--wh-card);
+}
+
+.wh-premium-calendar .flatpickr-day.selected {
+    background: var(--wordle-green) !important;
+    border-color: var(--wordle-green) !important;
+    color: white;
+}
+
+.wh-premium-calendar .flatpickr-day.today {
+    border-color: var(--wordle-yellow);
+}
+
+.wh-premium-calendar .flatpickr-day.flatpickr-disabled {
+    color: var(--wh-border);
+    cursor: not-allowed;
+}
+
+.wh-premium-calendar .flatpickr-months .flatpickr-prev-month, 
+.wh-premium-calendar .flatpickr-months .flatpickr-next-month {
+    color: var(--wh-text);
+    fill: var(--wh-text);
+}
+
+/* Dark Mode Overrides for Flatpickr */
+body.dark-mode .wh-premium-calendar {
+    background: #1e1e1f;
+    border-color: #3a3a3c;
+}
+
+body.dark-mode .wh-premium-calendar .flatpickr-day:hover {
+    background: #3a3a3c;
 }

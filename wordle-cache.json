@@ -1,36 +1,10 @@
 {
     "meta": {
-        "last_updated": "2026-05-04T14:02:12Z",
+        "last_updated": "2026-05-06T10:35:07Z",
         "plugin": "Wordle Hint Pro",
-        "version": "1.0.1"
+        "version": "1.0.6"
     },
     "data": {
-        "2026-05-03": {
-            "date": "2026-05-03",
-            "number": 1779,
-            "word": "PUFFY",
-            "vowels": 1,
-            "starts_with": "P",
-            "hints": {
-                "vague": "Something you might feel or look like after eating a very heavy meal.",
-                "category": "A characteristic often associated with a cartoon cloud or a marshmallow.",
-                "specific": "A trait commonly found in soft, downy textures and winter jackets.",
-                "final": "Imagine holding a feather pillow or looking at a cumulus cloud."
-            }
-        },
-        "2026-05-04": {
-            "date": "2026-05-04",
-            "number": 1780,
-            "word": "RISER",
-            "vowels": 2,
-            "starts_with": "R",
-            "hints": {
-                "vague": "This word might evoke a feeling of movement or progression.",
-                "category": "People described by this word often work in entertainment or construction.",
-                "specific": "In architecture or ballet, this word refers to an upward step or movement.",
-                "final": "You're probably thinking of someone rising to fame or a step in a staircase."
-            }
-        },
         "2026-05-05": {
             "date": "2026-05-05",
             "number": 1781,
@@ -120,6 +94,32 @@
                 "category": "Concepts tied to new beginnings.",
                 "specific": "A condition that accompanies fresh experiences.",
                 "final": "Something that accompanies every new start."
+            }
+        },
+        "2026-05-12": {
+            "date": "2026-05-12",
+            "number": 1788,
+            "word": "CLOCK",
+            "vowels": 1,
+            "starts_with": "C",
+            "hints": {
+                "vague": "A silent guardian of time",
+                "category": "Something you might find on a wall",
+                "specific": "A device that measures the passage of time, often with moving parts",
+                "final": "It's what you check when you're running late"
+            }
+        },
+        "2026-05-13": {
+            "date": "2026-05-13",
+            "number": 1789,
+            "word": "DOWDY",
+            "vowels": 1,
+            "starts_with": "D",
+            "hints": {
+                "vague": "Faded beauty",
+                "category": "Something worn by the fashionably timid",
+                "specific": "A style that's unremarkable, yet still recognizable",
+                "final": "An aesthetic that's been around for a while, but hasn't gone out of style"
             }
         }
     }
