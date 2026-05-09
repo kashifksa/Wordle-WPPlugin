@@ -223,6 +223,49 @@ document.addEventListener('DOMContentLoaded', () => {
         $container.find('.wh-stat-item:contains("Vowels") .wh-highlight').text(vowels);
         $container.find('.wh-stat-item:contains("Starts With") .wh-highlight').text(startsWith);
 
+        // Update Difficulty Badge
+        const difficulty = data.difficulty || (data.stats ? data.stats.difficulty : 0);
+        const avgGuesses = data.average_guesses || (data.stats ? data.stats.average_guesses : 0);
+        const $diffBadge = $container.find('.wh-difficulty-badge');
+        
+        if (difficulty > 0) {
+            $diffBadge.show().attr('data-value', difficulty);
+            
+            let diffLabel = 'Moderate';
+            if (difficulty <= 2.2) diffLabel = 'Very Easy';
+            else if (difficulty <= 3.2) diffLabel = 'Moderate';
+            else if (difficulty <= 4.4) diffLabel = 'Hard';
+            else diffLabel = 'Insane';
+            
+            $diffBadge.find('.wh-difficulty-label').text(diffLabel);
+            
+            // Update Distribution Chart
+            const $statsSection = jQuery('#wh-stats-summary');
+            let dist = [];
+            if (typeof data.guess_distribution === 'string' && data.guess_distribution !== '[]') {
+                dist = JSON.parse(data.guess_distribution);
+            } else if (data.stats && data.stats.distribution) {
+                dist = data.stats.distribution;
+            }
+            
+            if (dist && dist.length) {
+                $statsSection.show();
+                $statsSection.find('.wh-stats-avg strong').text(avgGuesses);
+                
+                const $bars = $statsSection.find('.wh-dist-bar');
+                const $pcts = $statsSection.find('.wh-dist-pct');
+                dist.forEach((pct, i) => {
+                    if ($bars[i]) jQuery($bars[i]).css('width', pct + '%');
+                    if ($pcts[i]) jQuery($pcts[i]).text(pct + '%');
+                });
+            } else {
+                $statsSection.hide();
+            }
+        } else {
+            $diffBadge.hide();
+            jQuery('#wh-stats-summary').hide();
+        }
+
         // Update Hint Cards
         $container.find('.wh-hint-card[data-hint="1"] .wh-hint-text').text(h1);
         $container.find('.wh-hint-card[data-hint="2"] .wh-hint-text').text(h2);

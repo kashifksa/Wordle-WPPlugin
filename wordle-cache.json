@@ -1,49 +1,10 @@
 {
     "meta": {
-        "last_updated": "2026-05-06T10:35:07Z",
+        "last_updated": "2026-05-09T12:59:13Z",
         "plugin": "Wordle Hint Pro",
         "version": "1.0.6"
     },
     "data": {
-        "2026-05-05": {
-            "date": "2026-05-05",
-            "number": 1781,
-            "word": "LATCH",
-            "vowels": 1,
-            "starts_with": "L",
-            "hints": {
-                "vague": "Something you might hold onto or engage for safety.",
-                "category": "A hardware item often found near a door or a gate.",
-                "specific": "A mechanical device used in sailing, cabinetry, and security.",
-                "final": "In a window or door, it secures the moving part in place."
-            }
-        },
-        "2026-05-06": {
-            "date": "2026-05-06",
-            "number": 1782,
-            "word": "LIKEN",
-            "vowels": 2,
-            "starts_with": "L",
-            "hints": {
-                "vague": "This word is used when you want to compare one thing to another.",
-                "category": "It functions as a verb that highlights similarities.",
-                "specific": "Often used in literature to create metaphors or analogies.",
-                "final": "To say that something is 'like' something else is to do this."
-            }
-        },
-        "2026-05-07": {
-            "date": "2026-05-07",
-            "number": 1783,
-            "word": "BUDGE",
-            "vowels": 2,
-            "starts_with": "B",
-            "hints": {
-                "vague": "Silent companion to progress",
-                "category": "Something that often occurs after a pause",
-                "specific": "A motion, often accompanied by exertion, to alter one's stance or trajectory",
-                "final": "The action required to get back into a task after taking a break"
-            }
-        },
         "2026-05-08": {
             "date": "2026-05-08",
             "number": 1784,
@@ -55,6 +16,18 @@
                 "category": "A celestial phenomenon often seen in space exploration.",
                 "specific": "A term used to describe a dark region, void of stars.",
                 "final": "It's what you're left with when light from a star takes a detour around an object"
+            },
+            "stats": {
+                "difficulty": 5,
+                "average_guesses": 4.8,
+                "distribution": [
+                    0,
+                    1,
+                    8,
+                    31,
+                    37,
+                    17
+                ]
             }
         },
         "2026-05-09": {
@@ -68,6 +41,18 @@
                 "category": "Frequently associated with high-end textiles, especially silk and velvet.",
                 "specific": "Describes the smooth, soft surface of expensive clothing or home furnishings.",
                 "final": "The characteristic feel of fine, high-quality fabric, often prized for its luxurious texture."
+            },
+            "stats": {
+                "difficulty": 1,
+                "average_guesses": 3.5,
+                "distribution": [
+                    0,
+                    11,
+                    44,
+                    32,
+                    10,
+                    2
+                ]
             }
         },
         "2026-05-10": {
@@ -81,6 +66,11 @@
                 "category": "You'd want it at your favorite winter sport.",
                 "specific": "A layer of protection from the elements.",
                 "final": "An essential for keeping you warm at a snowy festival."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
             }
         },
         "2026-05-11": {
@@ -94,6 +84,11 @@
                 "category": "Concepts tied to new beginnings.",
                 "specific": "A condition that accompanies fresh experiences.",
                 "final": "Something that accompanies every new start."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
             }
         },
         "2026-05-12": {
@@ -107,6 +102,11 @@
                 "category": "Something you might find on a wall",
                 "specific": "A device that measures the passage of time, often with moving parts",
                 "final": "It's what you check when you're running late"
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
             }
         },
         "2026-05-13": {
@@ -120,6 +120,65 @@
                 "category": "Something worn by the fashionably timid",
                 "specific": "A style that's unremarkable, yet still recognizable",
                 "final": "An aesthetic that's been around for a while, but hasn't gone out of style"
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            }
+        },
+        "2026-05-14": {
+            "date": "2026-05-14",
+            "number": 1790,
+            "word": "WAVER",
+            "vowels": 2,
+            "starts_with": "W",
+            "hints": {
+                "vague": "Echoes of the past linger in its presence.",
+                "category": "A feeling experienced when faced with movement or change.",
+                "specific": "A sense of instability or being unsteadfast, particularly in one's actions.",
+                "final": "When you're not sure what's ahead, it's a familiar sensation to feel a slight sway."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            }
+        },
+        "2026-05-15": {
+            "date": "2026-05-15",
+            "number": 1791,
+            "word": "CREED",
+            "vowels": 2,
+            "starts_with": "C",
+            "hints": {
+                "vague": "A foundation laid by individuals of strong conviction.",
+                "category": "A principle or virtue often upheld by communities.",
+                "specific": "Something that embodies and inspires devotion in others.",
+                "final": "A unifying aspect of human identity, often publicly declared."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            }
+        },
+        "2026-05-16": {
+            "date": "2026-05-16",
+            "number": 1792,
+            "word": "MOVER",
+            "vowels": 2,
+            "starts_with": "M",
+            "hints": {
+                "vague": "A gentle breeze on a summer day.",
+                "category": "Something you might see as you watch a parade march by.",
+                "specific": "To change your position in relation to something else is to do this, often involuntarily.",
+                "final": "The act of moving from one spot to another without losing your balance is a hallmark of this."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
             }
         }
     }

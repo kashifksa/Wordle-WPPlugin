@@ -139,6 +139,7 @@ class Wordle_Admin {
 			<h2>Actions</h2>
 			<button id="run-scraper-now" class="button button-primary">Run Scraper Now</button>
 			<button id="fetch-save-json" class="button button-primary">Fetch & Save JSON</button>
+			<button id="backfill-stats" class="button button-secondary" style="background: #6aaa64; color: white; border-color: #5a9a54;">Backfill Missing WordleBot Stats</button>
 			<button id="regenerate-fallbacks" class="button button-secondary">Regenerate Fallback Hints</button>
 			<button id="test-ai-connection" class="button button-secondary">Test Primary AI</button>
 			<button id="test-fallback-ai" class="button button-secondary">Test Fallback AI</button>
@@ -257,6 +258,39 @@ class Wordle_Admin {
 						}
 						$btn.prop('disabled', false).text('Regenerate Fallback Hints');
 					});
+				});
+
+				$('#backfill-stats').click(function() {
+					var $btn = $(this);
+					var $log = $('#scraper-log');
+					
+					if (!confirm('This will fetch WordleBot difficulty stats for all records missing them. Proceed?')) return;
+					
+					$btn.prop('disabled', true).text('Backfilling Stats...');
+					$log.show().html('<strong>Starting WordleBot Stats Backfill...</strong><br>');
+					
+					function runStatsBatch() {
+						$.post(ajaxurl, {
+							action: 'backfill_wordle_stats',
+							nonce: '<?php echo wp_create_nonce("wordle_stats_nonce"); ?>'
+						}, function(response) {
+							if (response.success) {
+								$log.append(response.data.message + '<br>');
+								if (response.data.remaining > 0) {
+									runStatsBatch(); // Recursive call
+								} else {
+									$log.append('<strong>✔ Stats backfill complete!</strong>');
+									$btn.prop('disabled', false).text('Backfill Missing WordleBot Stats');
+									$('#fetch-save-json').click(); // Refresh JSON
+								}
+							} else {
+								$log.append('<br><span style="color:red;">Error:</span> ' + response.data.message);
+								$btn.prop('disabled', false).text('Backfill Missing WordleBot Stats');
+							}
+						});
+					}
+					
+					runStatsBatch();
 				});
 
 				$('#test-ai-connection').click(function() {
@@ -728,5 +762,48 @@ add_action( 'wp_ajax_batch_generate_ai_hints', function() {
 		'message'   => "Processed $processed words. ($total_missing remaining)", 
 		'remaining' => $total_missing - $processed,
 		'errors'    => $errors
+	) );
+} );
+
+// AJAX handler to backfill stats
+add_action( 'wp_ajax_backfill_wordle_stats', function() {
+	check_ajax_referer( 'wordle_stats_nonce', 'nonce' );
+	
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+	}
+
+	global $wpdb;
+	$table = Wordle_DB::get_table_name();
+	$today = current_time( 'Y-m-d' );
+	
+	// Find entries missing difficulty or distribution (Only past puzzles with valid numbers)
+	$missing = $wpdb->get_results( $wpdb->prepare(
+		"SELECT puzzle_number FROM $table WHERE (difficulty IS NULL OR difficulty = 0 OR guess_distribution IS NULL OR guess_distribution = '') AND date <= %s AND puzzle_number > 0 LIMIT 20",
+		$today
+	) );
+	
+	if ( empty( $missing ) ) {
+		wp_send_json_success( array( 'message' => 'No puzzles missing stats.', 'remaining' => 0 ) );
+	}
+
+	$total_missing = $wpdb->get_var( $wpdb->prepare(
+		"SELECT COUNT(*) FROM $table WHERE (difficulty IS NULL OR difficulty = 0 OR guess_distribution IS NULL OR guess_distribution = '') AND date <= %s AND puzzle_number > 0",
+		$today
+	) );
+	
+	$count = 0;
+	foreach ( $missing as $p ) {
+		$stats = Wordle_Scraper::fetch_wordlebot_stats( $p->puzzle_number );
+		if ( $stats ) {
+			$wpdb->update( $table, $stats, array( 'puzzle_number' => $p->puzzle_number ) );
+			$count++;
+		}
+		usleep( 200000 ); // 200ms pause
+	}
+
+	wp_send_json_success( array( 
+		'message'   => "Updated stats for $count puzzles. (" . ( $total_missing - $count ) . " remaining)", 
+		'remaining' => $total_missing - $count 
 	) );
 } );

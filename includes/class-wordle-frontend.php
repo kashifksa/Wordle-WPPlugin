@@ -199,6 +199,20 @@ class Wordle_Frontend {
 					<h1 class="wh-main-title">Today's Wordle Hints</h1>
 					<div class="wh-meta">
 						<span class="wh-puzzle-num">#<?php echo esc_html( $puzzle['puzzle_number'] ); ?></span>
+						<?php 
+						if ( ! empty( $puzzle['difficulty'] ) ) {
+							$diff_val = floatval( $puzzle['difficulty'] );
+							$diff_label = 'Moderate';
+							if ( $diff_val <= 2.2 ) $diff_label = 'Very Easy';
+							elseif ( $diff_val <= 3.2 ) $diff_label = 'Moderate';
+							elseif ( $diff_val <= 4.4 ) $diff_label = 'Hard';
+							else $diff_label = 'Insane';
+							?>
+							<span class="wh-difficulty-badge" data-value="<?php echo esc_attr( $puzzle['difficulty'] ); ?>">
+								<span class="wh-difficulty-dot"></span>
+								<span class="wh-difficulty-label"><?php echo esc_html( $diff_label ); ?></span>
+							</span>
+						<?php } ?>
 						<span class="wh-separator">•</span>
 						<div class="wh-date-nav">
 							<button id="wh-prev-date" class="wh-nav-btn" title="Previous Day">←</button>
@@ -210,6 +224,28 @@ class Wordle_Frontend {
 						<span class="wh-stat-item">Vowels: <span class="wh-highlight"><?php echo esc_html( $puzzle['vowel_count'] ); ?></span></span>
 						<span class="wh-separator">•</span>
 						<span class="wh-stat-item">Starts With: <span class="wh-highlight"><?php echo esc_html( $puzzle['first_letter'] ); ?></span></span>
+					</div>
+				</div>
+
+				<div class="wh-stats-summary" id="wh-stats-summary" style="<?php echo empty( $puzzle['average_guesses'] ) ? 'display:none;' : ''; ?>">
+					<div class="wh-stats-header">
+						<span class="wh-stats-title">Wordle Bot Analytics</span>
+						<span class="wh-stats-avg">Global Avg: <strong><?php echo esc_html( $puzzle['average_guesses'] ); ?></strong> guesses</span>
+					</div>
+					<div class="wh-dist-chart">
+						<?php 
+						$dist = json_decode( $puzzle['guess_distribution'] ?? '[]', true );
+						if ( ! empty( $dist ) ) {
+							foreach ( $dist as $i => $pct ) {
+								$label = $i + 1;
+								echo "<div class='wh-dist-bar-wrapper' title='{$pct}% solved in {$label}'>";
+								echo "<div class='wh-dist-label'>{$label}</div>";
+								echo "<div class='wh-dist-bar-container'><div class='wh-dist-bar' style='width:{$pct}%'></div></div>";
+								echo "<div class='wh-dist-pct'>{$pct}%</div>";
+								echo "</div>";
+							}
+						}
+						?>
 					</div>
 				</div>
 

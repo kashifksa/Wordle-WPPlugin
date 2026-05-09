@@ -71,6 +71,12 @@ class Wordle_Scraper {
 			$data = array_merge( $data, self::generate_fallback_hints( $data['word'] ) );
 		}
 
+		// Try to fetch WordleBot stats for this puzzle
+		$stats = self::fetch_wordlebot_stats( $data['puzzle_number'] );
+		if ( ! is_wp_error( $stats ) && $stats ) {
+			$data = array_merge( $data, $stats );
+		}
+
 		// Save to DB
 		$inserted = Wordle_DB::insert_puzzle( $data );
 		
@@ -80,6 +86,87 @@ class Wordle_Scraper {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Fetch WordleBot statistics from Engaging Data's JS archive.
+	 */
+	public static function fetch_wordlebot_stats( $puzzle_number ) {
+		$url = 'https://engaging-data.com/pages/scripts/wordlebot/wordlepuzzles.js';
+		
+		$response = wp_remote_get( $url, array( 
+			'timeout'    => 20,
+			'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+		) );
+
+		if ( is_wp_error( $response ) ) {
+			error_log( "Wordle Scraper: Failed to fetch stats. " . $response->get_error_message() );
+			return $response;
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+		if ( empty( $body ) ) {
+			return new WP_Error( 'empty_response', 'Failed to fetch WordleBot stats' );
+		}
+
+		// Extract JSON from JS variable: wordlepuzzles = { ... }
+		// Note: The file might not have 'var' or a trailing semicolon.
+		$start = strpos( $body, '{' );
+		if ( $start === false ) {
+			return new WP_Error( 'parse_error', 'Could not find JSON start in JS file' );
+		}
+
+		$json_str = substr( $body, $start );
+		$json_str = rtrim( $json_str, "; \n\r" );
+		
+		$all_stats = json_decode( $json_str, true );
+		if ( empty( $all_stats ) ) {
+			error_log( "Wordle Scraper: JSON decode failed for stats. Error: " . json_last_error_msg() );
+			return new WP_Error( 'json_error', 'Failed to parse stats JSON' );
+		}
+
+		if ( isset( $all_stats[$puzzle_number] ) ) {
+			$p_stats = $all_stats[$puzzle_number];
+			
+			// Engaging Data distribution is in 'individual' array: [p1, p2, p3, p4, p5, p6]
+			// These are percentages. The remainder is "No Solve" (7 tries).
+			$dist = $p_stats['individual'] ?? array();
+			
+			if ( ! empty( $dist ) ) {
+				// Calculate Average Guesses
+				$sum_pct = 0;
+				$weighted_sum = 0;
+				
+				foreach ( $dist as $i => $pct ) {
+					$guesses = $i + 1;
+					$weighted_sum += ( $guesses * $pct );
+					$sum_pct += $pct;
+				}
+				
+				// Handle "No Solve" (assumed to be 7 guesses)
+				$no_solve_pct = 100 - $sum_pct;
+				$weighted_sum += ( 7 * $no_solve_pct );
+				
+				$avg = $weighted_sum / 100;
+				
+				// Calculate a Difficulty Rating (1-5)
+				// Typical Wordle averages: 3.4 (Very Easy) to 4.8 (Very Hard)
+				$difficulty = 1.0;
+				if ( $avg > 0 ) {
+					// Map 3.5 -> 1.0, 4.7 -> 5.0
+					$difficulty = ( ( $avg - 3.5 ) / ( 4.7 - 3.5 ) ) * 4 + 1;
+					$difficulty = max( 1.0, min( 5.0, round( $difficulty, 1 ) ) );
+				}
+
+				return array(
+					'difficulty'         => $difficulty,
+					'average_guesses'    => round( $avg, 2 ),
+					'guess_distribution' => json_encode( $dist ),
+				);
+			}
+		}
+
+		return false;
 	}
 
 	public static function analyze_word( $word ) {

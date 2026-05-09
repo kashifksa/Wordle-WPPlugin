@@ -139,6 +139,11 @@ class Wordle_API {
 				'specific' => $puzzle['hint3'],
 				'final'    => $puzzle['final_hint'],
 			),
+			'stats'       => array(
+				'difficulty'      => floatval( $puzzle['difficulty'] ?? 0 ),
+				'average_guesses' => floatval( $puzzle['average_guesses'] ?? 0 ),
+				'distribution'    => json_decode( $puzzle['guess_distribution'] ?? '[]' ),
+			),
 		), 200 );
 	}
 
@@ -261,6 +266,11 @@ class Wordle_API {
 						'category' => $puzzle['hint2'],
 						'specific' => $puzzle['hint3'],
 						'final'    => $puzzle['final_hint'],
+					),
+					'stats'       => array(
+						'difficulty'      => floatval( $puzzle['difficulty'] ?? 0 ),
+						'average_guesses' => floatval( $puzzle['average_guesses'] ?? 0 ),
+						'distribution'    => json_decode( $puzzle['guess_distribution'] ?? '[]' ),
 					),
 				);
 			}

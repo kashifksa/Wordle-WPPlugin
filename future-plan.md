@@ -43,3 +43,8 @@ This document outlines the roadmap for upcoming features and optimizations for t
 - [ ] **Client Plugin**: Create a lightweight client plugin that fetches data from this main plugin's `wordle-cache.json` endpoint instead of scraping externally.
 - [ ] **CORS Headers**: Add appropriate CORS headers so external client sites can fetch `wordle-cache.json` without browser blocking.
 - [ ] **Client Plugin Auth**: Optionally protect the JSON endpoint with a shared API key for trusted client sites.
+
+## 7. Analytics & Data Enrichment
+- [ ] **WordleBot Statistics**: Enrich the database with historical difficulty ratings, average guesses, and solve distributions.
+- [ ] **Performance Badges**: Display difficulty levels (Easy/Medium/Hard) and "Avg. Guesses" on the frontend hints board.
+- [ ] **Advanced Linguistics**: (Optional) Add more automated metrics like letter frequency scoring or word commonness ratings.
