@@ -162,6 +162,7 @@ class Wordle_Scraper {
 					'difficulty'         => $difficulty,
 					'average_guesses'    => round( $avg, 2 ),
 					'guess_distribution' => json_encode( $dist ),
+					'url'                => 'https://engaging-data.com/wordle-guess-distribution/?p=' . $puzzle_number
 				);
 			}
 		}

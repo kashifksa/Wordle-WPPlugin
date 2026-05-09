@@ -74,7 +74,8 @@ if ( preg_match( '/wordlepuzzles\s*=\s*(\{.*\})/s', $content, $matches ) ) {
                 array(
                     'difficulty'         => $diff,
                     'average_guesses'    => $avg,
-                    'guess_distribution' => json_encode( $dist )
+                    'guess_distribution' => json_encode( $dist ),
+                    'url'                => 'https://engaging-data.com/wordle-guess-distribution/?p=' . $puzzle_num
                 ),
                 array( 'id' => $row->id )
             );
