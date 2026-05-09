@@ -1,6 +1,6 @@
 {
     "meta": {
-        "last_updated": "2026-05-09T12:59:13Z",
+        "last_updated": "2026-05-09T15:58:57Z",
         "plugin": "Wordle Hint Pro",
         "version": "1.0.6"
     },
@@ -19,7 +19,7 @@
             },
             "stats": {
                 "difficulty": 5,
-                "average_guesses": 4.8,
+                "average_guesses": 4.7,
                 "distribution": [
                     0,
                     1,

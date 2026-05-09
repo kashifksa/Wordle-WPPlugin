@@ -221,7 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         $container.find('.wh-puzzle-num').text('#' + puzzleNum);
         $container.find('.wh-stat-item:contains("Vowels") .wh-highlight').text(vowels);
-        $container.find('.wh-stat-item:contains("Starts With") .wh-highlight').text(startsWith);
 
         // Update Difficulty Badge
         const difficulty = data.difficulty || (data.stats ? data.stats.difficulty : 0);

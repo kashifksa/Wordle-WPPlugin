@@ -222,8 +222,6 @@ class Wordle_Frontend {
 						</div>
 						<span class="wh-separator">•</span>
 						<span class="wh-stat-item">Vowels: <span class="wh-highlight"><?php echo esc_html( $puzzle['vowel_count'] ); ?></span></span>
-						<span class="wh-separator">•</span>
-						<span class="wh-stat-item">Starts With: <span class="wh-highlight"><?php echo esc_html( $puzzle['first_letter'] ); ?></span></span>
 					</div>
 				</div>
 
