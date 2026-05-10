@@ -58,6 +58,13 @@ class Wordle_Scraper {
 			return new WP_Error( 'data_missing', 'Crucial Wordle data missing from JSON' );
 		}
 
+		// Check if puzzle already exists in DB
+		$existing = Wordle_DB::get_puzzle_by_date( $data['date'] );
+		
+		if ( $existing && ! empty( $existing['average_guesses'] ) && ! empty( $existing['guess_distribution'] ) ) {
+			return $existing; // Already has stats, no need to update
+		}
+
 		// Analyze word locally
 		$analysis = self::analyze_word( $data['word'] );
 		$data = array_merge( $data, $analysis );
@@ -77,12 +84,12 @@ class Wordle_Scraper {
 			$data = array_merge( $data, $stats );
 		}
 
-		// Save to DB
+		// Save to DB (Insert or Update)
 		$inserted = Wordle_DB::insert_puzzle( $data );
 		
 		if ( ! $inserted ) {
-			error_log( "Wordle Scraper: Duplicate found or DB error, skipping " . $data['puzzle_number'] );
-			return new WP_Error( 'db_error', 'Duplicate found, skipping' );
+			error_log( "Wordle Scraper: DB error, failed to save " . $data['puzzle_number'] );
+			return new WP_Error( 'db_error', 'Failed to save to DB' );
 		}
 
 		return $data;

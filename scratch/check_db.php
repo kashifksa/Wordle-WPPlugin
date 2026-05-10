@@ -1,18 +1,11 @@
 <?php
-// Dynamically find wp-load.php
-$path = dirname(__FILE__);
-while ($path !== dirname($path)) {
-    if (file_exists($path . '/wp-load.php')) {
-        require_once($path . '/wp-load.php');
-        break;
-    }
-    $path = dirname($path);
-}
+require_once( dirname( __FILE__ ) . '/../../../../wp-load.php' );
 global $wpdb;
 $table = $wpdb->prefix . 'wordle_data';
-$results = $wpdb->get_results("SELECT date, word, puzzle_number FROM $table ORDER BY date DESC LIMIT 10");
-
-echo "LAST 10 PUZZLES:\n";
-foreach ($results as $row) {
-    echo $row->date . " | " . $row->word . " (#" . $row->puzzle_number . ")\n";
-}
+$date = '2026-05-08';
+$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE date = %s", $date ), ARRAY_A );
+echo "Date: " . $row['date'] . "\n";
+echo "Word: " . $row['word'] . "\n";
+echo "Avg Guesses: " . $row['average_guesses'] . "\n";
+echo "Distribution: " . $row['guess_distribution'] . "\n";
+echo "Type: " . gettype($row['guess_distribution']) . "\n";

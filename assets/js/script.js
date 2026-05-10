@@ -240,23 +240,48 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Update Distribution Chart
             const $statsSection = jQuery('#wh-stats-summary');
+            const $chart = $statsSection.find('.wh-dist-chart');
             let dist = [];
+            
             if (typeof data.guess_distribution === 'string' && data.guess_distribution !== '[]') {
-                dist = JSON.parse(data.guess_distribution);
+                try { dist = JSON.parse(data.guess_distribution); } catch(e) {}
             } else if (data.stats && data.stats.distribution) {
                 dist = data.stats.distribution;
+            } else if (Array.isArray(data.guess_distribution)) {
+                dist = data.guess_distribution;
             }
             
             if (dist && dist.length) {
                 $statsSection.show();
                 $statsSection.find('.wh-stats-avg strong').text(avgGuesses);
                 
-                const $bars = $statsSection.find('.wh-dist-bar');
-                const $pcts = $statsSection.find('.wh-dist-pct');
-                dist.forEach((pct, i) => {
-                    if ($bars[i]) jQuery($bars[i]).css('width', pct + '%');
-                    if ($pcts[i]) jQuery($pcts[i]).text(pct + '%');
-                });
+                let $bars = $chart.find('.wh-dist-bar');
+                
+                // If bars don't exist (e.g. PHP didn't render them), rebuild them
+                if ($bars.length === 0) {
+                    let chartHtml = '';
+                    dist.forEach((pct, i) => {
+                        const label = i + 1;
+                        chartHtml += `
+                            <div class="wh-dist-bar-wrapper" title="${pct}% solved in ${label}">
+                                <div class="wh-dist-label">${label}</div>
+                                <div class="wh-dist-bar-container">
+                                    <div class="wh-dist-bar" style="width:${pct}%"></div>
+                                </div>
+                                <div class="wh-dist-pct">${pct}%</div>
+                            </div>`;
+                    });
+                    $chart.html(chartHtml);
+                    $bars = $chart.find('.wh-dist-bar');
+                } else {
+                    const $pcts = $chart.find('.wh-dist-pct');
+                    dist.forEach((pct, i) => {
+                        if ($bars[i]) jQuery($bars[i]).css('width', pct + '%');
+                        if ($pcts[i]) jQuery($pcts[i]).text(pct + '%');
+                        // Update wrapper title too
+                        jQuery($bars[i]).closest('.wh-dist-bar-wrapper').attr('title', pct + '% solved in ' + (i+1));
+                    });
+                }
             } else {
                 $statsSection.hide();
             }

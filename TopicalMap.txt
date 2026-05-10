@@ -1,0 +1,735 @@
+
+================================================================
+ENTERPRISE TOPICAL AUTHORITY MAP
+Topic: "Today's Wordle Hints And Answer"
+Role: Semantic SEO Strategist + Knowledge Graph Architect
+================================================================
+
+==============================================================
+SECTION 1: TOPIC DECONSTRUCTION
+==============================================================
+
+CORE CONCEPTS
+- Daily Wordle puzzle solution
+- Progressive hint system (vague to specific)
+- 5-letter word guessing game
+- NYT Games ecosystem
+- Daily puzzle answer reveal
+
+PARENT CATEGORIES
+- Word Games
+- Puzzle Games
+- Daily Brain Teasers
+- NYT Games
+- Online Vocabulary Games
+
+SUBTOPICS
+- Today's Wordle answer
+- Wordle hints without spoilers
+- Wordle clues for today
+- Wordle answer history archive
+- How to play Wordle
+- Wordle strategy and tips
+- Wordle starting words
+- Wordle difficulty analysis
+- Wordle answer patterns
+
+MICROTOPICS
+- First letter clue
+- Last letter clue
+- Vowel count in today's word
+- Repeated letters warning
+- Letter position hints
+- WordleBot difficulty rating
+- Average guesses for today's puzzle
+- Wordle answer by puzzle number
+
+INTENT LAYERS
+- Informational: "What is today's Wordle answer?"
+- Navigational: "NYT Wordle today"
+- Problem-solving: "I'm stuck on Wordle today"
+- Comparative: "Wordle vs Quordle vs Dordle"
+
+USER JOURNEY STAGES
+Stage 1 - Awareness: User discovers Wordle exists
+Stage 2 - Engagement: User plays daily puzzle
+Stage 3 - Frustration: User gets stuck after 3+ attempts
+Stage 4 - Hint-seeking: User searches for clues
+Stage 5 - Solution: User wants the full answer
+Stage 6 - Retention: User bookmarks hint site
+Stage 7 - Community: User shares results, follows archive
+
+INTENT CLASSIFICATION
+- Informational: hints, clues, explanations, strategies
+- Navigational: "Wordle NYT today", "Wordle official site"
+- Transactional: Wordle apps, word game apps (low direct)
+- Comparative: Wordle vs other daily games
+
+COMMERCIAL OPPORTUNITIES
+- Display advertising (high CPM: games/puzzles audience)
+- App recommendations (word game apps)
+- Book affiliates (vocabulary, word puzzle books)
+- Email list building (daily hint newsletter)
+- Wordle-adjacent tools (word solvers, unscramble tools)
+
+==============================================================
+SECTION 2: SEMANTIC EXPANSION
+==============================================================
+
+SEMANTIC KEYWORD CLUSTERS
+
+[A] Core Answer Intent
+- today's wordle answer
+- wordle answer today
+- wordle solution today
+- what is the wordle today
+- wordle word of the day
+- wordle #[number] answer
+- wordle answer [month] [day] [year]
+
+[B] Hint & Clue Intent
+- wordle hints today
+- wordle clues today
+- wordle hint without spoiler
+- wordle help today
+- wordle tip today
+- wordle 3-letter hint
+- wordle starting letter today
+- wordle ends with [letter]
+
+[C] Strategy & How-To
+- best wordle starting words
+- wordle strategy guide
+- how to solve wordle every day
+- wordle in 2 guesses
+- wordle hard mode tips
+- wordle pattern recognition
+- common wordle letters
+
+[D] Archive & History
+- wordle answer archive
+- past wordle answers
+- wordle answer history
+- wordle answer [date]
+- all wordle answers list
+- wordle puzzle number list
+
+[E] Game Comparison
+- wordle vs quordle
+- wordle vs dordle
+- wordle alternatives
+- games like wordle
+- daily word games
+- nyt games wordle
+
+[F] Difficulty & Analytics
+- hardest wordle words
+- easiest wordle ever
+- wordle difficulty rating
+- wordlebot analysis
+- wordle average guesses
+- wordle statistics today
+
+[G] NLP / Contextual Phrases
+- five letter word game
+- guess the word puzzle
+- daily brain teaser word
+- word of the day game
+- new york times word puzzle
+- nyt mini crossword vs wordle
+- vocabulary challenge daily
+
+[H] Related Entities / Brands
+- New York Times Games
+- WordleBot
+- Josh Wardle (creator)
+- Quordle, Dordle, Wordle Unlimited
+- Merriam-Webster (word validation)
+- NYT Spelling Bee
+- Connections NYT
+
+[I] Long-Tail Keywords
+- wordle hints today no spoilers [month] [day]
+- what letters are in today wordle
+- today wordle answer starts with [letter]
+- wordle clue today vowels
+- wordle answer in 3 guesses strategy
+- is wordle the same for everyone
+- can you play old wordle puzzles
+
+[J] Pain Points
+- "I only have 1 guess left wordle"
+- "wordle is too hard today"
+- "I missed yesterday's wordle"
+- "wordle answer already used?"
+- "wordle hard mode stuck"
+
+==============================================================
+SECTION 3: TOPICAL MAP — 30+ CLUSTERS
+==============================================================
+
+--- CLUSTER 1 ---
+Title: Today's Wordle Answer (Date-Stamped)
+Intent: Informational + Navigational
+User Goal: Get the exact answer fast
+Main Entities: Wordle, NYT Games, puzzle date, answer word
+Supporting Entities: puzzle number, WordleBot rating
+Semantic Terms: daily wordle, word of the day, wordle solution
+NLP Keywords: "today's wordle answer", "wordle [date]"
+Internal Links: → Hint page, → Archive, → Strategy guide
+Content Type: Daily updated article (evergreen URL, fresh content)
+Monetization: Display ads, email capture
+
+--- CLUSTER 2 ---
+Title: Today's Wordle Hints (No Spoiler)
+Intent: Informational / Problem-solving
+User Goal: Get unstuck without being fully spoiled
+Main Entities: hint system, letter clues, vowel count
+Supporting Entities: starts-with, ends-with, repeated letters
+Semantic Terms: progressive hints, spoiler-free clues, gentle nudges
+NLP Keywords: "wordle hints today", "wordle clue no spoiler"
+Internal Links: → Answer page, → Strategy guide
+Content Type: Daily hint article with expandable spoiler reveals
+Monetization: High display ad CTR (frustrated users = engaged users)
+
+--- CLUSTER 3 ---
+Title: Wordle Answer History & Archive
+Intent: Informational
+User Goal: Look up past answers, verify patterns
+Main Entities: Archive list, past answers, puzzle numbers
+Supporting Entities: date index, word frequency analysis
+Semantic Terms: historical answers, past puzzles, complete list
+NLP Keywords: "wordle answer archive", "all wordle answers"
+Internal Links: → Daily answer, → Pattern analysis
+Content Type: Database-driven archive page
+Monetization: High pageviews = strong ad revenue
+
+--- CLUSTER 4 ---
+Title: Best Wordle Starting Words
+Intent: Informational + Problem-solving
+User Goal: Maximize first-guess efficiency
+Main Entities: CRANE, ADIEU, STARE, AUDIO, RAISE
+Supporting Entities: letter frequency, vowel coverage
+Semantic Terms: optimal opening, letter distribution, frequency analysis
+NLP Keywords: "best wordle starting word", "wordle first guess"
+Internal Links: → Strategy guide, → Letter frequency page
+Content Type: Evergreen listicle with data table
+Monetization: High organic traffic = strong display ads
+
+--- CLUSTER 5 ---
+Title: Wordle Strategy & How to Win Every Day
+Intent: Informational
+User Goal: Improve solving rate
+Main Entities: strategy patterns, elimination method, hard mode
+Supporting Entities: word lists, common letters, vowel placement
+Semantic Terms: deduction logic, process of elimination, pattern play
+NLP Keywords: "how to win wordle", "wordle tips and tricks"
+Internal Links: → Starting words, → Hard mode guide, → Stats
+Content Type: Long-form evergreen guide
+Monetization: High authority → backlink magnet → ad revenue
+
+--- CLUSTER 6 ---
+Title: Wordle Hard Mode — Tips & Strategy
+Intent: Informational + Problem-solving
+User Goal: Win on hard mode without losing
+Main Entities: hard mode rules, forced letter use, trap words
+Supporting Entities: dangerous word patterns, double-letter traps
+Semantic Terms: hard mode constraint, forced guesses, yellow tile traps
+NLP Keywords: "wordle hard mode tips", "wordle hard mode strategy"
+Internal Links: → Strategy guide, → Hardest words, → Answer page
+Content Type: Focused guide
+Monetization: Niche audience, high engagement
+
+--- CLUSTER 7 ---
+Title: Hardest Wordle Words Ever
+Intent: Informational + Entertainment
+User Goal: Learn trivia, understand difficulty
+Main Entities: CYNIC, VIVID, RUPEE, NYMPH, TRYST
+Supporting Entities: WordleBot scores, average guesses
+Semantic Terms: difficult puzzles, rare letters, low-frequency words
+NLP Keywords: "hardest wordle ever", "most difficult wordle words"
+Internal Links: → Answer archive, → Difficulty analysis
+Content Type: Listicle with data visualization
+Monetization: High shareability → social traffic → ads
+
+--- CLUSTER 8 ---
+Title: Wordle Words with Double Letters
+Intent: Informational + Problem-solving
+User Goal: Handle repeated letter traps
+Main Entities: double-letter words, letter repetition, trap patterns
+Supporting Entities: specific examples (VIVID, PUPPY, MOMMY)
+Semantic Terms: repeated letters, double consonants, letter duplication
+NLP Keywords: "wordle double letters", "wordle repeated letters today"
+Internal Links: → Today's hint, → Hard mode guide
+Content Type: Educational article
+Monetization: Display ads
+
+--- CLUSTER 9 ---
+Title: Wordle vs Quordle — Which is Better?
+Intent: Comparative
+User Goal: Decide which game to play
+Main Entities: Wordle, Quordle, Dordle, NYT Games
+Supporting Entities: difficulty level, time investment, word count
+Semantic Terms: word game comparison, daily puzzle variants
+NLP Keywords: "wordle vs quordle", "quordle vs wordle difficulty"
+Internal Links: → Wordle guide, → Daily games hub
+Content Type: Comparison article
+Monetization: App affiliate links, display ads
+
+--- CLUSTER 10 ---
+Title: Wordle vs NYT Spelling Bee
+Intent: Comparative
+User Goal: Choose best NYT daily game
+Main Entities: Wordle, Spelling Bee, NYT Games
+Supporting Entities: skill requirements, time to play
+NLP Keywords: "wordle vs spelling bee", "nyt games comparison"
+Internal Links: → NYT Games hub, → Wordle guide
+Content Type: Comparison article
+Monetization: Display ads
+
+--- CLUSTER 11 ---
+Title: Is Wordle the Same Word for Everyone?
+Intent: Informational / FAQ
+User Goal: Understand if Wordle is universal
+Main Entities: NYT global server, daily sync, timezone
+Supporting Entities: puzzle release time, EST rollover
+Semantic Terms: universal word game, shared daily puzzle
+NLP Keywords: "is wordle same for everyone", "wordle daily word global"
+Internal Links: → How Wordle works, → Today's answer
+Content Type: FAQ article
+Monetization: Display ads (quick-hit traffic)
+
+--- CLUSTER 12 ---
+Title: What Time Does Wordle Reset / Update?
+Intent: Informational / Navigational
+User Goal: Know when new puzzle drops
+Main Entities: midnight EST, NYT servers, puzzle refresh
+Supporting Entities: timezone converter, local reset time
+NLP Keywords: "what time does wordle reset", "when does wordle update"
+Internal Links: → Today's answer, → Timer tool
+Content Type: FAQ + dynamic timer
+Monetization: Return traffic driver
+
+--- CLUSTER 13 ---
+Title: Wordle Letter Frequency Analysis
+Intent: Informational + Data
+User Goal: Understand which letters appear most
+Main Entities: E, A, R, S, T frequency data, vowel distribution
+Supporting Entities: consonant frequency, positional letter analysis
+Semantic Terms: letter distribution, frequency map, positional data
+NLP Keywords: "most common wordle letters", "wordle letter frequency"
+Internal Links: → Starting words, → Strategy guide
+Content Type: Data article + table/chart
+Monetization: Authority building, backlinks
+
+--- CLUSTER 14 ---
+Title: Wordle Puzzle Number Index
+Intent: Navigational + Informational
+User Goal: Find specific puzzle by number
+Main Entities: puzzle #1 to present, date mapping
+Supporting Entities: launch date June 19 2021, archive
+NLP Keywords: "wordle puzzle #[number]", "wordle #1000 answer"
+Internal Links: → Archive, → Daily answer
+Content Type: Indexed database page
+Monetization: Long-tail search traffic
+
+--- CLUSTER 15 ---
+Title: How to Play Wordle — Beginner's Guide
+Intent: Informational
+User Goal: Learn the rules from scratch
+Main Entities: game rules, color tiles, green/yellow/gray
+Supporting Entities: keyboard interface, 6 guess limit
+Semantic Terms: wordle tutorial, word game rules, color feedback
+NLP Keywords: "how to play wordle", "wordle rules explained"
+Internal Links: → Strategy guide, → Starting words
+Content Type: Illustrated how-to guide
+Monetization: Entry point for new users → high retention
+
+--- CLUSTER 16 ---
+Title: Wordle Color Codes Explained (Green, Yellow, Gray)
+Intent: Informational
+User Goal: Understand what tile colors mean
+Main Entities: green tile, yellow tile, gray tile, feedback system
+Supporting Entities: letter position, elimination logic
+NLP Keywords: "wordle colors meaning", "what do wordle colors mean"
+Internal Links: → How to play, → Strategy guide
+Content Type: Visual explainer
+Monetization: Entry-level traffic
+
+--- CLUSTER 17 ---
+Title: Can You Play Old Wordle Puzzles?
+Intent: Informational + Problem-solving
+User Goal: Replay missed puzzles
+Main Entities: Wordle archive, NYT archive mode, unlimited Wordle
+Supporting Entities: third-party replay tools
+NLP Keywords: "play old wordle puzzles", "wordle archive play"
+Internal Links: → Archive page, → Wordle alternatives
+Content Type: Guide + tool recommendation
+Monetization: App/tool affiliate potential
+
+--- CLUSTER 18 ---
+Title: WordleBot Analysis — What is It?
+Intent: Informational
+User Goal: Understand NYT's AI solver tool
+Main Entities: WordleBot, NYT AI, difficulty rating, guess tree
+Supporting Entities: average guesses, lucky vs skill rating
+NLP Keywords: "what is wordlebot", "wordlebot analysis today"
+Internal Links: → Difficulty page, → Today's answer
+Content Type: Explainer article
+Monetization: Authority + engagement
+
+--- CLUSTER 19 ---
+Title: Today's Wordle Difficulty Rating
+Intent: Informational + Data
+User Goal: Know how hard today's puzzle is
+Main Entities: difficulty score, average guesses, WordleBot rating
+Supporting Entities: rare letter patterns, double letters
+NLP Keywords: "how hard is today wordle", "wordle difficulty today"
+Internal Links: → Today's hints, → WordleBot explainer
+Content Type: Daily updated data card
+Monetization: Repeat traffic, display ads
+
+--- CLUSTER 20 ---
+Title: Wordle Winning Streak — How to Keep It
+Intent: Informational + Problem-solving
+User Goal: Maintain streak without losing
+Main Entities: streak counter, streak protection, hint system
+Supporting Entities: backup strategy, hint-seeking behavior
+NLP Keywords: "wordle streak tips", "how to keep wordle streak"
+Internal Links: → Strategy guide, → Today's hints
+Content Type: Motivational guide
+Monetization: Email capture (daily reminder service)
+
+--- CLUSTER 21 ---
+Title: Words with No Vowels — Wordle Special Cases
+Intent: Informational
+User Goal: Handle unusual no-vowel words
+Main Entities: CRWTH, GLYPH, NYMPH, TRYST
+Supporting Entities: Y as vowel, consonant clusters
+NLP Keywords: "wordle no vowels", "five letter words no vowels"
+Internal Links: → Double letter page, → Hard mode guide
+Content Type: Educational + list article
+Monetization: Niche engagement
+
+--- CLUSTER 22 ---
+Title: Wordle Answer Starts With [Letter] — Full Guide
+Intent: Informational + Long-tail
+User Goal: Find answer from first letter hint
+Main Entities: letter-indexed word lists, alphabet filter
+Supporting Entities: 5-letter words by starting letter
+NLP Keywords: "wordle answer starts with S", "wordle starts with C"
+Internal Links: → Archive, → Today's answer
+Content Type: Parameterized guide (26 variations)
+Monetization: Massive long-tail traffic volume
+
+--- CLUSTER 23 ---
+Title: Five-Letter Words Ending in [Letter]
+Intent: Informational + Tool-driven
+User Goal: Narrow down possible answers
+Main Entities: word list, ending pattern, dictionary reference
+Supporting Entities: Merriam-Webster, Scrabble word lists
+NLP Keywords: "5 letter words ending in E", "wordle word ends with"
+Internal Links: → Today's hints, → Word finder tool
+Content Type: Parameterized word list (26 variations)
+Monetization: High search volume long-tail
+
+--- CLUSTER 24 ---
+Title: Wordle Alternatives — Best Daily Word Games
+Intent: Comparative + Informational
+User Goal: Find other games like Wordle
+Main Entities: Quordle, Dordle, Absurdle, Worldle, Heardle
+Supporting Entities: difficulty, format, daily frequency
+NLP Keywords: "games like wordle", "best wordle alternatives"
+Internal Links: → Wordle guide, → Comparison articles
+Content Type: Evergreen alternatives listicle
+Monetization: App affiliates, display ads
+
+--- CLUSTER 25 ---
+Title: Wordle for Kids — Easier Versions
+Intent: Informational + Commercial
+User Goal: Find child-appropriate versions
+Main Entities: Wordle Jr, child-friendly games, simpler word lists
+Supporting Entities: educational value, vocabulary building
+NLP Keywords: "wordle for kids", "easy wordle for children"
+Internal Links: → How to play, → Alternatives
+Content Type: Parent-focused guide
+Monetization: App affiliates, educational product ads
+
+--- CLUSTER 26 ---
+Title: Wordle Without NYT Account — How to Play Free
+Intent: Informational + Navigational
+User Goal: Play without subscription
+Main Entities: free access, NYT paywall, no-login play
+Supporting Entities: alternative sites, offline options
+NLP Keywords: "wordle free no account", "play wordle without nyt"
+Internal Links: → Alternatives, → How to play
+Content Type: FAQ + guide
+Monetization: Alternative app recommendations
+
+--- CLUSTER 27 ---
+Title: Wordle Statistics — Tracking Your Performance
+Intent: Informational
+User Goal: Understand their win rate and stats
+Main Entities: win %, current streak, guess distribution
+Supporting Entities: browser storage, NYT account sync
+NLP Keywords: "wordle stats", "wordle win percentage"
+Internal Links: → Strategy guide, → Hard mode tips
+Content Type: Guide + tracker tool
+Monetization: Engagement, return visits
+
+--- CLUSTER 28 ---
+Title: How Josh Wardle Created Wordle
+Intent: Informational + Brand Story
+User Goal: Learn the history and origin
+Main Entities: Josh Wardle, 2021 launch, NYT acquisition
+Supporting Entities: viral growth, social sharing, game design
+NLP Keywords: "who created wordle", "wordle history origin"
+Internal Links: → How to play, → NYT games hub
+Content Type: Brand story article
+Monetization: Authority building, backlinks
+
+--- CLUSTER 29 ---
+Title: Wordle Share Results — How the Emoji Grid Works
+Intent: Informational
+User Goal: Understand social sharing feature
+Main Entities: emoji grid, spoiler-free sharing, Twitter/X sharing
+Supporting Entities: green/yellow/black squares, share button
+NLP Keywords: "wordle share results", "wordle emoji grid meaning"
+Internal Links: → How to play, → Today's answer
+Content Type: Social engagement guide
+Monetization: Viral sharing → traffic spikes
+
+--- CLUSTER 30 ---
+Title: Daily Wordle Reminder — Never Miss a Puzzle
+Intent: Transactional + Utility
+User Goal: Set up reminders for daily play
+Main Entities: email newsletter, browser notifications, daily alert
+Supporting Entities: streak maintenance, habit formation
+NLP Keywords: "wordle daily reminder", "wordle notification"
+Internal Links: → Streak tips, → Today's answer
+Content Type: Utility + subscription page
+Monetization: Email list building → newsletter ads
+
+--- CLUSTER 31 ---
+Title: Wordle Accessibility — Playing with Colorblind Mode
+Intent: Informational + Inclusive
+User Goal: Use high-contrast mode effectively
+Main Entities: colorblind mode, NYT accessibility, orange/blue tiles
+Supporting Entities: visual accessibility, contrast settings
+NLP Keywords: "wordle colorblind mode", "wordle accessibility"
+Internal Links: → How to play, → Settings guide
+Content Type: Accessibility guide
+Monetization: Inclusive audience expansion
+
+--- CLUSTER 32 ---
+Title: Wordle Answer Pattern Analysis — Vowel-Heavy vs Consonant
+Intent: Informational + Data
+User Goal: Identify answer word patterns
+Main Entities: vowel-heavy words, consonant clusters, NYT patterns
+Supporting Entities: word frequency database, linguistic analysis
+NLP Keywords: "wordle word patterns", "wordle vowel analysis"
+Internal Links: → Letter frequency, → Starting words
+Content Type: Data-driven analysis
+Monetization: Authority + backlinks
+
+--- CLUSTER 33 ---
+Title: Monthly Wordle Answer Roundup
+Intent: Informational + Archive
+User Goal: Review all answers from a given month
+Main Entities: monthly archive, pattern trends, difficulty distribution
+Supporting Entities: rare word list, common words used
+NLP Keywords: "wordle answers [month] [year]", "all wordle answers May 2025"
+Internal Links: → Archive, → Daily answers
+Content Type: Monthly roundup
+Monetization: Long-tail date-based traffic
+
+--- CLUSTER 34 ---
+Title: Wordle Spoiler Policy — How We Reveal Hints
+Intent: Informational + Trust
+User Goal: Understand the site's hint philosophy
+Main Entities: spoiler protection, progressive reveal, user consent
+Supporting Entities: expandable sections, hint tiers
+NLP Keywords: "wordle hints no spoiler", "wordle answer spoiler free"
+Internal Links: → Today's hints, → About page
+Content Type: Trust-building editorial policy
+Monetization: Indirect (trust → return visits → ads)
+
+==============================================================
+SECTION 4: SEMANTIC GRAPH — RELATIONSHIP TABLE
+==============================================================
+
+Parent Topic           | Child Topic                    | Relationship     | Connection                        | Link Direction
+-----------------------|--------------------------------|------------------|-----------------------------------|------------------
+Wordle (Game)          | Today's Answer                 | IS-A             | Core daily output of game         | Pillar → Cluster
+Wordle (Game)          | Hint System                    | HAS-A            | Feature of puzzle help ecosystem  | Pillar → Cluster
+Wordle (Game)          | Game Rules                     | DEFINED-BY       | Foundation of how game works      | Pillar → Supporting
+Wordle (Game)          | NYT Games                      | PART-OF          | Acquired by NYT in 2022           | Pillar → Authority Hub
+Today's Answer         | Date-Stamped Article           | INSTANCE-OF      | Each day produces one answer      | Cluster → Supporting
+Today's Answer         | Puzzle Number                  | IDENTIFIED-BY    | Each answer has unique #          | Cluster → Archive
+Hint System            | Progressive Hint Tiers         | CONTAINS         | Vague → Specific hints            | Cluster → Supporting
+Hint System            | Spoiler-Free Design            | GOVERNED-BY      | Editorial policy for hints        | Cluster → Supporting
+Letter Analysis        | Vowel Count                    | COMPONENT-OF     | Analytical sub-feature            | Cluster → Supporting
+Letter Analysis        | Starts With / Ends With        | COMPONENT-OF     | Positional letter data            | Cluster → Supporting
+Letter Analysis        | Repeated Letters               | COMPONENT-OF     | Duplicate letter detection        | Cluster → Supporting
+Strategy Guide         | Starting Words                 | INFORMS          | Best first guesses from strategy  | Cluster → Cluster
+Strategy Guide         | Hard Mode Tips                 | EXTENDS          | Advanced version of strategy      | Cluster → Cluster
+Archive                | Monthly Roundup                | AGGREGATES       | Monthly view of archive           | Hub → Cluster
+Archive                | Puzzle Number Index            | INDEXES          | Numeric access to archive         | Hub → Cluster
+WordleBot              | Difficulty Rating              | PRODUCES         | AI analysis of puzzle hardness    | Entity → Data
+WordleBot              | Guess Distribution             | GENERATES        | Statistical breakdown of guesses  | Entity → Data
+NYT Games              | Spelling Bee                   | SIBLING-OF       | Same publisher, different game    | Authority → Comparison
+NYT Games              | Connections                    | SIBLING-OF       | Same publisher, different game    | Authority → Comparison
+Wordle                 | Quordle                        | INSPIRED         | Quordle built on Wordle model     | Pillar → Comparison
+Wordle                 | Dordle                         | INSPIRED         | Dordle = 2 simultaneous Wordles   | Pillar → Comparison
+Josh Wardle            | Wordle Origin Story            | CREATED          | Founder relationship              | Entity → Brand Story
+Merriam-Webster        | Word Validation                | VALIDATES        | Dictionary source for word list   | Entity → Supporting
+
+==============================================================
+SECTION 5: CONTENT SILO ARCHITECTURE
+==============================================================
+
+PILLAR PAGE (Tier 1)
+URL: /wordle-hints-today/
+Title: "Today's Wordle Hints and Answer [Date]"
+Purpose: Primary daily landing page. Updated every 24 hours.
+Content: Progressive hints (H2 sections), answer reveal, letter analysis, difficulty badge, archive nav
+Internal Links OUT: → Archive, → Strategy guide, → Starting words, → How to play
+
+CLUSTER PAGES (Tier 2)
+1. /wordle-answer-archive/ — Full indexed archive
+2. /wordle-strategy-guide/ — Evergreen strategy hub
+3. /wordle-starting-words/ — Optimized first guess guide
+4. /wordle-difficulty-analysis/ — WordleBot data hub
+5. /how-to-play-wordle/ — Beginner onboarding
+6. /wordle-alternatives/ — Comparative games hub
+7. /wordle-letter-frequency/ — Data and analytics hub
+
+SUPPORTING ARTICLES (Tier 3)
+- /wordle-hard-mode-tips/
+- /wordle-double-letters/
+- /wordle-no-vowels/
+- /wordle-colorblind-mode/
+- /wordle-streak-guide/
+- /wordle-color-codes-explained/
+- /who-created-wordle/
+- /wordle-statistics-guide/
+- /wordle-share-results-explained/
+- /play-old-wordle-puzzles/
+- /wordle-for-kids/
+- /wordle-vs-quordle/
+- /wordle-vs-spelling-bee/
+- /five-letter-words-starting-with-[letter]/ (x26)
+- /five-letter-words-ending-with-[letter]/ (x26)
+- /wordle-answers-[month]-[year]/ (monthly)
+
+TOPICAL BRIDGES
+- Strategy Guide ↔ Starting Words (bidirectional, same cluster)
+- Today's Answer ↔ Difficulty Analysis (daily data connection)
+- Archive ↔ Monthly Roundups (aggregation bridge)
+- How to Play ↔ Color Codes Explained (sequential reading path)
+- Alternatives ↔ Comparison Articles (hub-and-spoke)
+
+AUTHORITY HUBS
+- /nyt-games-hub/ — Parent entity hub for all NYT games
+- /daily-word-games/ — Broad category authority page
+- /word-game-strategy/ — Cross-game strategy authority
+
+CRAWL FLOW
+Homepage → Pillar (Today's Answer) → Cluster Pages → Supporting Articles
+All Cluster pages link back to Pillar (Pillar gets deepest crawl equity)
+Archive pages link to individual date articles (flat URL structure preferred)
+
+LINK EQUITY FLOW
+External links land on: Pillar page (most) + Archive (second)
+Pillar distributes equity → Cluster pages
+Cluster pages distribute equity → Supporting articles
+Supporting articles funnel back to → Pillar (loop reinforcement)
+
+TOPICAL REINFORCEMENT LOGIC
+Every supporting article MUST:
+1. Reference "Today's Wordle" by name
+2. Link to the Pillar page
+3. Use at least 3 semantic variants of "wordle hints/answer"
+4. Include entity mentions: NYT, WordleBot, Josh Wardle (where relevant)
+5. End with CTA linking to today's answer or archive
+
+==============================================================
+SECTION 6: GAP ANALYSIS
+==============================================================
+
+MISSING SUBTOPICS (Opportunities)
+1. Wordle answer by puzzle number (parameterized: /wordle-puzzle-[number]/)
+2. Wordle etymology — word origin for each answer
+3. Wordle community stats — Twitter/X sharing trends
+4. Wordle vs Connections strategy crossover
+5. Wordle global variations (UK vs US English words)
+6. Wordle on mobile vs desktop experience differences
+7. Wordle browser extension guide
+8. Family Wordle sessions — multiplayer / group play
+9. Wordle integration in education (classroom use)
+10. AI tools to solve Wordle (vs human solving)
+
+WEAK COMPETITOR COVERAGE AREAS
+- Most competitors: Only provide the answer, no progressive hints
+- Competitor gap: No difficulty rating or WordleBot context
+- Competitor gap: No letter-by-letter analytical breakdown
+- Competitor gap: Poor archive UX (flat lists, not filterable)
+- Competitor gap: No email/notification retention system
+- Competitor gap: No cross-game comparison content
+
+UNDERUSED ENTITIES
+- Josh Wardle (origin story, creator intent)
+- Merriam-Webster (word validation source)
+- Wordle's original open-source history (pre-NYT)
+- NYT Games as a portfolio entity
+- Wordle Academic Research (linguistics studies citing Wordle)
+- Wordle in pop culture (SNL sketches, viral moments)
+
+EMERGING TRENDS
+1. AI-assisted puzzle solving (ChatGPT playing Wordle)
+2. Wordle spinoffs in other languages (Wordle ES, FR, DE)
+3. Accessibility-first gaming content (WCAG compliance)
+4. Voice search optimization: "Hey Siri, what is today's Wordle?"
+5. SGE/AI Overview targeting for featured snippet position
+6. Schema markup for daily puzzle (FAQPage + Article schema)
+7. Wordle as vocabulary learning tool (ESL audience)
+
+INFORMATION GAIN OPPORTUNITIES
+- Add letter-position frequency tables (not just overall frequency)
+- Publish WordleBot-style difficulty forecasts
+- Historical "on this day" wordle trivia
+- Visual word pattern heatmaps
+- Linguistic analysis: etymology of each answer word
+- Guess distribution visualizations per puzzle
+
+EXPANSION RECOMMENDATIONS
+Phase 1 (0-3 months):
+  - Launch 26 "starts with [letter]" pages
+  - Launch 26 "ends with [letter]" pages
+  - Build monthly archive roundup template
+  - Add FAQ schema to all cluster pages
+
+Phase 2 (3-6 months):
+  - Launch cross-language Wordle guides
+  - Build WordleBot comparison data hub
+  - Create Wordle-in-Education resource section
+  - Launch email newsletter (daily answer digest)
+
+Phase 3 (6-12 months):
+  - Authority hub: /nyt-games/ with full NYT game coverage
+  - Launch Wordle stats tracker tool
+  - Build interactive word explorer tool
+  - Publish academic-grade letter frequency research
+
+AUTHORITY SCALING METHODS
+1. Digital PR: Pitch Wordle word-of-year studies to media outlets
+2. Data journalism: Publish annual Wordle difficulty reports
+3. Link building: Create free tools (word finder, pattern matcher)
+4. Social: Daily Twitter/X thread with hints (drives branded search)
+5. Schema: Implement FAQPage, Article, BreadcrumbList schema sitewide
+6. E-E-A-T: Add editorial team bios, methodology pages, source citations
+7. Topical velocity: Publish 1 new supporting article per week
+
+==============================================================
+END OF TOPICAL AUTHORITY MAP
+================================================================

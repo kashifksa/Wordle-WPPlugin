@@ -233,15 +233,15 @@ class Wordle_Frontend {
 					<div class="wh-dist-chart">
 						<?php 
 						$dist = json_decode( $puzzle['guess_distribution'] ?? '[]', true );
-						if ( ! empty( $dist ) ) {
-							foreach ( $dist as $i => $pct ) {
-								$label = $i + 1;
-								echo "<div class='wh-dist-bar-wrapper' title='{$pct}% solved in {$label}'>";
-								echo "<div class='wh-dist-label'>{$label}</div>";
-								echo "<div class='wh-dist-bar-container'><div class='wh-dist-bar' style='width:{$pct}%'></div></div>";
-								echo "<div class='wh-dist-pct'>{$pct}%</div>";
-								echo "</div>";
-							}
+						// Always render 6 placeholders for AJAX compatibility
+						for ( $i = 0; $i < 6; $i++ ) {
+							$pct = isset( $dist[$i] ) ? $dist[$i] : 0;
+							$label = $i + 1;
+							echo "<div class='wh-dist-bar-wrapper' title='{$pct}% solved in {$label}'>";
+							echo "<div class='wh-dist-label'>{$label}</div>";
+							echo "<div class='wh-dist-bar-container'><div class='wh-dist-bar' style='width:{$pct}%'></div></div>";
+							echo "<div class='wh-dist-pct'>{$pct}%</div>";
+							echo "</div>";
 						}
 						?>
 					</div>

@@ -937,28 +937,35 @@ body.dark-mode .wh-premium-calendar .flatpickr-day:hover {
     flex-grow: 1;
     background: var(--wh-inner-card);
     height: 14px;
-    border-radius: 4px;
+    border-radius: 6px;
     overflow: hidden;
+    border: 1px solid var(--wh-border);
 }
 
 .wh-dist-bar {
     height: 100%;
-    background: var(--wordle-gray);
+    background: linear-gradient(90deg, var(--wordle-gray), #939598);
     border-radius: 4px;
-    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);
 }
 
 .wh-dist-bar-wrapper:nth-child(3) .wh-dist-bar,
 .wh-dist-bar-wrapper:nth-child(4) .wh-dist-bar {
-    background: var(--wordle-green);
+    background: linear-gradient(90deg, var(--wordle-green), #85c17e);
 }
 
 .wh-dist-pct {
-    width: 35px;
+    width: 40px;
     font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--wh-text-muted);
+    font-weight: 700;
+    color: var(--wh-text);
     text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.wh-dist-bar-wrapper:hover .wh-dist-bar {
+    filter: brightness(1.1);
 }
 
 .wh-desktop-only {

@@ -1,35 +1,10 @@
 {
     "meta": {
-        "last_updated": "2026-05-09T16:05:18Z",
+        "last_updated": "2026-05-10T10:37:12Z",
         "plugin": "Wordle Hint Pro",
         "version": "1.0.6"
     },
     "data": {
-        "2026-05-08": {
-            "date": "2026-05-08",
-            "number": 1784,
-            "word": "UMBRA",
-            "vowels": 2,
-            "starts_with": "U",
-            "hints": {
-                "vague": "A shadowy figure lurks in the darkness.",
-                "category": "A celestial phenomenon often seen in space exploration.",
-                "specific": "A term used to describe a dark region, void of stars.",
-                "final": "It's what you're left with when light from a star takes a detour around an object"
-            },
-            "stats": {
-                "difficulty": 5,
-                "average_guesses": 4.7,
-                "distribution": [
-                    0,
-                    1,
-                    8,
-                    31,
-                    37,
-                    17
-                ]
-            }
-        },
         "2026-05-09": {
             "date": "2026-05-09",
             "number": 1785,
@@ -62,15 +37,22 @@
             "vowels": 2,
             "starts_with": "P",
             "hints": {
-                "vague": "Something to wrap your worries in.",
-                "category": "You'd want it at your favorite winter sport.",
-                "specific": "A layer of protection from the elements.",
-                "final": "An essential for keeping you warm at a snowy festival."
+                "vague": "A gentle caress from the frozen north.",
+                "category": "Protective gear for a crisp winter day.",
+                "specific": "Outerwear designed to shield from biting winds.",
+                "final": "A waterproof outer layer often seen on skiers and travelers."
             },
             "stats": {
-                "difficulty": 0,
-                "average_guesses": 0,
-                "distribution": []
+                "difficulty": 5,
+                "average_guesses": 4.9,
+                "distribution": [
+                    0,
+                    1,
+                    6,
+                    27,
+                    39,
+                    21
+                ]
             }
         },
         "2026-05-11": {
@@ -174,6 +156,24 @@
                 "category": "Something you might see as you watch a parade march by.",
                 "specific": "To change your position in relation to something else is to do this, often involuntarily.",
                 "final": "The act of moving from one spot to another without losing your balance is a hallmark of this."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            }
+        },
+        "2026-05-17": {
+            "date": "2026-05-17",
+            "number": 1793,
+            "word": "BYLAW",
+            "vowels": 1,
+            "starts_with": "B",
+            "hints": {
+                "vague": "Something you'd find in the rulebook, quite often.",
+                "category": "Governance-related term that may not be well-known to outsiders.",
+                "specific": "A regulation that's common to most organizations, even small ones.",
+                "final": "A standard procedure that's usually found in local councils, but exists elsewhere too."
             },
             "stats": {
                 "difficulty": 0,
