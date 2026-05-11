@@ -144,6 +144,15 @@ class Wordle_API {
 				'average_guesses' => floatval( $puzzle['average_guesses'] ?? 0 ),
 				'distribution'    => json_decode( $puzzle['guess_distribution'] ?? '[]' ),
 			),
+			'dictionary'  => array(
+				'part_of_speech'   => $puzzle['part_of_speech'] ?? '',
+				'definition'       => $puzzle['definition'] ?? '',
+				'pronunciation'    => $puzzle['pronunciation'] ?? '',
+				'audio_url'        => $puzzle['audio_url'] ?? '',
+				'etymology'        => $puzzle['etymology'] ?? '',
+				'example_sentence' => $puzzle['example_sentence'] ?? '',
+				'first_known_use'  => $puzzle['first_known_use'] ?? '',
+			),
 		), 200 );
 	}
 
@@ -271,6 +280,15 @@ class Wordle_API {
 						'difficulty'      => floatval( $puzzle['difficulty'] ?? 0 ),
 						'average_guesses' => floatval( $puzzle['average_guesses'] ?? 0 ),
 						'distribution'    => json_decode( $puzzle['guess_distribution'] ?? '[]' ),
+					),
+					'dictionary'  => array(
+						'part_of_speech'   => $puzzle['part_of_speech'] ?? '',
+						'definition'       => $puzzle['definition'] ?? '',
+						'pronunciation'    => $puzzle['pronunciation'] ?? '',
+						'audio_url'        => $puzzle['audio_url'] ?? '',
+						'etymology'        => $puzzle['etymology'] ?? '',
+						'example_sentence' => $puzzle['example_sentence'] ?? '',
+						'first_known_use'  => $puzzle['first_known_use'] ?? '',
 					),
 				);
 			}

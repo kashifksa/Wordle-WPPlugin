@@ -84,6 +84,12 @@ class Wordle_Scraper {
 			$data = array_merge( $data, $stats );
 		}
 
+		// Enrichment: Merriam-Webster Dictionary
+		$dictionary = Wordle_Dictionary::fetch_enrichment( $data['word'] );
+		if ( ! is_wp_error( $dictionary ) ) {
+			$data = array_merge( $data, $dictionary );
+		}
+
 		// Save to DB (Insert or Update)
 		$inserted = Wordle_DB::insert_puzzle( $data );
 		

@@ -1,35 +1,10 @@
 {
     "meta": {
-        "last_updated": "2026-05-10T10:37:12Z",
+        "last_updated": "2026-05-11T12:51:26Z",
         "plugin": "Wordle Hint Pro",
         "version": "1.0.6"
     },
     "data": {
-        "2026-05-09": {
-            "date": "2026-05-09",
-            "number": 1785,
-            "word": "SATIN",
-            "vowels": 2,
-            "starts_with": "S",
-            "hints": {
-                "vague": "A quiet, peaceful quality found in luxurious fabrics.",
-                "category": "Frequently associated with high-end textiles, especially silk and velvet.",
-                "specific": "Describes the smooth, soft surface of expensive clothing or home furnishings.",
-                "final": "The characteristic feel of fine, high-quality fabric, often prized for its luxurious texture."
-            },
-            "stats": {
-                "difficulty": 1,
-                "average_guesses": 3.5,
-                "distribution": [
-                    0,
-                    11,
-                    44,
-                    32,
-                    10,
-                    2
-                ]
-            }
-        },
         "2026-05-10": {
             "date": "2026-05-10",
             "number": 1786,
@@ -53,6 +28,15 @@
                     39,
                     21
                 ]
+            },
+            "dictionary": {
+                "part_of_speech": "noun",
+                "definition": "A type of outerwear typically made of thick fabric or fur, designed to keep the wearer warm in cold weather.",
+                "pronunciation": "\u02c8p\u00e4r-k\u0259",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/parka.mp3",
+                "etymology": "",
+                "example_sentence": "She wore her warm parka to protect herself from the frigid mountain weather.",
+                "first_known_use": "1625{ds||1||}"
             }
         },
         "2026-05-11": {
@@ -71,6 +55,15 @@
                 "difficulty": 0,
                 "average_guesses": 0,
                 "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "adverb",
+                "definition": "in a recently acquired or created state",
+                "pronunciation": "\u02c8n\u00fc-l\u0113",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/newly.mp3",
+                "etymology": "",
+                "example_sentence": "a newly married couple",
+                "first_known_use": "before 12th century{ds||1||}"
             }
         },
         "2026-05-12": {
@@ -89,6 +82,15 @@
                 "difficulty": 0,
                 "average_guesses": 0,
                 "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "noun",
+                "definition": "A mechanical or electronic device for measuring and displaying time.",
+                "pronunciation": "\u02c8kl\u00e4k",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/clock.mp3",
+                "etymology": "From Old English 'clocc', a bell, and 'clocian', to strike. Influenced by Old Norse 'klokkr', a bell.",
+                "example_sentence": "The old grandfather clock stood tall in the foyer, ticking away with a soothing melody.",
+                "first_known_use": "14th century{ds||1||}"
             }
         },
         "2026-05-13": {
@@ -107,6 +109,15 @@
                 "difficulty": 0,
                 "average_guesses": 0,
                 "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "adjective",
+                "definition": "not neat or becoming in appearance : shabby",
+                "pronunciation": "\u02c8dau\u0307-d\u0113",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/dowdy.mp3",
+                "etymology": "",
+                "example_sentence": "a dowdy old hat",
+                "first_known_use": "1676{ds||1||}"
             }
         },
         "2026-05-14": {
@@ -125,6 +136,15 @@
                 "difficulty": 0,
                 "average_guesses": 0,
                 "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "verb",
+                "definition": "to vacillate irresolutely between choices : fluctuate in opinion, allegiance, or direction",
+                "pronunciation": "\u02c8w\u0101-v\u0259r",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/waver.mp3",
+                "etymology": "Middle English; akin to Old English w\u01e3fre restless, wafian to wave with the hands wave",
+                "example_sentence": "wavering flames",
+                "first_known_use": "14th century{ds||1||}"
             }
         },
         "2026-05-15": {
@@ -143,6 +163,15 @@
                 "difficulty": 0,
                 "average_guesses": 0,
                 "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "noun",
+                "definition": "a brief authoritative formula of religious belief",
+                "pronunciation": "\u02c8kr\u0113d",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/creed.mp3",
+                "etymology": "Middle English crede, from Old English cr\u0113da, from Latin credo (first word of the Apostles' and Nicene Creeds), from credere to believe, trust, entrust; akin to Old Irish cretid he believes, Sanskrit \u015brad-dadh\u0101ti",
+                "example_sentence": "the Nicene Creed",
+                "first_known_use": "before 12th century{ds||1||}"
             }
         },
         "2026-05-16": {
@@ -161,6 +190,15 @@
                 "difficulty": 0,
                 "average_guesses": 0,
                 "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "noun",
+                "definition": "A person or thing that moves or is moved.",
+                "pronunciation": "\u02c8m\u00fc-v\u0259r",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/mover.mp3",
+                "etymology": "",
+                "example_sentence": "The movers arrived at our house promptly at 9am to begin packing our belongings.",
+                "first_known_use": "14th century"
             }
         },
         "2026-05-17": {
@@ -179,6 +217,42 @@
                 "difficulty": 0,
                 "average_guesses": 0,
                 "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "noun",
+                "definition": "A local ordinance or a law governing a specific area or institution, typically within a municipal corporation.",
+                "pronunciation": "\u02c8b\u012b-\u02ccl\u022f",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/bylaw.mp3",
+                "etymology": "From by + law. The word originated in the late 14th century as a legal term in Scotland.",
+                "example_sentence": "The city council passed a bylaw to limit noise pollution in residential areas.",
+                "first_known_use": "14th century{ds||1||}"
+            }
+        },
+        "2026-05-18": {
+            "date": "2026-05-18",
+            "number": 1794,
+            "word": "LOATH",
+            "vowels": 2,
+            "starts_with": "L",
+            "hints": {
+                "vague": "A feeling that's not quite right.",
+                "category": "Something that people might grumble about.",
+                "specific": "The state of being displeased with a situation.",
+                "final": "An aversion that's difficult to shake off, often due to a past experience."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "adjective",
+                "definition": "unwilling to do something contrary to one's ways of thinking : reluctant",
+                "pronunciation": "\u02c8l\u014dth",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/loath.mp3",
+                "etymology": "Middle English loth loathsome, from Old English l\u0101th; akin to Old High German leid loathsome, Old Irish lius loathing",
+                "example_sentence": "She was loath to admit her mistakes.",
+                "first_known_use": "12th century"
             }
         }
     }

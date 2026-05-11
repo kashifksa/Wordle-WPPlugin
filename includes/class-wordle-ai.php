@@ -230,6 +230,81 @@ class Wordle_AI {
 		error_log( "Wordle AI: Failed to parse JSON from string: " . substr( $string, 0, 100 ) . "..." );
 		return null;
 	}
+	/**
+	 * Enrich dictionary data using AI when MW results are incomplete.
+	 */
+	public static function enrich_dictionary_data( $word, $current_data = array() ) {
+		$missing = array();
+		if ( empty( $current_data['definition'] ) || $current_data['definition'] === 'Definition unavailable' ) $missing[] = 'definition';
+		if ( empty( $current_data['synonyms'] ) || $current_data['synonyms'] === '[]' ) $missing[] = 'synonyms';
+		if ( empty( $current_data['antonyms'] ) || $current_data['antonyms'] === '[]' ) $missing[] = 'antonyms';
+		if ( empty( $current_data['example_sentence'] ) ) $missing[] = 'example_sentence';
+		if ( empty( $current_data['etymology'] ) ) $missing[] = 'etymology';
+
+		if ( empty( $missing ) ) {
+			return $current_data;
+		}
+
+		$primary_key   = get_option( 'wordle_hint_ai_api_key' );
+		$primary_model = get_option( 'wordle_hint_ai_model', 'llama-3.1-8b-instant' );
+
+		if ( ! $primary_key ) {
+			return $current_data;
+		}
+
+		$prompt = "For the word '{$word}', provide the following missing dictionary information: " . implode( ', ', $missing ) . ".\n\n";
+		$prompt .= "Format: Return strictly JSON with keys: " . implode( ', ', $missing ) . ".\n";
+		$prompt .= "- synonyms/antonyms should be arrays.\n";
+		$prompt .= "- etymology should be a short history of the word origin.\n";
+		$prompt .= "- definition should be concise.\n";
+
+		$endpoint = 'https://api.openai.com/v1/chat/completions';
+		if ( strpos( $primary_key, 'gsk_' ) === 0 ) {
+			$endpoint = 'https://api.groq.com/openai/v1/chat/completions';
+		}
+
+		$body_args = array(
+			'model'    => $primary_model,
+			'messages' => array(
+				array( 'role' => 'system', 'content' => "You are a professional lexicographer. Provide accurate linguistic data in JSON format." ),
+				array( 'role' => 'user', 'content' => $prompt ),
+			),
+		);
+
+		// Groq-specific: no response_format
+		if ( strpos( $primary_key, 'gsk_' ) === false ) {
+			$body_args['response_format'] = array( 'type' => 'json_object' );
+		}
+
+		$response = wp_remote_post( $endpoint, array(
+			'headers' => array(
+				'Content-Type'  => 'application/json',
+				'Authorization' => 'Bearer ' . $primary_key,
+			),
+			'body'    => json_encode( $body_args ),
+			'timeout' => 20,
+		) );
+
+		if ( is_wp_error( $response ) ) {
+			return $current_data;
+		}
+
+		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( isset( $body['choices'][0]['message']['content'] ) ) {
+			$ai_data = self::extract_json( $body['choices'][0]['message']['content'] );
+			if ( $ai_data ) {
+				// Sanitize and merge
+				if ( isset( $ai_data['synonyms'] ) ) $current_data['synonyms'] = json_encode( (array) $ai_data['synonyms'] );
+				if ( isset( $ai_data['antonyms'] ) ) $current_data['antonyms'] = json_encode( (array) $ai_data['antonyms'] );
+				if ( isset( $ai_data['definition'] ) ) $current_data['definition'] = sanitize_text_field( $ai_data['definition'] );
+				if ( isset( $ai_data['example_sentence'] ) ) $current_data['example_sentence'] = sanitize_text_field( $ai_data['example_sentence'] );
+				if ( isset( $ai_data['etymology'] ) ) $current_data['etymology'] = sanitize_text_field( $ai_data['etymology'] );
+			}
+		}
+
+		return $current_data;
+	}
+
 	private static function is_word_in_hints( $word, $hints ) {
 		$word = strtolower( $word );
 		foreach ( $hints as $hint ) {

@@ -47,4 +47,5 @@ This document outlines the roadmap for upcoming features and optimizations for t
 ## 7. Analytics & Data Enrichment
 - [ ] **WordleBot Statistics**: Enrich the database with historical difficulty ratings, average guesses, and solve distributions.
 - [ ] **Performance Badges**: Display difficulty levels (Easy/Medium/Hard) and "Avg. Guesses" on the frontend hints board.
-- [ ] **Advanced Linguistics**: (Optional) Add more automated metrics like letter frequency scoring or word commonness ratings.
+- [x] **Advanced Linguistics**: Add automated metrics like letter frequency scoring and dictionary-based enrichment fields.
+- [x] **Merriam-Webster Integration**: Implement the scraper/fetcher logic to populate the new `part_of_speech`, `definition`, `etymology`, and `synonyms` fields.

@@ -32,6 +32,8 @@ class Wordle_Admin {
 		register_setting( 'wordle_hint_settings_group', 'wordle_hint_api_key' );
 		register_setting( 'wordle_hint_settings_group', 'wordle_hint_timezone' );
 		register_setting( 'wordle_hint_settings_group', 'wordle_hint_cron_schedule' );
+		register_setting( 'wordle_hint_settings_group', 'wordle_mw_dictionary_key' );
+		register_setting( 'wordle_hint_settings_group', 'wordle_mw_thesaurus_key' );
 	}
 
 	public static function settings_page() {
@@ -113,6 +115,20 @@ class Wordle_Admin {
 						<th scope="row">Timezone</th>
 						<td><input type="text" name="wordle_hint_timezone" value="<?php echo esc_attr( get_option( 'wordle_hint_timezone', 'Asia/Karachi' ) ); ?>" class="regular-text" /></td>
 					</tr>
+					<tr valign="top" style="border-top: 1px solid #ccc;">
+						<th scope="row">Merriam-Webster Dictionary Key</th>
+						<td>
+							<input type="password" name="wordle_mw_dictionary_key" value="<?php echo esc_attr( get_option( 'wordle_mw_dictionary_key' ) ); ?>" class="large-text" />
+							<p class="description">Required for definitions, pronunciation, and etymology. Get a key at <a href="https://dictionaryapi.com/" target="_blank">dictionaryapi.com</a> (Collegiate Dictionary).</p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">Merriam-Webster Thesaurus Key</th>
+						<td>
+							<input type="password" name="wordle_mw_thesaurus_key" value="<?php echo esc_attr( get_option( 'wordle_mw_thesaurus_key' ) ); ?>" class="large-text" />
+							<p class="description">Optional. Used for synonyms and antonyms (Collegiate Thesaurus).</p>
+						</td>
+					</tr>
 				</table>
 				<?php submit_button(); ?>
 			</form>
@@ -140,6 +156,7 @@ class Wordle_Admin {
 			<button id="run-scraper-now" class="button button-primary">Run Scraper Now</button>
 			<button id="fetch-save-json" class="button button-primary">Fetch & Save JSON</button>
 			<button id="backfill-stats" class="button button-secondary" style="background: #6aaa64; color: white; border-color: #5a9a54;">Backfill Missing WordleBot Stats</button>
+			<button id="backfill-dictionary" class="button button-secondary" style="background: #2271b1; color: white; border-color: #135e96;">Backfill Dictionary Enrichment</button>
 			<button id="regenerate-fallbacks" class="button button-secondary">Regenerate Fallback Hints</button>
 			<button id="test-ai-connection" class="button button-secondary">Test Primary AI</button>
 			<button id="test-fallback-ai" class="button button-secondary">Test Fallback AI</button>
@@ -178,11 +195,16 @@ class Wordle_Admin {
 					});
 				});
 
-				$('#fetch-save-json').click(function() {
+				$('#fetch-save-json').click(function(e, isManual) {
 					var $btn = $(this);
 					var $log = $('#scraper-log');
 					$btn.prop('disabled', true).text('Refreshing...');
-					$log.show().html('Starting JSON cache generation...');
+					
+					if (isManual !== false) {
+						$log.show().html('Starting JSON cache generation...');
+					} else {
+						$log.append('<br>Starting JSON cache generation...');
+					}
 					
 					$.post({
 						url: '<?php echo get_rest_url(null, "wordle/v1/refresh-json"); ?>',
@@ -291,6 +313,39 @@ class Wordle_Admin {
 					}
 					
 					runStatsBatch();
+				});
+				
+				$('#backfill-dictionary').click(function() {
+					var $btn = $(this);
+					var $log = $('#scraper-log');
+					
+					if (!confirm('This will fetch Dictionary & Thesaurus data from Merriam-Webster for all records missing definitions. Proceed?')) return;
+					
+					$btn.prop('disabled', true).text('Backfilling Dictionary...');
+					$log.show().html('<strong>Starting Dictionary Enrichment Backfill...</strong><br>');
+					
+					function runDictBatch() {
+						$.post(ajaxurl, {
+							action: 'backfill_wordle_dictionary',
+							nonce: '<?php echo wp_create_nonce("wordle_dict_nonce"); ?>'
+						}, function(response) {
+							if (response.success) {
+								$log.append(response.data.message + '<br>');
+								if (response.data.remaining > 0) {
+									setTimeout(runDictBatch, 1000); // 1s pause between batches
+								} else {
+									$log.append('<strong>✔ Dictionary enrichment complete!</strong>');
+									$btn.prop('disabled', false).text('Backfill Dictionary Enrichment');
+									$('#fetch-save-json').trigger('click', [false]); // Refresh JSON without clearing log
+								}
+							} else {
+								$log.append('<br><span style="color:red;">Error:</span> ' + response.data.message);
+								$btn.prop('disabled', false).text('Backfill Dictionary Enrichment');
+							}
+						});
+					}
+					
+					runDictBatch();
 				});
 
 				$('#test-ai-connection').click(function() {
@@ -511,6 +566,12 @@ add_action( 'wp_ajax_save_manual_wordle', function() {
 	} else {
 		$ai_status = 'AI Error: ' . $hints->get_error_message() . ' (Fallback hints used)';
 		$data = array_merge( $data, Wordle_Scraper::generate_fallback_hints( $word ) );
+	}
+
+	// Enrichment: Merriam-Webster Dictionary
+	$dictionary = Wordle_Dictionary::fetch_enrichment( $word );
+	if ( ! is_wp_error( $dictionary ) ) {
+		$data = array_merge( $data, $dictionary );
 	}
 
 	// Save to DB (UPSERT)
@@ -804,6 +865,108 @@ add_action( 'wp_ajax_backfill_wordle_stats', function() {
 
 	wp_send_json_success( array( 
 		'message'   => "Updated stats for $count puzzles. (" . ( $total_missing - $count ) . " remaining)", 
+		'remaining' => $total_missing - $count 
+	) );
+} );
+
+// AJAX handler to backfill dictionary data
+add_action( 'wp_ajax_backfill_wordle_dictionary', function() {
+	check_ajax_referer( 'wordle_dict_nonce', 'nonce' );
+	
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+	}
+
+	global $wpdb;
+	$table = Wordle_DB::get_table_name();
+
+	// Ensure the database schema is up to date
+	Wordle_DB::create_table();
+
+	// Check for API key first
+	$dict_key = Wordle_Dictionary::sanitize_key( get_option( 'wordle_mw_dictionary_key' ) );
+	if ( empty( $dict_key ) ) {
+		wp_send_json_error( array( 'message' => 'Merriam-Webster Dictionary API key is missing. Please enter it in settings.' ) );
+	}
+	
+	// Find entries missing critical metadata (including antonyms and pronunciation)
+	$missing = $wpdb->get_results( "SELECT id, word FROM $table WHERE 
+		definition IS NULL OR definition = '' OR 
+		synonyms IS NULL OR synonyms = '' OR 
+		antonyms IS NULL OR antonyms = '' OR 
+		example_sentence IS NULL OR example_sentence = '' OR 
+		etymology IS NULL OR etymology = '' OR
+		first_known_use LIKE '%{%' OR etymology LIKE '%{%'
+		LIMIT 10" );
+	
+	if ( empty( $missing ) ) {
+		wp_send_json_success( array( 'message' => 'No puzzles missing dictionary data.', 'remaining' => 0 ) );
+	}
+
+	$total_missing = $wpdb->get_var( "SELECT COUNT(*) FROM $table WHERE 
+		definition IS NULL OR definition = '' OR 
+		synonyms IS NULL OR synonyms = '' OR 
+		antonyms IS NULL OR antonyms = '' OR 
+		example_sentence IS NULL OR example_sentence = '' OR 
+		etymology IS NULL OR etymology = '' OR
+		first_known_use LIKE '%{%' OR etymology LIKE '%{%'" );
+	
+	$count = 0;
+	$details = array();
+	foreach ( $missing as $record ) {
+		$sources = array();
+		
+		// Tier 1: Merriam-Webster (Primary)
+		$enrichment = Wordle_Dictionary::fetch_enrichment( $record->word );
+		if ( is_wp_error( $enrichment ) ) {
+			$errors[] = $record->word . ': MW Error - ' . $enrichment->get_error_message();
+			$enrichment = array();
+		} else {
+			if ( ! empty( $enrichment ) ) $sources[] = 'MW';
+		}
+
+		// Tier 2: Free Dictionary API (Backup)
+		if ( empty( $enrichment['definition'] ) || empty( $enrichment['synonyms'] ) || $enrichment['synonyms'] === '[]' ) {
+			$free_data = Wordle_Dictionary::fetch_free_dictionary_enrichment( $record->word );
+			if ( ! is_wp_error( $free_data ) ) {
+				$sources[] = 'FreeAPI';
+				foreach ( $free_data as $key => $val ) {
+					if ( empty( $enrichment[ $key ] ) || $enrichment[ $key ] === '[]' ) {
+						$enrichment[ $key ] = $val;
+					}
+				}
+			}
+		}
+
+		// Tier 3: AI Enrichment (Final Gap-Fill)
+		$has_gaps = empty( $enrichment['definition'] ) || empty( $enrichment['synonyms'] ) || $enrichment['synonyms'] === '[]' || empty( $enrichment['antonyms'] ) || $enrichment['antonyms'] === '[]' || empty( $enrichment['example_sentence'] );
+		if ( $has_gaps ) {
+			$enrichment = Wordle_AI::enrich_dictionary_data( $record->word, $enrichment );
+			$sources[] = 'AI';
+		}
+		
+		// Final fallback placeholders to prevent infinite loops
+		if ( empty( $enrichment['definition'] ) ) $enrichment['definition'] = 'Definition unavailable';
+		if ( empty( $enrichment['synonyms'] ) )   $enrichment['synonyms'] = '[]';
+		if ( empty( $enrichment['antonyms'] ) )   $enrichment['antonyms'] = '[]';
+		if ( empty( $enrichment['etymology'] ) )  $enrichment['etymology'] = 'Etymology unavailable';
+		if ( empty( $enrichment['example_sentence'] ) ) $enrichment['example_sentence'] = 'Example unavailable';
+
+		$wpdb->update( $table, $enrichment, array( 'id' => $record->id ) );
+		$count++;
+		
+		$details[] = $record->word . ' (' . implode( '+', array_unique( $sources ) ) . ')';
+		
+		sleep( 1 ); // Rate limit protection
+	}
+
+	$message = "Enriched $count puzzles: " . implode( ', ', $details ) . ". (" . ( $total_missing - $count ) . " remaining)";
+	if ( ! empty( $errors ) ) {
+		$message .= "<br><span style='color:red;'>Errors:</span><br>" . implode( "<br>", $errors );
+	}
+
+	wp_send_json_success( array( 
+		'message'   => $message, 
 		'remaining' => $total_missing - $count 
 	) );
 } );

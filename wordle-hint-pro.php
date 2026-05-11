@@ -54,6 +54,7 @@ class Wordle_Hint_Pro {
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-db.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-scraper.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-ai.php';
+		require_once WORDLE_HINT_PATH . 'includes/class-wordle-dictionary.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-static-hints.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-api.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-admin.php';

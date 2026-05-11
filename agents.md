@@ -22,13 +22,14 @@ Primary goals:
 ## 1) High-Level Architecture
 
 Flow:
-WP Cron → Scraper → Validator → Analyzer → AI Hint Generator → DB Storage → JSON Cache → Frontend Shortcode
+WP Cron → Scraper → Validator → Analyzer → Dictionary Enrichment → AI Hint Generator → DB Storage → JSON Cache → Frontend Shortcode
 
 Components:
 
 * **Scheduler**: WordPress Cron (`wp_schedule_event`) with retry logic via transients.
 * **Scraper**: PHP-based HTML fetching (`wp_remote_get`) and parsing.
 * **Analyzer**: Pure PHP logic for letter/vowel/consonant counts.
+* **Dictionary Enrichment**: Merriam-Webster API integration (Collegiate Dictionary & Thesaurus) for definitions, etymology, and phonetics.
 * **Hint Generator**: Groq API integration (Llama models) with local pattern fallbacks.
 * **Storage**: Custom WP database table (`wp_wordle_data`).
 * **Cache**: Static JSON file (`wordle-data.json`) for zero-DB-hit frontend delivery.
@@ -42,7 +43,7 @@ All values are stored in the WordPress `options` table and manageable via the Ad
 
 Required Settings:
 
-* **API Keys**: Groq AI API Key, Scraper Source URL.
+* **API Keys**: Groq AI API Key, Scraper Source URL, Merriam-Webster Dictionary Key, Merriam-Webster Thesaurus Key.
 * **Time & Scheduling**: Scrape time (default 03:35 PM PKT), retry intervals.
 * **AI Tuning**: Model choice (llama-3.1-8b), custom prompt templates.
 * **Security**: API key for restricted manual endpoints (if any).
@@ -71,6 +72,7 @@ Responsibilities:
 
 * Fetch HTML from configured source.
 * Extract: `date`, `puzzle_number`, and `word`.
+* Enrichment: Trigger `Wordle_Dictionary` to fetch definitions, etymology, and audio pronunciations.
 * Requirements: Respect robots.txt (implied), use realistic User-Agents, and implement request jitter.
 
 ---
@@ -117,6 +119,25 @@ Rules:
 
 ---
 
+## 7.5) Dictionary & Enrichment (Merriam-Webster)
+
+Input: `WORD`
+
+Output:
+
+* `part_of_speech`: Grammatical category.
+* `definition`: Concise dictionary definition.
+* `etymology`: Word origin and history.
+* `pronunciation`: Written phonetics and local MP3 audio URL (downloaded to server).
+* `synonyms/antonyms`: Related and opposite words (from Thesaurus).
+
+Rules:
+
+* **Cleaning**: Remove MW formatting tokens (e.g., `{bc}`, `{it}`) before storage.
+* **Rate Limiting**: Implementation of 1s delay between batch calls to stay within free tier limits.
+
+---
+
 ## 8) Data Model
 
 Table: `wp_wordle_data`
@@ -128,8 +149,11 @@ Columns:
 * `puzzle_number`: INT UNIQUE
 * `word`: VARCHAR(10)
 * `hint1`, `hint2`, `hint3`, `final_hint`: TEXT
-* `vowel_count`: INT
+* `vowel_count`, `consonant_count`: INT
 * `starts_with`: VARCHAR(1)
+* `difficulty`, `average_guesses`: DECIMAL
+* `part_of_speech`, `pronunciation`, `audio_url`, `first_known_use`: VARCHAR
+* `definition`, `etymology`, `synonyms`, `antonyms`, `example_sentence`, `definitions_json`: TEXT
 * `created_at`: TIMESTAMP
 
 ---
