@@ -252,11 +252,12 @@ class Wordle_AI {
 			return $current_data;
 		}
 
-		$prompt = "For the word '{$word}', provide the following missing dictionary information: " . implode( ', ', $missing ) . ".\n\n";
-		$prompt .= "Format: Return strictly JSON with keys: " . implode( ', ', $missing ) . ".\n";
-		$prompt .= "- synonyms/antonyms should be arrays.\n";
-		$prompt .= "- etymology should be a short history of the word origin.\n";
-		$prompt .= "- definition should be concise.\n";
+		$prompt = "Provide linguistic data for the word '{$word}'. Missing fields: " . implode( ', ', $missing ) . ".\n\n";
+		$prompt .= "CRITICAL: Return a FLAT JSON object with exactly these keys: " . implode( ', ', $missing ) . ".\n";
+		$prompt .= "- synonyms/antonyms: simple arrays of strings.\n";
+		$prompt .= "- etymology: concise string.\n";
+		$prompt .= "- definition: concise string.\n";
+		$prompt .= "- example_sentence: a sentence using the word.\n";
 
 		$endpoint = 'https://api.openai.com/v1/chat/completions';
 		if ( strpos( $primary_key, 'gsk_' ) === 0 ) {
@@ -266,7 +267,7 @@ class Wordle_AI {
 		$body_args = array(
 			'model'    => $primary_model,
 			'messages' => array(
-				array( 'role' => 'system', 'content' => "You are a professional lexicographer. Provide accurate linguistic data in JSON format." ),
+				array( 'role' => 'system', 'content' => "You are an expert lexicographer. You provide highly accurate linguistic data. You MUST distinguish clearly between synonyms (similar meanings) and antonyms (opposite meanings). You output strictly flat JSON without any preamble or nesting. Keys: " . implode(', ', $missing) ),
 				array( 'role' => 'user', 'content' => $prompt ),
 			),
 		);
@@ -292,10 +293,20 @@ class Wordle_AI {
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 		if ( isset( $body['choices'][0]['message']['content'] ) ) {
 			$ai_data = self::extract_json( $body['choices'][0]['message']['content'] );
+			
 			if ( $ai_data ) {
+				// Handle nesting under the word key if AI did that
+				$word_key = strtoupper($word);
+				$word_key_lower = strtolower($word);
+				if ( ! isset($ai_data['antonyms']) && isset($ai_data[$word_key]) && is_array($ai_data[$word_key]) ) {
+					$ai_data = $ai_data[$word_key];
+				} elseif ( ! isset($ai_data['antonyms']) && isset($ai_data[$word_key_lower]) && is_array($ai_data[$word_key_lower]) ) {
+					$ai_data = $ai_data[$word_key_lower];
+				}
+
 				// Sanitize and merge
-				if ( isset( $ai_data['synonyms'] ) ) $current_data['synonyms'] = json_encode( (array) $ai_data['synonyms'] );
-				if ( isset( $ai_data['antonyms'] ) ) $current_data['antonyms'] = json_encode( (array) $ai_data['antonyms'] );
+				if ( isset( $ai_data['synonyms'] ) ) $current_data['synonyms'] = json_encode( array_values( (array) $ai_data['synonyms'] ) );
+				if ( isset( $ai_data['antonyms'] ) ) $current_data['antonyms'] = json_encode( array_values( (array) $ai_data['antonyms'] ) );
 				if ( isset( $ai_data['definition'] ) ) $current_data['definition'] = sanitize_text_field( $ai_data['definition'] );
 				if ( isset( $ai_data['example_sentence'] ) ) $current_data['example_sentence'] = sanitize_text_field( $ai_data['example_sentence'] );
 				if ( isset( $ai_data['etymology'] ) ) $current_data['etymology'] = sanitize_text_field( $ai_data['etymology'] );

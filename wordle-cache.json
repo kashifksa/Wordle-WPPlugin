@@ -1,6 +1,6 @@
 {
     "meta": {
-        "last_updated": "2026-05-11T12:51:26Z",
+        "last_updated": "2026-05-11T14:44:39Z",
         "plugin": "Wordle Hint Pro",
         "version": "1.0.6"
     },
@@ -31,12 +31,12 @@
             },
             "dictionary": {
                 "part_of_speech": "noun",
-                "definition": "A type of outerwear typically made of thick fabric or fur, designed to keep the wearer warm in cold weather.",
+                "definition": "a hooded fur pullover garment for arctic wear",
                 "pronunciation": "\u02c8p\u00e4r-k\u0259",
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/parka.mp3",
-                "etymology": "",
+                "etymology": "Aleut, from Russian dialect, ultimately from Nenets (Samoyedic language of northern Russia)",
                 "example_sentence": "She wore her warm parka to protect herself from the frigid mountain weather.",
-                "first_known_use": "1625{ds||1||}"
+                "first_known_use": "1625"
             }
         },
         "2026-05-11": {
@@ -52,18 +52,25 @@
                 "final": "Something that accompanies every new start."
             },
             "stats": {
-                "difficulty": 0,
-                "average_guesses": 0,
-                "distribution": []
+                "difficulty": 5,
+                "average_guesses": 4.7,
+                "distribution": [
+                    0,
+                    1,
+                    9,
+                    32,
+                    37,
+                    17
+                ]
             },
             "dictionary": {
                 "part_of_speech": "adverb",
-                "definition": "in a recently acquired or created state",
+                "definition": "lately, recently",
                 "pronunciation": "\u02c8n\u00fc-l\u0113",
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/newly.mp3",
-                "etymology": "",
+                "etymology": "Etymology unavailable",
                 "example_sentence": "a newly married couple",
-                "first_known_use": "before 12th century{ds||1||}"
+                "first_known_use": "before 12th century"
             }
         },
         "2026-05-12": {
@@ -90,7 +97,7 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/clock.mp3",
                 "etymology": "From Old English 'clocc', a bell, and 'clocian', to strike. Influenced by Old Norse 'klokkr', a bell.",
                 "example_sentence": "The old grandfather clock stood tall in the foyer, ticking away with a soothing melody.",
-                "first_known_use": "14th century{ds||1||}"
+                "first_known_use": "14th century"
             }
         },
         "2026-05-13": {
@@ -115,9 +122,9 @@
                 "definition": "not neat or becoming in appearance : shabby",
                 "pronunciation": "\u02c8dau\u0307-d\u0113",
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/dowdy.mp3",
-                "etymology": "",
+                "etymology": "Etymology unavailable",
                 "example_sentence": "a dowdy old hat",
-                "first_known_use": "1676{ds||1||}"
+                "first_known_use": "1676"
             }
         },
         "2026-05-14": {
@@ -144,7 +151,7 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/waver.mp3",
                 "etymology": "Middle English; akin to Old English w\u01e3fre restless, wafian to wave with the hands wave",
                 "example_sentence": "wavering flames",
-                "first_known_use": "14th century{ds||1||}"
+                "first_known_use": "14th century"
             }
         },
         "2026-05-15": {
@@ -171,7 +178,7 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/creed.mp3",
                 "etymology": "Middle English crede, from Old English cr\u0113da, from Latin credo (first word of the Apostles' and Nicene Creeds), from credere to believe, trust, entrust; akin to Old Irish cretid he believes, Sanskrit \u015brad-dadh\u0101ti",
                 "example_sentence": "the Nicene Creed",
-                "first_known_use": "before 12th century{ds||1||}"
+                "first_known_use": "before 12th century"
             }
         },
         "2026-05-16": {
@@ -193,11 +200,11 @@
             },
             "dictionary": {
                 "part_of_speech": "noun",
-                "definition": "A person or thing that moves or is moved.",
+                "definition": "one that moves or sets something in motion; especially : one whose business or occupation is the moving of household goods from one residence to another",
                 "pronunciation": "\u02c8m\u00fc-v\u0259r",
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/mover.mp3",
-                "etymology": "",
-                "example_sentence": "The movers arrived at our house promptly at 9am to begin packing our belongings.",
+                "etymology": "Etymology unavailable",
+                "example_sentence": "Example unavailable",
                 "first_known_use": "14th century"
             }
         },
@@ -225,7 +232,7 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/bylaw.mp3",
                 "etymology": "From by + law. The word originated in the late 14th century as a legal term in Scotland.",
                 "example_sentence": "The city council passed a bylaw to limit noise pollution in residential areas.",
-                "first_known_use": "14th century{ds||1||}"
+                "first_known_use": "14th century"
             }
         },
         "2026-05-18": {

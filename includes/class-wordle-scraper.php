@@ -98,6 +98,11 @@ class Wordle_Scraper {
 			return new WP_Error( 'db_error', 'Failed to save to DB' );
 		}
 
+		// Trigger JSON cache refresh to make data live
+		if ( class_exists( 'Wordle_API' ) ) {
+			Wordle_API::refresh_json_cache();
+		}
+
 		return $data;
 	}
 
@@ -105,28 +110,40 @@ class Wordle_Scraper {
 	 * Fetch WordleBot statistics from Engaging Data's JS archive.
 	 */
 	public static function fetch_wordlebot_stats( $puzzle_number ) {
-		$url = 'https://engaging-data.com/pages/scripts/wordlebot/wordlepuzzles.js';
-		
-		$response = wp_remote_get( $url, array( 
-			'timeout'    => 20,
-			'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
-		) );
+		$local_file = WORDLE_HINT_PATH . 'engagingData.js';
+		$body = '';
 
-		if ( is_wp_error( $response ) ) {
-			error_log( "Wordle Scraper: Failed to fetch stats. " . $response->get_error_message() );
-			return $response;
+		// Try local file first (more reliable)
+		if ( file_exists( $local_file ) ) {
+			$body = file_get_contents( $local_file );
+		} else {
+			$url = 'https://engaging-data.com/pages/scripts/wordlebot/wordlepuzzles.js';
+			$response = wp_remote_get( $url, array( 
+				'timeout'    => 20,
+				'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+			) );
+
+			if ( is_wp_error( $response ) ) {
+				error_log( "Wordle Scraper: Failed to fetch stats remotely. " . $response->get_error_message() );
+				return $response;
+			}
+
+			$status_code = wp_remote_retrieve_response_code( $response );
+			if ( $status_code !== 200 ) {
+				return new WP_Error( 'http_error', 'Remote stats server returned ' . $status_code );
+			}
+
+			$body = wp_remote_retrieve_body( $response );
 		}
 
-		$body = wp_remote_retrieve_body( $response );
 		if ( empty( $body ) ) {
 			return new WP_Error( 'empty_response', 'Failed to fetch WordleBot stats' );
 		}
 
 		// Extract JSON from JS variable: wordlepuzzles = { ... }
-		// Note: The file might not have 'var' or a trailing semicolon.
 		$start = strpos( $body, '{' );
 		if ( $start === false ) {
-			return new WP_Error( 'parse_error', 'Could not find JSON start in JS file' );
+			return new WP_Error( 'parse_error', 'Could not find JSON start in stats file' );
 		}
 
 		$json_str = substr( $body, $start );

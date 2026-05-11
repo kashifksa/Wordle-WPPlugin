@@ -856,11 +856,15 @@ add_action( 'wp_ajax_backfill_wordle_stats', function() {
 	$count = 0;
 	foreach ( $missing as $p ) {
 		$stats = Wordle_Scraper::fetch_wordlebot_stats( $p->puzzle_number );
-		if ( $stats ) {
+		if ( $stats && ! is_wp_error( $stats ) ) {
 			$wpdb->update( $table, $stats, array( 'puzzle_number' => $p->puzzle_number ) );
 			$count++;
 		}
 		usleep( 200000 ); // 200ms pause
+	}
+
+	if ( $count > 0 && class_exists( 'Wordle_API' ) ) {
+		Wordle_API::refresh_json_cache();
 	}
 
 	wp_send_json_success( array( 
@@ -958,6 +962,10 @@ add_action( 'wp_ajax_backfill_wordle_dictionary', function() {
 		$details[] = $record->word . ' (' . implode( '+', array_unique( $sources ) ) . ')';
 		
 		sleep( 1 ); // Rate limit protection
+	}
+
+	if ( $count > 0 && class_exists( 'Wordle_API' ) ) {
+		Wordle_API::refresh_json_cache();
 	}
 
 	$message = "Enriched $count puzzles: " . implode( ', ', $details ) . ". (" . ( $total_missing - $count ) . " remaining)";
