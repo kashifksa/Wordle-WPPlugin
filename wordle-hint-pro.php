@@ -61,6 +61,7 @@ class Wordle_Hint_Pro {
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-frontend.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-archive.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-scheduler.php';
+		require_once WORDLE_HINT_PATH . 'includes/class-wordle-solver.php';
 	}
 
 	/**
@@ -71,6 +72,7 @@ class Wordle_Hint_Pro {
 		
 		add_action( 'init', array( $this, 'register_shortcodes' ) );
 		add_action( 'init', array( 'Wordle_Frontend', 'init_seo_hooks' ) );
+		add_action( 'init', array( 'Wordle_Solver', 'init' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}
 
