@@ -1,145 +1,266 @@
 {
-    "2026-04-28": {
-        "date": "2026-04-28",
-        "number": 1774,
-        "word": "QUACK",
-        "vowels": 2,
-        "starts_with": "Q",
-        "hints": {
-            "vague": "Sounds associated with waterfowl.",
-            "category": "Found in nature, often near ponds.",
-            "specific": "This vocalization is often heard in early morning hours.",
-            "final": "A common call made by a certain water-dwelling bird before dawn."
-        }
+    "meta": {
+        "last_updated": "2026-05-12T09:13:49Z",
+        "plugin": "Wordle Hint Pro",
+        "version": "1.0.6"
     },
-    "2026-04-29": {
-        "date": "2026-04-29",
-        "number": 1775,
-        "word": "RURAL",
-        "vowels": 2,
-        "starts_with": "R",
-        "hints": {
-            "vague": "Relating to the countryside rather than the town.",
-            "category": "The opposite of 'urban' or 'city-like'.",
-            "specific": "Evokes images of farms, fields, and open spaces.",
-            "final": "Life away from the hustle and bustle of a metropolitan area."
-        }
-    },
-    "2026-04-30": {
-        "date": "2026-04-30",
-        "number": 1776,
-        "word": "CROCK",
-        "vowels": 1,
-        "starts_with": "C",
-        "hints": {
-            "vague": "An earthenware pot or jar used for cooking or storage.",
-            "category": "Also used informally to describe something nonsensical or false.",
-            "specific": "You might find one filled with butter or slow-cooking soup.",
-            "final": "Think of a heavy ceramic container or a '____' of lies."
-        }
-    },
-    "2026-05-01": {
-        "date": "2026-05-01",
-        "number": 1777,
-        "word": "PLUME",
-        "vowels": 2,
-        "starts_with": "P",
-        "hints": {
-            "vague": "Whispers of the past",
-            "category": "Found in an artist's studio",
-            "specific": "Something that's shed, left behind like a shadow",
-            "final": "A delicate reminder of flight"
-        }
-    },
-    "2026-05-02": {
-        "date": "2026-05-02",
-        "number": 1778,
-        "word": "BRING",
-        "vowels": 1,
-        "starts_with": "B",
-        "hints": {
-            "vague": "It can be an action that causes excitement on certain special occasions.",
-            "category": "Something you'd find on a 'Gift Registry' before a wedding or party.",
-            "specific": "Imagine attending a gathering and being asked to contribute something.",
-            "final": "The first thing a host might ask you to do with a gift or a dish."
-        }
-    },
-    "2026-05-03": {
-        "date": "2026-05-03",
-        "number": 1779,
-        "word": "PUFFY",
-        "vowels": 1,
-        "starts_with": "P",
-        "hints": {
-            "vague": "Something you might feel or look like after eating a very heavy meal.",
-            "category": "A characteristic often associated with a cartoon cloud or a marshmallow.",
-            "specific": "A trait commonly found in soft, downy textures and winter jackets.",
-            "final": "Imagine holding a feather pillow or looking at a cumulus cloud."
-        }
-    },
-    "2026-05-04": {
-        "date": "2026-05-04",
-        "number": 1780,
-        "word": "RISER",
-        "vowels": 2,
-        "starts_with": "R",
-        "hints": {
-            "vague": "This word might evoke a feeling of movement or progression.",
-            "category": "People described by this word often work in entertainment or construction.",
-            "specific": "In architecture or ballet, this word refers to an upward step or movement.",
-            "final": "You're probably thinking of someone rising to fame or a step in a staircase."
-        }
-    },
-    "2026-05-05": {
-        "date": "2026-05-05",
-        "number": 1781,
-        "word": "LATCH",
-        "vowels": 1,
-        "starts_with": "L",
-        "hints": {
-            "vague": "Something you might hold onto or engage for safety.",
-            "category": "A hardware item often found near a door or a gate.",
-            "specific": "A mechanical device used in sailing, cabinetry, and security.",
-            "final": "In a window or door, it secures the moving part in place."
-        }
-    },
-    "2026-05-06": {
-        "date": "2026-05-06",
-        "number": 1782,
-        "word": "LIKEN",
-        "vowels": 2,
-        "starts_with": "L",
-        "hints": {
-            "vague": "This word is used when you want to compare one thing to another.",
-            "category": "It functions as a verb that highlights similarities.",
-            "specific": "Often used in literature to create metaphors or analogies.",
-            "final": "To say that something is 'like' something else is to do this."
-        }
-    },
-    "2026-05-07": {
-        "date": "2026-05-07",
-        "number": 1783,
-        "word": "BUDGE",
-        "vowels": 2,
-        "starts_with": "B",
-        "hints": {
-            "vague": "Silent companion to progress",
-            "category": "Something that often occurs after a pause",
-            "specific": "A motion, often accompanied by exertion, to alter one's stance or trajectory",
-            "final": "The action required to get back into a task after taking a break"
-        }
-    },
-    "2026-05-08": {
-        "date": "2026-05-08",
-        "number": 1784,
-        "word": "UMBRA",
-        "vowels": 2,
-        "starts_with": "U",
-        "hints": {
-            "vague": "A shadowy figure lurks in the darkness.",
-            "category": "A celestial phenomenon often seen in space exploration.",
-            "specific": "A term used to describe a dark region, void of stars.",
-            "final": "It's what you're left with when light from a star takes a detour around an object"
+    "data": {
+        "2026-05-11": {
+            "date": "2026-05-11",
+            "number": 1787,
+            "word": "NEWLY",
+            "vowels": 1,
+            "starts_with": "N",
+            "hints": {
+                "vague": "A fleeting quality, ever-present yet brief.",
+                "category": "Concepts tied to new beginnings.",
+                "specific": "A condition that accompanies fresh experiences.",
+                "final": "Something that accompanies every new start."
+            },
+            "stats": {
+                "difficulty": 5,
+                "average_guesses": 4.8,
+                "distribution": [
+                    0,
+                    1,
+                    9,
+                    31,
+                    37,
+                    17
+                ]
+            },
+            "dictionary": {
+                "part_of_speech": "adverb",
+                "definition": "lately, recently",
+                "pronunciation": "\u02c8n\u00fc-l\u0113",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/newly.mp3",
+                "etymology": "Etymology unavailable",
+                "example_sentence": "a newly married couple",
+                "first_known_use": "before 12th century"
+            }
+        },
+        "2026-05-12": {
+            "date": "2026-05-12",
+            "number": 1788,
+            "word": "CLOCK",
+            "vowels": 1,
+            "starts_with": "C",
+            "hints": {
+                "vague": "A silent guardian of time",
+                "category": "Something you might find on a wall",
+                "specific": "A device that measures the passage of time, often with moving parts",
+                "final": "It's what you check when you're running late"
+            },
+            "stats": {
+                "difficulty": 3.9,
+                "average_guesses": 4.4,
+                "distribution": [
+                    1,
+                    1,
+                    16,
+                    39,
+                    30,
+                    11
+                ]
+            },
+            "dictionary": {
+                "part_of_speech": "noun",
+                "definition": "A mechanical or electronic device for measuring and displaying time.",
+                "pronunciation": "\u02c8kl\u00e4k",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/clock.mp3",
+                "etymology": "From Old English 'clocc', a bell, and 'clocian', to strike. Influenced by Old Norse 'klokkr', a bell.",
+                "example_sentence": "The old grandfather clock stood tall in the foyer, ticking away with a soothing melody.",
+                "first_known_use": "14th century"
+            }
+        },
+        "2026-05-13": {
+            "date": "2026-05-13",
+            "number": 1789,
+            "word": "DOWDY",
+            "vowels": 1,
+            "starts_with": "D",
+            "hints": {
+                "vague": "Faded beauty",
+                "category": "Something worn by the fashionably timid",
+                "specific": "A style that's unremarkable, yet still recognizable",
+                "final": "An aesthetic that's been around for a while, but hasn't gone out of style"
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "adjective",
+                "definition": "not neat or becoming in appearance : shabby",
+                "pronunciation": "\u02c8dau\u0307-d\u0113",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/dowdy.mp3",
+                "etymology": "Etymology unavailable",
+                "example_sentence": "a dowdy old hat",
+                "first_known_use": "1676"
+            }
+        },
+        "2026-05-14": {
+            "date": "2026-05-14",
+            "number": 1790,
+            "word": "WAVER",
+            "vowels": 2,
+            "starts_with": "W",
+            "hints": {
+                "vague": "Echoes of the past linger in its presence.",
+                "category": "A feeling experienced when faced with movement or change.",
+                "specific": "A sense of instability or being unsteadfast, particularly in one's actions.",
+                "final": "When you're not sure what's ahead, it's a familiar sensation to feel a slight sway."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "verb",
+                "definition": "to vacillate irresolutely between choices : fluctuate in opinion, allegiance, or direction",
+                "pronunciation": "\u02c8w\u0101-v\u0259r",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/waver.mp3",
+                "etymology": "Middle English; akin to Old English w\u01e3fre restless, wafian to wave with the hands wave",
+                "example_sentence": "wavering flames",
+                "first_known_use": "14th century"
+            }
+        },
+        "2026-05-15": {
+            "date": "2026-05-15",
+            "number": 1791,
+            "word": "CREED",
+            "vowels": 2,
+            "starts_with": "C",
+            "hints": {
+                "vague": "A foundation laid by individuals of strong conviction.",
+                "category": "A principle or virtue often upheld by communities.",
+                "specific": "Something that embodies and inspires devotion in others.",
+                "final": "A unifying aspect of human identity, often publicly declared."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "noun",
+                "definition": "a brief authoritative formula of religious belief",
+                "pronunciation": "\u02c8kr\u0113d",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/creed.mp3",
+                "etymology": "Middle English crede, from Old English cr\u0113da, from Latin credo (first word of the Apostles' and Nicene Creeds), from credere to believe, trust, entrust; akin to Old Irish cretid he believes, Sanskrit \u015brad-dadh\u0101ti",
+                "example_sentence": "the Nicene Creed",
+                "first_known_use": "before 12th century"
+            }
+        },
+        "2026-05-16": {
+            "date": "2026-05-16",
+            "number": 1792,
+            "word": "MOVER",
+            "vowels": 2,
+            "starts_with": "M",
+            "hints": {
+                "vague": "A gentle breeze on a summer day.",
+                "category": "Something you might see as you watch a parade march by.",
+                "specific": "To change your position in relation to something else is to do this, often involuntarily.",
+                "final": "The act of moving from one spot to another without losing your balance is a hallmark of this."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "noun",
+                "definition": "one that moves or sets something in motion; especially : one whose business or occupation is the moving of household goods from one residence to another",
+                "pronunciation": "\u02c8m\u00fc-v\u0259r",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/mover.mp3",
+                "etymology": "Etymology unavailable",
+                "example_sentence": "Example unavailable",
+                "first_known_use": "14th century"
+            }
+        },
+        "2026-05-17": {
+            "date": "2026-05-17",
+            "number": 1793,
+            "word": "BYLAW",
+            "vowels": 1,
+            "starts_with": "B",
+            "hints": {
+                "vague": "Something you'd find in the rulebook, quite often.",
+                "category": "Governance-related term that may not be well-known to outsiders.",
+                "specific": "A regulation that's common to most organizations, even small ones.",
+                "final": "A standard procedure that's usually found in local councils, but exists elsewhere too."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "noun",
+                "definition": "A local ordinance or a law governing a specific area or institution, typically within a municipal corporation.",
+                "pronunciation": "\u02c8b\u012b-\u02ccl\u022f",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/bylaw.mp3",
+                "etymology": "From by + law. The word originated in the late 14th century as a legal term in Scotland.",
+                "example_sentence": "The city council passed a bylaw to limit noise pollution in residential areas.",
+                "first_known_use": "14th century"
+            }
+        },
+        "2026-05-18": {
+            "date": "2026-05-18",
+            "number": 1794,
+            "word": "LOATH",
+            "vowels": 2,
+            "starts_with": "L",
+            "hints": {
+                "vague": "A feeling that's not quite right.",
+                "category": "Something that people might grumble about.",
+                "specific": "The state of being displeased with a situation.",
+                "final": "An aversion that's difficult to shake off, often due to a past experience."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "adjective",
+                "definition": "unwilling to do something contrary to one's ways of thinking : reluctant",
+                "pronunciation": "\u02c8l\u014dth",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/loath.mp3",
+                "etymology": "Middle English loth loathsome, from Old English l\u0101th; akin to Old High German leid loathsome, Old Irish lius loathing",
+                "example_sentence": "She was loath to admit her mistakes.",
+                "first_known_use": "12th century"
+            }
+        },
+        "2026-05-19": {
+            "date": "2026-05-19",
+            "number": 1795,
+            "word": "DUSTY",
+            "vowels": 1,
+            "starts_with": "D",
+            "hints": {
+                "vague": "A presence felt in forgotten corners.",
+                "category": "Connected to delicate balance and fine particles.",
+                "specific": "A reminder of impermanence and the passing of time.",
+                "final": "Often swept away, yet it's presence remains."
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "adjective",
+                "definition": "covered or abounding with dust",
+                "pronunciation": "\u02c8d\u0259-st\u0113",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/dusty.mp3",
+                "etymology": "",
+                "example_sentence": "dusty scholarship",
+                "first_known_use": "13th century"
+            }
         }
     }
 }

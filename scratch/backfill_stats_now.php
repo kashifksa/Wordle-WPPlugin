@@ -30,5 +30,5 @@ foreach ($puzzles as $p) {
 }
 
 // Clear the JSON cache to reflect changes
-unlink(WORDLE_HINT_PATH . 'wordle-cache.json');
+unlink(WORDLE_HINT_PATH . 'wordle-data.json');
 echo "Cache cleared.\n";

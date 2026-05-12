@@ -112,28 +112,34 @@ class Wordle_Scraper {
 	public static function fetch_wordlebot_stats( $puzzle_number ) {
 		$local_file = WORDLE_HINT_PATH . 'engagingData.js';
 		$body = '';
+		$is_old = false;
 
-		// Try local file first (more reliable)
 		if ( file_exists( $local_file ) ) {
+			// Get dynamic interval from settings (default 4 hours)
+			$interval_hours = intval( get_option( 'wordle_stats_refresh_interval', 4 ) );
+			if ( ( time() - filemtime( $local_file ) ) > ( $interval_hours * HOUR_IN_SECONDS ) ) {
+				$is_old = true;
+			}
 			$body = file_get_contents( $local_file );
-		} else {
+		}
+
+		// Fetch from remote if local missing, old, or doesn't contain the puzzle
+		if ( empty( $body ) || $is_old || strpos( $body, '"' . $puzzle_number . '":' ) === false ) {
 			$url = 'https://engaging-data.com/pages/scripts/wordlebot/wordlepuzzles.js';
 			$response = wp_remote_get( $url, array( 
 				'timeout'    => 20,
 				'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
 			) );
 
-			if ( is_wp_error( $response ) ) {
-				error_log( "Wordle Scraper: Failed to fetch stats remotely. " . $response->get_error_message() );
-				return $response;
+			if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+				$body = wp_remote_retrieve_body( $response );
+				if ( ! empty( $body ) ) {
+					file_put_contents( $local_file, $body ); // Update local cache
+				}
+			} elseif ( empty( $body ) ) {
+				// If remote failed and we have no local body at all
+				return is_wp_error( $response ) ? $response : new WP_Error( 'http_error', 'Failed to fetch stats' );
 			}
-
-			$status_code = wp_remote_retrieve_response_code( $response );
-			if ( $status_code !== 200 ) {
-				return new WP_Error( 'http_error', 'Remote stats server returned ' . $status_code );
-			}
-
-			$body = wp_remote_retrieve_body( $response );
 		}
 
 		if ( empty( $body ) ) {

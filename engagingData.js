@@ -1,4 +1,3 @@
-
 wordlepuzzles={"419": {"date": "08/12", "num": 419, "answer": "LABEL", "cumulative": [1, 3, 18, 49, 79, 95], "individual": [1, 2, 15, 31, 30, 16], "sample": 227063, "datestr": "081222"},
 "420": {"date": "08/13", "num": 420, "answer": "HUNKY", "cumulative": [1, 1, 10, 41, 67, 86], "individual": [1, 0, 9, 31, 26, 19], "sample": 228002, "datestr": "081322"},
 "421": {"date": "08/14", "num": 421, "answer": "KHAKI", "cumulative": [1, 2, 15, 47, 76, 91], "individual": [1, 1, 13, 32, 29, 15], "sample": 227354, "datestr": "081422"},
@@ -1288,5 +1287,8 @@ wordlepuzzles={"419": {"date": "08/12", "num": 419, "answer": "LABEL", "cumulati
 "1782": {"date": "05/06", "num": 1782, "answer": "LIKEN", "cumulative": [0, 2, 14, 45, 77, 94], "individual": [0, 2, 12, 31, 32, 17], "sample": 1782358, "datestr": "050626", "hardmode": {"cumulative": [0, 2, 16, 50, 82, 97], "individual": [0, 2, 14, 34, 32, 15], "sample": 216607}},
 "1783": {"date": "05/07", "num": 1783, "answer": "BUDGE", "cumulative": [0, 2, 14, 44, 74, 92], "individual": [0, 2, 12, 30, 30, 18], "sample": 1781757, "datestr": "050726", "hardmode": {"cumulative": [0, 2, 16, 51, 80, 95], "individual": [0, 2, 14, 35, 29, 15], "sample": 218229}},
 "1784": {"date": "05/08", "num": 1784, "answer": "UMBRA", "cumulative": [0, 1, 9, 40, 77, 94], "individual": [0, 1, 8, 31, 37, 17], "sample": 1786885, "datestr": "050826", "hardmode": {"cumulative": [0, 1, 12, 53, 91, 99], "individual": [0, 1, 11, 41, 38, 8], "sample": 213044}},
-"1785": {"date": "05/09", "num": 1785, "answer": "SATIN", "cumulative": [0, 11, 55, 87, 97, 99], "individual": [0, 11, 44, 32, 10, 2], "sample": 1071669, "datestr": "050926", "hardmode": {"cumulative": [0, 14, 64, 92, 99, 99], "individual": [0, 14, 50, 28, 7, 0], "sample": 128555}}
+"1785": {"date": "05/09", "num": 1785, "answer": "SATIN", "cumulative": [0, 12, 55, 87, 97, 99], "individual": [0, 12, 43, 32, 10, 2], "sample": 1773895, "datestr": "050926", "hardmode": {"cumulative": [0, 15, 65, 92, 99, 99], "individual": [0, 15, 50, 27, 7, 0], "sample": 226101}},
+"1786": {"date": "05/10", "num": 1786, "answer": "PARKA", "cumulative": [0, 1, 8, 37, 75, 95], "individual": [0, 1, 7, 29, 38, 20], "sample": 1775660, "datestr": "051026", "hardmode": {"cumulative": [0, 1, 12, 44, 81, 97], "individual": [0, 1, 11, 32, 37, 16], "sample": 224329}},
+"1787": {"date": "05/11", "num": 1787, "answer": "NEWLY", "cumulative": [0, 1, 10, 41, 78, 95], "individual": [0, 1, 9, 31, 37, 17], "sample": 1786174, "datestr": "051126", "hardmode": {"cumulative": [0, 1, 14, 53, 87, 98], "individual": [0, 1, 13, 39, 34, 11], "sample": 213117}},
+"1788": {"date": "05/12", "num": 1788, "answer": "CLOCK", "cumulative": [1, 2, 18, 57, 87, 98], "individual": [1, 1, 16, 39, 30, 11], "sample": 1056209, "datestr": "051226", "hardmode": {"cumulative": [0, 2, 20, 61, 91, 99], "individual": [0, 2, 18, 41, 30, 8], "sample": 125110}}
 }

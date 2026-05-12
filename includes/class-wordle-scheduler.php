@@ -54,12 +54,17 @@ class Wordle_Scheduler {
 		foreach ( $dates_to_check as $date ) {
 			$existing = Wordle_DB::get_puzzle_by_date( $date );
 			
-			// Database-First: Skip if entry exists
+			// Database-First: Skip ONLY if entry exists AND has stats
 			if ( $existing ) {
-				error_log( "Wordle Scraper: Skipped date $date: already exists" );
-				$skipped_count++;
-				if ( $date === $today ) $success_count++; // Today is considered "handled" if it exists
-				continue;
+				$has_stats = ! empty( $existing['average_guesses'] ) && ! empty( $existing['guess_distribution'] );
+				if ( $has_stats ) {
+					error_log( "Wordle Scraper: Skipped date $date: already exists with stats" );
+					$skipped_count++;
+					if ( $date === $today ) $success_count++; 
+					continue;
+				} else {
+					error_log( "Wordle Scraper: Date $date exists but missing stats. Re-scraping for enrichment." );
+				}
 			}
 
 			// Conditional Scraping: Scrape if missing

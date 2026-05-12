@@ -16,7 +16,7 @@ class Wordle_API {
 	 * Triggered on 'init' hook.
 	 */
 	public static function maybe_refresh_cache() {
-		$file_path = WORDLE_HINT_PATH . 'wordle-cache.json';
+		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
 		$regenerate = false;
 
 		if ( ! file_exists( $file_path ) ) {
@@ -214,7 +214,7 @@ class Wordle_API {
 			return new WP_REST_Response( array( 'success' => false, 'message' => 'No data received' ), 400 );
 		}
 
-		$file_path = WORDLE_HINT_PATH . 'wordle-cache.json';
+		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
 		$json_content = json_encode( $data, JSON_PRETTY_PRINT );
 
 		if ( file_put_contents( $file_path, $json_content ) !== false ) {
@@ -308,7 +308,7 @@ class Wordle_API {
 			'data' => $puzzles_data
 		);
 
-		$file_path = WORDLE_HINT_PATH . 'wordle-cache.json';
+		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
 		$success = file_put_contents( $file_path, json_encode( $final_output, JSON_PRETTY_PRINT ) );
 		
 		return $success !== false ? count( $puzzles_data ) : false;

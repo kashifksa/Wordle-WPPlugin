@@ -152,8 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initGameLogic(jQuery('.wordle-hint-container'));
 
     const jsonUrl = typeof wordleHintData !== 'undefined'
-        ? wordleHintData.pluginUrl + 'wordle-cache.json'
-        : '/wp-content/plugins/Wordle-WPPlugin/wordle-cache.json';
+        ? wordleHintData.pluginUrl + 'wordle-data.json'
+        : '/wp-content/plugins/Wordle-WPPlugin/wordle-data.json';
 
     // 2. VERSIONED FETCH (date-based cache busting)
     fetch(jsonUrl + '?v=' + today)

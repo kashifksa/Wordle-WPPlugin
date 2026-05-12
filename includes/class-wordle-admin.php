@@ -34,6 +34,7 @@ class Wordle_Admin {
 		register_setting( 'wordle_hint_settings_group', 'wordle_hint_cron_schedule' );
 		register_setting( 'wordle_hint_settings_group', 'wordle_mw_dictionary_key' );
 		register_setting( 'wordle_hint_settings_group', 'wordle_mw_thesaurus_key' );
+		register_setting( 'wordle_hint_settings_group', 'wordle_stats_refresh_interval' );
 	}
 
 	public static function settings_page() {
@@ -129,6 +130,13 @@ class Wordle_Admin {
 							<p class="description">Optional. Used for synonyms and antonyms (Collegiate Thesaurus).</p>
 						</td>
 					</tr>
+					<tr valign="top">
+						<th scope="row">Stats Refresh Interval (Hours)</th>
+						<td>
+							<input type="number" name="wordle_stats_refresh_interval" value="<?php echo esc_attr( get_option( 'wordle_stats_refresh_interval', 4 ) ); ?>" min="1" max="24" class="small-text" />
+							<p class="description">How often to refresh the local statistics file from Engaging Data. Recommended: 2-6 hours to catch both preliminary and finalized WordleBot stats.</p>
+						</td>
+					</tr>
 				</table>
 				<?php submit_button(); ?>
 			</form>
@@ -140,7 +148,7 @@ class Wordle_Admin {
 					<td><strong>JSON Cache Status:</strong></td>
 					<td>
 						<?php 
-						$file = WORDLE_HINT_PATH . 'wordle-cache.json';
+						$file = WORDLE_HINT_PATH . 'wordle-data.json';
 						if (file_exists($file)) {
 							echo '✔ Last updated: ' . date('F j, Y, g:i a', filemtime($file));
 						} else {
