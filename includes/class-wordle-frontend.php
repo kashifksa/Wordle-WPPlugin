@@ -343,7 +343,7 @@ class Wordle_Frontend {
 					</div>
 				</div>
 
-				<div class="wh-discovery-section" id="wh-discovery-section" style="display:none;">
+				<div class="wh-discovery-section" id="wh-discovery-section">
 					<div class="wh-discovery-header">
 						<h3 class="wh-discovery-title">Word Discovery</h3>
 						<div class="wh-discovery-meta">

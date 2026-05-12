@@ -30,6 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!$container.length) return;
 
         $container.css('opacity', '0.5');
+        // Zap Discovery area instantly so old content doesn't flicker during fetch
+        jQuery('#wh-discovery-section').addClass('wh-no-transition').removeClass('wh-visible');
+        setTimeout(() => jQuery('#wh-discovery-section').removeClass('wh-no-transition'), 100);
         fetch(wordleHintData.apiUrl + 'data?date=' + dateStr)
             .then(res => res.json())
             .then(apiRes => {
@@ -408,8 +411,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTags($container.find('#wh-synonyms'), dict.synonyms);
         updateTags($container.find('#wh-antonyms'), dict.antonyms);
 
-        // Reset Discovery Visibility
-        $container.find('#wh-discovery-section').hide();
+        // Reset Discovery Visibility (Instant for date switch)
+        $container.find('#wh-discovery-section').addClass('wh-no-transition').removeClass('wh-visible');
+        setTimeout(() => $container.find('#wh-discovery-section').removeClass('wh-no-transition'), 100);
 
         // Initialize Game Logic
         initGameLogic($container);
@@ -455,7 +459,8 @@ document.addEventListener('DOMContentLoaded', () => {
             $boxes.removeClass('revealed');
             $toolbar.removeClass('wh-visible').addClass('wh-hidden');
             $revealBtn.removeClass('wh-hidden').prop('disabled', false);
-            jQuery('#wh-discovery-section').hide();
+            jQuery('#wh-discovery-section').addClass('wh-no-transition').removeClass('wh-visible');
+            setTimeout(() => jQuery('#wh-discovery-section').removeClass('wh-no-transition'), 100);
             
             // Auto-trigger reveal again for smooth UX
             setTimeout(() => $revealBtn.trigger('click'), 400);
@@ -486,7 +491,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const $box = $container.find(`.wh-box[data-index="${index}"]`);
             if ($box.length && !$box.hasClass('revealed')) {
                 $box.addClass('revealing');
-                setTimeout(() => { $box.addClass('revealed'); }, 50);
+                setTimeout(() => { 
+                    $box.addClass('revealed');
+                    checkAllRevealed(); // Check completion after the class is actually added
+                }, 50);
                 setTimeout(() => { $box.removeClass('revealing'); }, 600);
             }
         }
@@ -494,7 +502,6 @@ document.addEventListener('DOMContentLoaded', () => {
         $container.off('click', '.wh-box').on('click', '.wh-box', function(e) {
             e.preventDefault();
             revealBox(jQuery(this).data('index'));
-            checkAllRevealed();
         });
 
         function checkAllRevealed() {
@@ -504,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Show Discovery Section with a small delay for premium feel
                 setTimeout(() => {
-                    $container.find('#wh-discovery-section').fadeIn(800);
+                    $container.find('#wh-discovery-section').addClass('wh-visible');
                 }, 400);
             }
         }
@@ -521,7 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             $toolbar.removeClass('wh-hidden').addClass('wh-visible');
                             
                             // Show Discovery Section
-                            jQuery('#wh-discovery-section').fadeIn(800);
+                            jQuery('#wh-discovery-section').addClass('wh-visible');
                         }, 800);
                     }
                 }, i * 180);
