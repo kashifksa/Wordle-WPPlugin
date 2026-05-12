@@ -1,6 +1,6 @@
 {
     "meta": {
-        "last_updated": "2026-05-12T09:13:49Z",
+        "last_updated": "2026-05-12T11:26:00Z",
         "plugin": "Wordle Hint Pro",
         "version": "1.0.6"
     },
@@ -36,7 +36,9 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/newly.mp3",
                 "etymology": "Etymology unavailable",
                 "example_sentence": "a newly married couple",
-                "first_known_use": "before 12th century"
+                "first_known_use": "before 12th century",
+                "synonyms": "[\"freshly\",\"just\",\"late\",\"lately\",\"new\",\"now\",\"only\",\"recently\"]",
+                "antonyms": "[\"anciently\"]"
             }
         },
         "2026-05-12": {
@@ -70,7 +72,9 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/clock.mp3",
                 "etymology": "From Old English 'clocc', a bell, and 'clocian', to strike. Influenced by Old Norse 'klokkr', a bell.",
                 "example_sentence": "The old grandfather clock stood tall in the foyer, ticking away with a soothing melody.",
-                "first_known_use": "14th century"
+                "first_known_use": "14th century",
+                "synonyms": "[\"watch\",\"timer\",\"hourglass\"]",
+                "antonyms": "[\"stopwatch\",\"clockless\",\"timeless\"]"
             }
         },
         "2026-05-13": {
@@ -80,10 +84,10 @@
             "vowels": 1,
             "starts_with": "D",
             "hints": {
-                "vague": "Faded beauty",
-                "category": "Something worn by the fashionably timid",
-                "specific": "A style that's unremarkable, yet still recognizable",
-                "final": "An aesthetic that's been around for a while, but hasn't gone out of style"
+                "vague": "Sometimes awkwardly mismatched with elegance.",
+                "category": "Things people might wear but regret afterwards.",
+                "specific": "An appearance that is slightly off, like mismatched socks.",
+                "final": "The kind of style that screams 'out of place' or 'unlucky'."
             },
             "stats": {
                 "difficulty": 0,
@@ -97,7 +101,9 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/dowdy.mp3",
                 "etymology": "Etymology unavailable",
                 "example_sentence": "a dowdy old hat",
-                "first_known_use": "1676"
+                "first_known_use": "1676",
+                "synonyms": "[\"blowsy\",\"frowsy\",\"slobbish\",\"slobby\",\"sloppy\",\"sloven\",\"slovenly\",\"unkempt\",\"untidy\",\"cheesy\",\"inelegant\",\"styleless\",\"tacky\",\"tasteless\",\"ticky-tacky\"]",
+                "antonyms": "[\"dapper\",\"dashing\",\"dolled up\",\"sharp\",\"smart\",\"spruce\",\"chic\",\"classic\",\"classy\",\"elegant\"]"
             }
         },
         "2026-05-14": {
@@ -107,10 +113,10 @@
             "vowels": 2,
             "starts_with": "W",
             "hints": {
-                "vague": "Echoes of the past linger in its presence.",
-                "category": "A feeling experienced when faced with movement or change.",
-                "specific": "A sense of instability or being unsteadfast, particularly in one's actions.",
-                "final": "When you're not sure what's ahead, it's a familiar sensation to feel a slight sway."
+                "vague": "An ephemeral occurrence that can turn one's path.",
+                "category": "Something you might experience while balancing on one foot.",
+                "specific": "The sensation when a smooth ride becomes uneven.",
+                "final": "A moment of losing your footing, without actually falling."
             },
             "stats": {
                 "difficulty": 0,
@@ -124,7 +130,9 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/waver.mp3",
                 "etymology": "Middle English; akin to Old English w\u01e3fre restless, wafian to wave with the hands wave",
                 "example_sentence": "wavering flames",
-                "first_known_use": "14th century"
+                "first_known_use": "14th century",
+                "synonyms": "[\"balance\",\"dither\",\"falter\",\"halt\",\"hang back\",\"hesitate\",\"scruple\",\"shilly-shally\",\"stagger\",\"teeter\",\"vacillate\",\"wobble\",\"falter\",\"rock\",\"teeter\"]",
+                "antonyms": "[\"dive (in)\",\"plunge (in)\"]"
             }
         },
         "2026-05-15": {
@@ -134,10 +142,10 @@
             "vowels": 2,
             "starts_with": "C",
             "hints": {
-                "vague": "A foundation laid by individuals of strong conviction.",
-                "category": "A principle or virtue often upheld by communities.",
-                "specific": "Something that embodies and inspires devotion in others.",
-                "final": "A unifying aspect of human identity, often publicly declared."
+                "vague": "A binding that transcends the surface level",
+                "category": "A fundamental part of a tradition or custom",
+                "specific": "A commitment that underpins a community's values",
+                "final": "The foundation upon which a shared ideal is built"
             },
             "stats": {
                 "difficulty": 0,
@@ -151,7 +159,9 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/creed.mp3",
                 "etymology": "Middle English crede, from Old English cr\u0113da, from Latin credo (first word of the Apostles' and Nicene Creeds), from credere to believe, trust, entrust; akin to Old Irish cretid he believes, Sanskrit \u015brad-dadh\u0101ti",
                 "example_sentence": "the Nicene Creed",
-                "first_known_use": "before 12th century"
+                "first_known_use": "before 12th century",
+                "synonyms": "[\"credo\",\"doctrine\",\"dogma\",\"gospel\",\"ideology\",\"philosophy\",\"testament\",\"credo\",\"cult\",\"faith\",\"persuasion\",\"religion\"]",
+                "antonyms": "[]"
             }
         },
         "2026-05-16": {
@@ -161,10 +171,10 @@
             "vowels": 2,
             "starts_with": "M",
             "hints": {
-                "vague": "A gentle breeze on a summer day.",
-                "category": "Something you might see as you watch a parade march by.",
-                "specific": "To change your position in relation to something else is to do this, often involuntarily.",
-                "final": "The act of moving from one spot to another without losing your balance is a hallmark of this."
+                "vague": "Movement often has its price",
+                "category": "A common experience for many",
+                "specific": "Change can be unsettling, but necessary",
+                "final": "The act of transitioning often requires a push"
             },
             "stats": {
                 "difficulty": 0,
@@ -178,7 +188,9 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/mover.mp3",
                 "etymology": "Etymology unavailable",
                 "example_sentence": "Example unavailable",
-                "first_known_use": "14th century"
+                "first_known_use": "14th century",
+                "synonyms": "[\"carrier\",\"hauler\",\"conveyance\",\"transport\",\"transportation\",\"vehicle\",\"transit\",\"activator\",\"animator\",\"driver\",\"energizer\",\"executor\",\"generator\",\"impetus\",\"incentive\"]",
+                "antonyms": "[\"counterincentive\",\"disincentive\"]"
             }
         },
         "2026-05-17": {
@@ -188,10 +200,10 @@
             "vowels": 1,
             "starts_with": "B",
             "hints": {
-                "vague": "Something you'd find in the rulebook, quite often.",
-                "category": "Governance-related term that may not be well-known to outsiders.",
-                "specific": "A regulation that's common to most organizations, even small ones.",
-                "final": "A standard procedure that's usually found in local councils, but exists elsewhere too."
+                "vague": "A delicate balance that can easily tip the scales.",
+                "category": "Something you might find in a municipal code.",
+                "specific": "A standard or regulation that governs certain practices.",
+                "final": "The rules that shape the fabric of a community, often written by local authorities."
             },
             "stats": {
                 "difficulty": 0,
@@ -200,12 +212,14 @@
             },
             "dictionary": {
                 "part_of_speech": "noun",
-                "definition": "A local ordinance or a law governing a specific area or institution, typically within a municipal corporation.",
+                "definition": "a rule adopted by an organization chiefly for the government of its members and the regulation of its affairs",
                 "pronunciation": "\u02c8b\u012b-\u02ccl\u022f",
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/bylaw.mp3",
-                "etymology": "From by + law. The word originated in the late 14th century as a legal term in Scotland.",
+                "etymology": "Middle English bilawe, probably from Old Norse *b\u0233l\u01ebg, from Old Norse b\u0233r town + lag-, l\u01ebg law",
                 "example_sentence": "The city council passed a bylaw to limit noise pollution in residential areas.",
-                "first_known_use": "14th century"
+                "first_known_use": "14th century",
+                "synonyms": "[\"ground rule\",\"reg\",\"regulation\",\"rule\"]",
+                "antonyms": "[\"freedom\",\"openness\",\"permissiveness\"]"
             }
         },
         "2026-05-18": {
@@ -215,10 +229,10 @@
             "vowels": 2,
             "starts_with": "L",
             "hints": {
-                "vague": "A feeling that's not quite right.",
-                "category": "Something that people might grumble about.",
-                "specific": "The state of being displeased with a situation.",
-                "final": "An aversion that's difficult to shake off, often due to a past experience."
+                "vague": "Fragile bonds, sometimes found in quiet moments.",
+                "category": "Concepts people often have a strong opinion about",
+                "specific": "A feeling that can be overwhelming when it takes hold",
+                "final": "A sense of discomfort that can spread quickly among people."
             },
             "stats": {
                 "difficulty": 0,
@@ -232,7 +246,9 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/loath.mp3",
                 "etymology": "Middle English loth loathsome, from Old English l\u0101th; akin to Old High German leid loathsome, Old Irish lius loathing",
                 "example_sentence": "She was loath to admit her mistakes.",
-                "first_known_use": "12th century"
+                "first_known_use": "12th century",
+                "synonyms": "[\"cagey\",\"disinclined\",\"dubious\",\"hesitant\",\"indisposed\",\"reluctant\",\"reticent\"]",
+                "antonyms": "[\"disposed\",\"inclined\"]"
             }
         },
         "2026-05-19": {
@@ -242,10 +258,10 @@
             "vowels": 1,
             "starts_with": "D",
             "hints": {
-                "vague": "A presence felt in forgotten corners.",
-                "category": "Connected to delicate balance and fine particles.",
-                "specific": "A reminder of impermanence and the passing of time.",
-                "final": "Often swept away, yet it's presence remains."
+                "vague": "Something that clings to your skin after being outside on a windy day.",
+                "category": "Associated with desert landscapes or areas with frequent storms.",
+                "specific": "It's what remains when the air is filled with fine particles",
+                "final": "Commonly found on old cars or worn-out furniture"
             },
             "stats": {
                 "difficulty": 0,
@@ -259,7 +275,9 @@
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/dusty.mp3",
                 "etymology": "",
                 "example_sentence": "dusty scholarship",
-                "first_known_use": "13th century"
+                "first_known_use": "13th century",
+                "synonyms": "[\"fine\",\"floury\",\"powdery\",\"bedraggled\",\"befouled\",\"begrimed\",\"bemired\",\"besmirched\",\"black\",\"blackened\",\"cruddy\",\"dingy\",\"dirty\",\"draggled\",\"filthy\"]",
+                "antonyms": "[\"coarse\",\"grainy\",\"granular\",\"granulated\",\"clean\",\"cleanly\",\"immaculate\",\"spick-and-span\",\"spotless\",\"stainless\"]"
             }
         }
     }

@@ -314,6 +314,69 @@ class Wordle_Frontend {
 						</div>
 					</div>
 				</div>
+
+				<div class="wh-discovery-section" id="wh-discovery-section" style="display:none;">
+					<div class="wh-discovery-header">
+						<h3 class="wh-discovery-title">Word Discovery</h3>
+						<div class="wh-discovery-meta">
+							<span class="wh-pos" id="wh-pos"><?php echo esc_html( $puzzle['part_of_speech'] ?? '' ); ?></span>
+							<span class="wh-separator">•</span>
+							<span class="wh-pronunciation" id="wh-pronunciation"><?php echo esc_html( $puzzle['pronunciation'] ?? '' ); ?></span>
+							<?php if ( ! empty( $puzzle['audio_url'] ) ) : ?>
+								<button class="wh-audio-btn" id="wh-audio-btn" data-src="<?php echo esc_url( $puzzle['audio_url'] ); ?>" title="Listen to pronunciation">
+									<span class="wh-audio-icon">🔊</span>
+								</button>
+								<audio id="wh-pronunciation-audio" style="display:none;"></audio>
+							<?php endif; ?>
+						</div>
+					</div>
+
+					<div class="wh-discovery-grid">
+						<div class="wh-discovery-item wh-span-all">
+							<div class="wh-discovery-label">Definition</div>
+							<p class="wh-discovery-text" id="wh-definition"><?php echo esc_html( $puzzle['definition'] ?? '' ); ?></p>
+						</div>
+
+						<div class="wh-discovery-item wh-span-all wh-example-box" id="wh-example-wrapper" style="<?php echo empty($puzzle['example_sentence']) ? 'display:none;' : ''; ?>">
+							<div class="wh-discovery-label">Example Usage</div>
+							<p class="wh-discovery-text italic" id="wh-example"><?php echo esc_html( $puzzle['example_sentence'] ?? '' ); ?></p>
+						</div>
+
+						<div class="wh-discovery-item">
+							<div class="wh-discovery-label">Synonyms</div>
+							<div class="wh-tag-container" id="wh-synonyms">
+								<?php 
+								$syns = json_decode( $puzzle['synonyms'] ?? '[]', true );
+								if ( ! empty( $syns ) ) {
+									foreach ( array_slice( $syns, 0, 8 ) as $syn ) {
+										echo '<span class="wh-tag">' . esc_html( $syn ) . '</span>';
+									}
+								}
+								?>
+							</div>
+						</div>
+
+						<div class="wh-discovery-item">
+							<div class="wh-discovery-label">Antonyms</div>
+							<div class="wh-tag-container" id="wh-antonyms">
+								<?php 
+								$ants = json_decode( $puzzle['antonyms'] ?? '[]', true );
+								if ( ! empty( $ants ) ) {
+									foreach ( array_slice( $ants, 0, 8 ) as $ant ) {
+										echo '<span class="wh-tag wh-tag-alt">' . esc_html( $ant ) . '</span>';
+									}
+								}
+								?>
+							</div>
+						</div>
+
+						<div class="wh-discovery-item wh-span-all">
+							<div class="wh-discovery-label">Etymology & History</div>
+							<p class="wh-discovery-text small" id="wh-etymology"><?php echo esc_html( $puzzle['etymology'] ?? '' ); ?></p>
+							<div class="wh-first-use" id="wh-first-use-wrapper" style="<?php echo empty($puzzle['first_known_use']) ? 'display:none;' : ''; ?>">First Known Use: <strong id="wh-first-use"><?php echo esc_html( $puzzle['first_known_use'] ?? '' ); ?></strong></div>
+						</div>
+					</div>
+				</div>
 		</div>
 		<?php
 		return ob_get_clean();

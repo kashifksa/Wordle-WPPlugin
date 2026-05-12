@@ -977,3 +977,170 @@ body.dark-mode .wh-premium-calendar .flatpickr-day:hover {
     .wh-difficulty-label { font-size: 0.7rem; }
     .wh-stats-summary { padding: 0.75rem; }
 }
+/* 🧪 Word Discovery Section (Premium Design) */
+.wh-discovery-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed var(--wh-border);
+    text-align: left;
+    animation: slide-up 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.wh-discovery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.wh-discovery-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--wh-text);
+}
+
+.wh-discovery-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--wh-card);
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 1px solid var(--wh-border);
+}
+
+.wh-pos {
+    color: var(--wordle-green);
+    font-style: italic;
+}
+
+.wh-pronunciation {
+    color: var(--wh-text-muted);
+}
+
+.wh-audio-btn {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease !important;
+    margin-left: 2px;
+}
+
+.wh-audio-btn:hover {
+    transform: scale(1.2) !important;
+}
+
+.wh-audio-icon {
+    font-size: 1.1rem;
+}
+
+.wh-discovery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.wh-span-all {
+    grid-column: 1 / -1;
+}
+
+.wh-discovery-item {
+    background: var(--wh-card);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--wh-border);
+}
+
+.wh-discovery-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--wh-text-muted);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+}
+
+.wh-discovery-text {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--wh-text);
+}
+
+.wh-discovery-text.small {
+    font-size: 0.85rem;
+    color: var(--wh-text-muted);
+}
+
+.wh-discovery-text.italic {
+    font-style: italic;
+}
+
+.wh-example-box {
+    background: var(--wh-inner-card);
+    border-left: 4px solid var(--wordle-yellow);
+}
+
+.wh-tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.2rem;
+}
+
+.wh-tag {
+    background: var(--wh-inner-card);
+    color: var(--wh-text);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid var(--wh-border);
+}
+
+.wh-tag-alt {
+    color: var(--wh-text-muted);
+    background: transparent;
+    border-style: dashed;
+}
+
+.wh-first-use {
+    margin-top: 0.8rem;
+    font-size: 0.8rem;
+    color: var(--wh-text-muted);
+    border-top: 1px solid var(--wh-border);
+    padding-top: 0.6rem;
+}
+
+.wh-first-use strong {
+    color: var(--wh-text);
+}
+
+/* 📱 Discovery Mobile Tweak */
+@media (max-width: 600px) {
+    .wh-discovery-grid {
+        grid-template-columns: 1fr;
+    }
+    .wh-discovery-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .wh-discovery-meta {
+        width: fit-content;
+    }
+}

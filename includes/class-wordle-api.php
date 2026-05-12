@@ -289,6 +289,8 @@ class Wordle_API {
 						'etymology'        => $puzzle['etymology'] ?? '',
 						'example_sentence' => $puzzle['example_sentence'] ?? '',
 						'first_known_use'  => $puzzle['first_known_use'] ?? '',
+						'synonyms'         => $puzzle['synonyms'] ?? '[]',
+						'antonyms'         => $puzzle['antonyms'] ?? '[]',
 					),
 				);
 			}

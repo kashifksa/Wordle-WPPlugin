@@ -312,6 +312,55 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Update Discovery Section (Handle both flat raw DB and nested Cache formats)
+        const dict = data.dictionary || data;
+        $container.find('#wh-pos').text(dict.part_of_speech || '');
+        $container.find('#wh-pronunciation').text(dict.pronunciation || '');
+        $container.find('#wh-definition').text(dict.definition || '');
+        $container.find('#wh-etymology').text(dict.etymology || '');
+        $container.find('#wh-first-use').text(dict.first_known_use || '');
+        
+        const $firstUseWrapper = $container.find('#wh-first-use-wrapper');
+        if (dict.first_known_use) $firstUseWrapper.show(); else $firstUseWrapper.hide();
+
+        const $exampleWrapper = $container.find('#wh-example-wrapper');
+        const example = dict.example_sentence || dict.example;
+        if (example) {
+            $exampleWrapper.show().find('#wh-example').text(example);
+        } else {
+            $exampleWrapper.hide();
+        }
+
+        const audioUrl = dict.audio_url || dict.audio;
+        const $audioBtn = $container.find('#wh-audio-btn');
+        if (audioUrl) {
+            $audioBtn.show().attr('data-src', audioUrl);
+        } else {
+            $audioBtn.hide();
+        }
+
+        // Handle Tags (Synonyms/Antonyms)
+        function updateTags($el, rawData) {
+            let tags = [];
+            if (typeof rawData === 'string' && rawData !== '[]') {
+                try { tags = JSON.parse(rawData); } catch(e) {}
+            } else if (Array.isArray(rawData)) {
+                tags = rawData;
+            }
+            
+            $el.empty();
+            if (tags && tags.length) {
+                tags.slice(0, 8).forEach(tag => {
+                    $el.append(`<span class="wh-tag ${$el.attr('id') === 'wh-antonyms' ? 'wh-tag-alt' : ''}">${tag}</span>`);
+                });
+            }
+        }
+        updateTags($container.find('#wh-synonyms'), dict.synonyms);
+        updateTags($container.find('#wh-antonyms'), dict.antonyms);
+
+        // Reset Discovery Visibility
+        $container.find('#wh-discovery-section').hide();
+
         // Initialize Game Logic
         initGameLogic($container);
     }
@@ -360,6 +409,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if ($container.find('.wh-box.revealed').length === word.length) {
                 $revealBtn.addClass('wh-hidden').prop('disabled', true);
                 $postRevealActions.addClass('wh-visible');
+                
+                // Show Discovery Section with a small delay for premium feel
+                setTimeout(() => {
+                    $container.find('#wh-discovery-section').fadeIn(800);
+                }, 400);
             }
         }
 
@@ -373,6 +427,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         setTimeout(() => {
                             $revealBtn.addClass('wh-hidden');
                             $postRevealActions.addClass('wh-visible');
+                            
+                            // Show Discovery Section
+                            jQuery('#wh-discovery-section').fadeIn(800);
                         }, 800);
                     }
                 }, i * 180);
@@ -383,6 +440,9 @@ document.addEventListener('DOMContentLoaded', () => {
             $boxes.removeClass('revealed');
             $postRevealActions.removeClass('wh-visible');
             $revealBtn.removeClass('wh-hidden').prop('disabled', false);
+            
+            // Hide Discovery Section
+            jQuery('#wh-discovery-section').hide();
         });
 
         $container.off('click', '.wh-hint-card.locked').on('click', '.wh-hint-card.locked', function(e) {
@@ -390,6 +450,20 @@ document.addEventListener('DOMContentLoaded', () => {
             $card.fadeOut(200, function() {
                 $card.removeClass('locked').addClass('unlocked').fadeIn(400);
             });
+        });
+
+        // Audio Playback
+        $container.off('click', '#wh-audio-btn').on('click', '#wh-audio-btn', function() {
+            const audioSrc = jQuery(this).attr('data-src');
+            const $audio = jQuery('#wh-pronunciation-audio');
+            if (audioSrc && $audio.length) {
+                $audio.attr('src', audioSrc);
+                $audio[0].play();
+                
+                // Visual feedback
+                jQuery(this).addClass('playing');
+                setTimeout(() => jQuery(this).removeClass('playing'), 500);
+            }
         });
     }
 });

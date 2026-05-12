@@ -13,6 +13,8 @@ This document outlines the roadmap for upcoming features and optimizations for t
 - [ ] **Archive Shortcode (`[wordle_archive]`)**: Render a grid or list of past puzzles with links to their hints (e.g., `?date=YYYY-MM-DD`).
 - [ ] **Countdown Timer (`[wordle_timer]`)**: A live countdown until the next Wordle hints are released.
 - [ ] **"Copy Clues" Button**: A one-click button to copy hints (without the answer) for social sharing.
+- [ ] **FAQ Schema Integration**: Automatically inject JSON-LD FAQ schema for daily hints to improve search engine visibility and capture "People Also Ask" snippets.
+- [ ] **Monthly Roundup Generator**: Automated tool to create/update monthly archive summaries (e.g., "Wordle Answers: May 2026").
 - [x] **Dynamic SEO Meta Tags**: Hooks into `document_title_parts` (WP core), Rank Math, and Yoast filters to update the page title to "Wordle Hint #[number] - [Date]" and inject a keyword-rich meta description dynamically based on the current puzzle.
 - [x] **Structured Data (Schema)**: Handled via Rank Math plugin — no custom code needed.
 - [x] **Dark Mode Persistence**: Restore user's dark/light theme preference from `localStorage` on every page load so it survives refreshes.
