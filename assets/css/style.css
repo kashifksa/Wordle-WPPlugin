@@ -330,51 +330,135 @@ body.dark-mode .wh-toggle-knob {
     color: #000000 !important;
 }
 
-.wh-reveal-main-btn.wh-hidden {
+.wh-hidden {
     opacity: 0 !important;
     visibility: hidden !important;
     pointer-events: none !important;
+    display: none !important; /* Force hide from layout */
 }
 
-/* Post Reveal Actions */
-.wh-post-reveal-actions {
+.wh-reveal-main-btn.wh-hidden {
+    display: none !important;
+}
+
+/* Smart Post-Reveal Toolbar */
+.wh-post-reveal-toolbar {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
     width: 100%;
+    background: var(--wh-card);
+    border: 1px solid var(--wh-border);
+    border-radius: 12px;
+    padding: 10px 15px;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
     opacity: 0;
     visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.4s ease, visibility 0.4s ease !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.wh-post-reveal-actions.wh-visible {
+.wh-post-reveal-toolbar.wh-visible {
     opacity: 1;
     visibility: visible;
-    pointer-events: auto;
+    display: flex !important;
 }
 
-.wh-secondary-btn {
-    background: transparent !important;
-    color: var(--wh-text-muted) !important;
+.wh-toolbar-segment {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wh-toolbar-btn, .wh-share-btn, .wh-replay-btn {
+    background: var(--wh-inner-card) !important;
     border: 1px solid var(--wh-border) !important;
-    padding: 0.6rem 2rem !important;
+    color: var(--wh-text) !important;
     border-radius: 8px !important;
     cursor: pointer !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    padding: 6px 12px !important;
+}
+
+.wh-toolbar-btn:hover, .wh-share-btn:hover, .wh-replay-btn:hover {
+    background: var(--wordle-yellow) !important;
+    border-color: var(--wordle-yellow) !important;
+    color: #000 !important;
+}
+
+.wh-share-btn {
+    background: var(--wordle-green) !important;
+    color: white !important;
+    border-color: var(--wordle-green) !important;
+    padding: 8px 16px !important;
     font-size: 0.9rem !important;
-    font-weight: 600 !important;
 }
 
-#reveal-again-btn {
-    margin-top: 10px;
+.wh-share-btn:hover {
+    background: var(--wordle-yellow-dark) !important;
+    color: #000 !important;
 }
 
-.wh-secondary-btn:hover {
-    color: #000000 !important;
-    border-color: var(--wordle-yellow-dark) !important;
-    background-color: var(--wordle-yellow) !important;
+.wh-next-countdown {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 4px;
+}
+
+.next-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--wh-text-muted);
+    letter-spacing: 0.05em;
+}
+
+.next-time {
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--wordle-green);
+}
+
+.wh-replay-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    font-size: 16px !important;
+}
+
+/* Responsive Toolbar */
+@media (max-width: 600px) {
+    .wh-post-reveal-toolbar {
+        flex-direction: column;
+        position: static;
+        transform: none;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .wh-toolbar-segment {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .wh-nav-segment { order: 2; }
+    .wh-share-segment { order: 1; }
+    .wh-timer-segment { order: 3; }
+
+    .wh-share-btn {
+        width: 100%;
+    }
 }
 
 /* Hints Section */

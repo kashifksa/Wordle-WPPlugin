@@ -148,6 +148,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial attempt
     initCalendar();
 
+    // --- 1.8.5 SMART TOOLBAR TIMER ---
+    function initToolbarTimer() {
+        const $timer = jQuery('#wh-timer-val');
+        if (!$timer.length) return;
+
+        function updateTimer() {
+            const now = new Date();
+            // Next puzzle is at midnight UTC/local transition or usually 00:00:00
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+
+            const diff = tomorrow - now;
+            if (diff <= 0) {
+                $timer.text("00:00:00");
+                return;
+            }
+
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+
+            $timer.text(
+                String(h).padStart(2, '0') + ":" + 
+                String(m).padStart(2, '0') + ":" + 
+                String(s).padStart(2, '0')
+            );
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    }
+    initToolbarTimer();
+
     // --- 1.9 INSTANT ACTIVATION ---
     initGameLogic(jQuery('.wordle-hint-container'));
 
@@ -299,10 +333,26 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset cards to locked state for new date
         $container.find('.wh-hint-card').removeClass('unlocked').addClass('locked').show();
 
-        // Update Answer Grid
         const $grid = $container.find('#wh-answer-grid');
+        const $revealBtn = $container.find('#reveal-answer-btn');
+        const $toolbar = $container.find('#wh-post-reveal-toolbar');
+        const $prevBtnLabel = $toolbar.find('#wh-toolbar-prev .label');
+        
         $grid.attr('data-word', word.toUpperCase());
         $grid.find('.wh-box').removeClass('revealed'); // Hide answer for new date
+        
+        // Reset Toolbar & Reveal Button Visibility
+        $revealBtn.removeClass('wh-hidden').prop('disabled', false);
+        $toolbar.removeClass('wh-visible').addClass('wh-hidden');
+
+        // Dynamic Button Text (Past dates shouldn't say "Today's")
+        if (puzzleDate < today) {
+            $revealBtn.find('.btn-text').text('Show Answer');
+            $prevBtnLabel.text('Previous Day');
+        } else {
+            $revealBtn.find('.btn-text').text("Show Today's Answer");
+            $prevBtnLabel.text('Yesterday');
+        }
 
         const letters = word.toUpperCase().split('');
         const tiles = $container.find('.wh-box-back');
@@ -386,8 +436,50 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const $boxes = $container.find('.wh-box');
         const $revealBtn = $container.find('#reveal-answer-btn');
-        const $postRevealActions = $container.find('.wh-post-reveal-actions');
-        const $revealAgainBtn = $container.find('#reveal-again-btn');
+        const $toolbar = $container.find('#wh-post-reveal-toolbar');
+
+        // New Toolbar Button Listeners
+        $container.off('click', '#wh-toolbar-prev').on('click', '#wh-toolbar-prev', function() {
+            const currentDataDate = jQuery('.wordle-hint-container .wh-date').attr('data-current-date') || finalDate;
+            const dateObj = new Date(currentDataDate + 'T00:00:00');
+            dateObj.setDate(dateObj.getDate() - 1);
+            const newDateStr = dateObj.getFullYear() + '-' + String(dateObj.getMonth() + 1).padStart(2, '0') + '-' + String(dateObj.getDate()).padStart(2, '0');
+            navigateToDate(newDateStr);
+        });
+
+        $container.off('click', '#wh-toolbar-calendar').on('click', '#wh-toolbar-calendar', function() {
+            if (window.whFlatpickr) window.whFlatpickr.open();
+        });
+
+        $container.off('click', '#wh-replay-reveal').on('click', '#wh-replay-reveal', function() {
+            $boxes.removeClass('revealed');
+            $toolbar.removeClass('wh-visible').addClass('wh-hidden');
+            $revealBtn.removeClass('wh-hidden').prop('disabled', false);
+            jQuery('#wh-discovery-section').hide();
+            
+            // Auto-trigger reveal again for smooth UX
+            setTimeout(() => $revealBtn.trigger('click'), 400);
+        });
+
+        // Copy Results Logic (Emojis)
+        $container.off('click', '#wh-copy-results').on('click', '#wh-copy-results', function() {
+            const puzzleNum = $container.find('.wh-puzzle-num').text();
+            const dateStr = $container.find('.wh-date').text();
+            const word = $grid.attr('data-word') || '';
+            const $btn = jQuery(this);
+            const originalHtml = $btn.html();
+
+            // Wordle grid results (always green for the answer reveal)
+            const gridString = "🟩🟩🟩🟩🟩";
+            const shareText = `Wordle ${puzzleNum}\n${dateStr}\n\n${gridString}\n\nSolve it here: ${window.location.href}`;
+
+            navigator.clipboard.writeText(shareText).then(() => {
+                $btn.html('<span>✅ Copied!</span>').addClass('copied');
+                setTimeout(() => {
+                    $btn.html(originalHtml).removeClass('copied');
+                }, 2000);
+            });
+        });
 
         function revealBox(index) {
             if (!word || index < 0 || index >= word.length) return;
@@ -408,7 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function checkAllRevealed() {
             if ($container.find('.wh-box.revealed').length === word.length) {
                 $revealBtn.addClass('wh-hidden').prop('disabled', true);
-                $postRevealActions.addClass('wh-visible');
+                $toolbar.removeClass('wh-hidden').addClass('wh-visible');
                 
                 // Show Discovery Section with a small delay for premium feel
                 setTimeout(() => {
@@ -426,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (i === word.length - 1) {
                         setTimeout(() => {
                             $revealBtn.addClass('wh-hidden');
-                            $postRevealActions.addClass('wh-visible');
+                            $toolbar.removeClass('wh-hidden').addClass('wh-visible');
                             
                             // Show Discovery Section
                             jQuery('#wh-discovery-section').fadeIn(800);
@@ -434,15 +526,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }, i * 180);
             }
-        });
-
-        $revealAgainBtn.off('click').on('click', function() {
-            $boxes.removeClass('revealed');
-            $postRevealActions.removeClass('wh-visible');
-            $revealBtn.removeClass('wh-hidden').prop('disabled', false);
-            
-            // Hide Discovery Section
-            jQuery('#wh-discovery-section').hide();
         });
 
         $container.off('click', '.wh-hint-card.locked').on('click', '.wh-hint-card.locked', function(e) {

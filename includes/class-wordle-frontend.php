@@ -309,8 +309,36 @@ class Wordle_Frontend {
 							<span class="btn-text">Show Today's Answer</span>
 						</button>
 
-						<div class="wh-post-reveal-actions">
-							<button id="reveal-again-btn" class="wh-secondary-btn">Reveal Again</button>
+						<!-- New Smart Action Toolbar -->
+						<div id="wh-post-reveal-toolbar" class="wh-post-reveal-toolbar wh-hidden">
+							<div class="wh-toolbar-segment wh-nav-segment">
+								<?php 
+								$is_today = ( $puzzle['date'] === date( 'Y-m-d' ) );
+								$nav_label = $is_today ? 'Yesterday' : 'Previous Day';
+								?>
+								<button id="wh-toolbar-prev" class="wh-toolbar-btn" title="<?php echo $nav_label; ?>'s Puzzle">
+									<span class="icon">←</span> <span class="label"><?php echo $nav_label; ?></span>
+								</button>
+								<button id="wh-toolbar-calendar" class="wh-toolbar-btn" title="Open Calendar">
+									<span class="icon">📅</span>
+								</button>
+							</div>
+
+							<div class="wh-toolbar-segment wh-share-segment">
+								<button id="wh-copy-results" class="wh-share-btn">
+									<span class="icon">📋</span> <span class="label">Copy Results</span>
+								</button>
+							</div>
+
+							<div class="wh-toolbar-segment wh-timer-segment">
+								<div class="wh-next-countdown">
+									<span class="next-label">NEXT WORDLE</span>
+									<span id="wh-timer-val" class="next-time">00:00:00</span>
+								</div>
+								<button id="wh-replay-reveal" class="wh-replay-btn" title="Replay Animation">
+									<span class="icon">↻</span>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
