@@ -390,3 +390,6 @@ Antigravity: I have successfully integrated **Section 9: Topical Authority & Str
 204: 
 205: User: next and from next tell me the commands for git and github also i want to learn about them so after completion every task give me the git commands for branches and commit then after testing ask me to commit on my master branch go check my existing git repository for understanding
 206: Antigravity: I have completed **Step 2: Add Pagination Cap to `/all` Endpoint**. I modified `get_all_wordle()` to enforce a maximum limit of 100 records per request, preventing potential database dumping. Since you're currently on the `feature/security` branch, I'll provide the Git commands to save your progress and eventually merge it into `master`.
+207: 
+208: User: next step 3
+209: Antigravity: I have completed **Step 3: Sanitize `/save` Endpoint Inputs**. I implemented a strict whitelist of 20+ allowed database fields and applied individual sanitization (like `intval`, `sanitize_text_field`, and `esc_url_raw`) to each. This prevents "Mass Assignment" attacks where a malicious user could try to overwrite internal database columns like `id` or `created_at`.

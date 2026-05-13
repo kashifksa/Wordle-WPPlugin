@@ -205,13 +205,51 @@ class Wordle_API {
 
 	public static function save_wordle( $request ) {
 		$params = $request->get_params();
-		$inserted = Wordle_DB::insert_puzzle( $params );
+		$sanitized_data = array();
+		
+		$whitelist = array(
+			'date'               => 'sanitize_text_field',
+			'puzzle_number'      => 'intval',
+			'word'               => 'sanitize_text_field',
+			'hint1'              => 'sanitize_textarea_field',
+			'hint2'              => 'sanitize_textarea_field',
+			'hint3'              => 'sanitize_textarea_field',
+			'final_hint'         => 'sanitize_textarea_field',
+			'vowel_count'        => 'intval',
+			'consonant_count'    => 'intval',
+			'first_letter'       => 'sanitize_text_field',
+			'difficulty'         => 'floatval',
+			'average_guesses'    => 'floatval',
+			'guess_distribution' => 'sanitize_text_field',
+			'part_of_speech'     => 'sanitize_text_field',
+			'definition'         => 'sanitize_textarea_field',
+			'pronunciation'      => 'sanitize_text_field',
+			'audio_url'          => 'esc_url_raw',
+			'etymology'          => 'sanitize_textarea_field',
+			'example_sentence'   => 'sanitize_textarea_field',
+			'first_known_use'    => 'sanitize_text_field',
+			'synonyms'           => 'sanitize_text_field',
+			'antonyms'           => 'sanitize_text_field',
+			'locale'             => 'sanitize_text_field',
+		);
+
+		foreach ( $whitelist as $field => $sanitize_callback ) {
+			if ( isset( $params[$field] ) ) {
+				$sanitized_data[$field] = call_user_func( $sanitize_callback, $params[$field] );
+			}
+		}
+
+		if ( empty( $sanitized_data['puzzle_number'] ) || empty( $sanitized_data['date'] ) ) {
+			return new WP_REST_Response( array( 'success' => false, 'message' => 'Missing required fields: puzzle_number and date' ), 400 );
+		}
+
+		$inserted = Wordle_DB::insert_puzzle( $sanitized_data );
 		
 		if ( $inserted ) {
 			return new WP_REST_Response( array( 'success' => true, 'message' => 'Saved' ), 200 );
 		}
 		
-		return new WP_REST_Response( array( 'success' => false, 'message' => 'Duplicate or error' ), 400 );
+		return new WP_REST_Response( array( 'success' => false, 'message' => 'Database error or duplicate' ), 400 );
 	}
 
 	public static function save_json_to_file( $request ) {

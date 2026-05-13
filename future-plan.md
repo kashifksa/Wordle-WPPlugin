@@ -48,10 +48,10 @@ No maximum on `$limit` — anyone can request `?limit=99999` and dump the full d
 
 ---
 
-### Step 3 — 🔴 Security: Sanitize `/save` Endpoint Inputs
+### Step 3 — ✅ Security: Sanitize `/save` Endpoint Inputs (Completed)
 **File**: `class-wordle-api.php`, `save_wordle()`
 `$request->get_params()` passed raw to `insert_puzzle()` — allows mass-assignment of any DB column.
-**Fix**: Whitelist and sanitize only known fields before inserting.
+**Fix**: Whitelist and sanitize only known fields before inserting. (Fixed: Implemented strict whitelist).
 
 ---
 
