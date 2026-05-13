@@ -423,3 +423,6 @@ Antigravity: I have successfully integrated **Section 9: Topical Authority & Str
 237: 
 238: User: next
 239: Antigravity: I have completed **Step 13: API Rate Limiting**. I implemented a security layer for your public REST endpoints. Each user (tracked by IP address) is now limited to 60 requests per minute for the `/data` and `/all` endpoints. This prevents malicious bots from scraping your hints and protects your server from being overwhelmed.
+240: 
+241: User: next
+242: Antigravity: I have completed **Step 14: Performance: Object Cache Integration**. I integrated the WordPress Object Cache into the API fetching logic. This means common requests (like today's hints) are stored in memory for 1 hour, reducing database load and speeding up response times. I also ensured the cache is cleared whenever you refresh the JSON data, so your content is always fresh and fast.

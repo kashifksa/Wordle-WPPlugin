@@ -135,6 +135,12 @@ class Wordle_API {
 		$locale = $request->get_param( 'locale' ) ?: 'global';
 		$date   = $request->get_param( 'date' ) ?: current_time( 'Y-m-d' );
 		
+		$cache_key = "wordle_data_{$date}_{$locale}";
+		$cached = wp_cache_get( $cache_key, 'wordle_hint' );
+		if ( false !== $cached ) {
+			return new WP_REST_Response( $cached, 200 );
+		}
+
 		$puzzle = Wordle_DB::get_puzzle_by_date( $date, $locale );
 
 		if ( ! $puzzle ) {
@@ -144,7 +150,10 @@ class Wordle_API {
 			), 404 );
 		}
 		
-		return new WP_REST_Response( self::prepare_puzzle_response( $puzzle ), 200 );
+		$response_data = self::prepare_puzzle_response( $puzzle );
+		wp_cache_set( $cache_key, $response_data, 'wordle_hint', HOUR_IN_SECONDS );
+
+		return new WP_REST_Response( $response_data, 200 );
 	}
 
 	/**
@@ -203,28 +212,33 @@ class Wordle_API {
 	public static function get_all_wordle( $request ) {
 		$page  = $request->get_param( 'page' ) ?: 1;
 		$limit = $request->get_param( 'limit' ) ?: 20;
-		
-		// Cap limit to 100 to prevent data dumping
 		$limit = min( 100, intval( $limit ) );
-		
 		$locale = $request->get_param( 'locale' ) ?: 'global';
 		
+		$cache_key = "wordle_all_{$locale}_p{$page}_l{$limit}";
+		$cached = wp_cache_get( $cache_key, 'wordle_hint' );
+		if ( false !== $cached ) {
+			return new WP_REST_Response( $cached, 200 );
+		}
+
 		global $wpdb;
 		$table = Wordle_DB::get_table_name();
 		$offset = ( $page - 1 ) * $limit;
 		
 		$results = $wpdb->get_results( $wpdb->prepare(
 			"SELECT * FROM $table WHERE locale = %s ORDER BY date DESC LIMIT %d OFFSET %d",
-			$locale,
-			$limit,
-			$offset
-		) );
+			$locale, $limit, $offset
+		), ARRAY_A );
 		
-		return new WP_REST_Response( array(
+		$response_data = array(
 			'success' => true,
 			'page'    => (int)$page,
 			'data'    => $results,
-		), 200 );
+		);
+		
+		wp_cache_set( $cache_key, $response_data, 'wordle_hint', HOUR_IN_SECONDS );
+
+		return new WP_REST_Response( $response_data, 200 );
 	}
 
 	public static function save_wordle( $request ) {
@@ -385,6 +399,10 @@ class Wordle_API {
 		// Refresh Wordle Solver JSON as well
 		if ( class_exists( 'Wordle_Solver' ) ) {
 			Wordle_Solver::generate_solver_json();
+		}
+
+		if ( $success !== false && function_exists( 'wp_cache_delete' ) ) {
+			wp_cache_delete( 'wordle_all_puzzles', 'wordle_hint' );
 		}
 
 		return $success !== false ? count( $puzzles_data ) : false;
