@@ -1,46 +1,10 @@
 {
     "meta": {
-        "last_updated": "2026-05-12T11:26:00Z",
+        "last_updated": "2026-05-13T07:32:09Z",
         "plugin": "Wordle Hint Pro",
         "version": "1.0.6"
     },
     "data": {
-        "2026-05-11": {
-            "date": "2026-05-11",
-            "number": 1787,
-            "word": "NEWLY",
-            "vowels": 1,
-            "starts_with": "N",
-            "hints": {
-                "vague": "A fleeting quality, ever-present yet brief.",
-                "category": "Concepts tied to new beginnings.",
-                "specific": "A condition that accompanies fresh experiences.",
-                "final": "Something that accompanies every new start."
-            },
-            "stats": {
-                "difficulty": 5,
-                "average_guesses": 4.8,
-                "distribution": [
-                    0,
-                    1,
-                    9,
-                    31,
-                    37,
-                    17
-                ]
-            },
-            "dictionary": {
-                "part_of_speech": "adverb",
-                "definition": "lately, recently",
-                "pronunciation": "\u02c8n\u00fc-l\u0113",
-                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/newly.mp3",
-                "etymology": "Etymology unavailable",
-                "example_sentence": "a newly married couple",
-                "first_known_use": "before 12th century",
-                "synonyms": "[\"freshly\",\"just\",\"late\",\"lately\",\"new\",\"now\",\"only\",\"recently\"]",
-                "antonyms": "[\"anciently\"]"
-            }
-        },
         "2026-05-12": {
             "date": "2026-05-12",
             "number": 1788,
@@ -48,10 +12,10 @@
             "vowels": 1,
             "starts_with": "C",
             "hints": {
-                "vague": "A silent guardian of time",
-                "category": "Something you might find on a wall",
-                "specific": "A device that measures the passage of time, often with moving parts",
-                "final": "It's what you check when you're running late"
+                "vague": "Something measured in intervals.",
+                "category": "A tool or mechanism used for reference and organization.",
+                "specific": "A device displaying the passing of time, often found in homes and public spaces.",
+                "final": "A circular display showing the hour and, commonly, minutes, typically used to synchronize daily activities."
             },
             "stats": {
                 "difficulty": 3.9,
@@ -67,13 +31,13 @@
             },
             "dictionary": {
                 "part_of_speech": "noun",
-                "definition": "A mechanical or electronic device for measuring and displaying time.",
+                "definition": "a device other than a watch for indicating or measuring time commonly by means of hands moving on a dial; broadly : any periodic system by which time is measured",
                 "pronunciation": "\u02c8kl\u00e4k",
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/clock.mp3",
-                "etymology": "From Old English 'clocc', a bell, and 'clocian', to strike. Influenced by Old Norse 'klokkr', a bell.",
+                "etymology": "Middle English clok, from Middle Dutch clocke bell, clock, from Old French or Medieval Latin; Old French dialect (Picard) cloque bell, from Medieval Latin clocca, of Celtic origin; akin to Middle Irish clocc bell",
                 "example_sentence": "The old grandfather clock stood tall in the foyer, ticking away with a soothing melody.",
                 "first_known_use": "14th century",
-                "synonyms": "[\"watch\",\"timer\",\"hourglass\"]",
+                "synonyms": "[\"chronometer\",\"timekeeper\",\"timepiece\",\"timer\"]",
                 "antonyms": "[\"stopwatch\",\"clockless\",\"timeless\"]"
             }
         },
@@ -84,10 +48,10 @@
             "vowels": 1,
             "starts_with": "D",
             "hints": {
-                "vague": "Sometimes awkwardly mismatched with elegance.",
-                "category": "Things people might wear but regret afterwards.",
-                "specific": "An appearance that is slightly off, like mismatched socks.",
-                "final": "The kind of style that screams 'out of place' or 'unlucky'."
+                "vague": "Outdated charm that's hard to explain",
+                "category": "A quality found in attire worn by those who like to follow the past rather than trendsetters",
+                "specific": "It's when something lacks a modern polish, giving it a less-than-fashionable appearance",
+                "final": "It's the style of clothing that's reminiscent of a bygone era and often seen on the unambitious"
             },
             "stats": {
                 "difficulty": 0,
@@ -113,10 +77,10 @@
             "vowels": 2,
             "starts_with": "W",
             "hints": {
-                "vague": "An ephemeral occurrence that can turn one's path.",
-                "category": "Something you might experience while balancing on one foot.",
-                "specific": "The sensation when a smooth ride becomes uneven.",
-                "final": "A moment of losing your footing, without actually falling."
+                "vague": "Ephemeral moments caught on a thread of time.",
+                "category": "A gentle sway, often found near moving bodies of water.",
+                "specific": "It's what you experience when unsure of your next step.",
+                "final": "Think of the sensation you get when walking on thin ice, unsure if it'll hold."
             },
             "stats": {
                 "difficulty": 0,
@@ -142,10 +106,10 @@
             "vowels": 2,
             "starts_with": "C",
             "hints": {
-                "vague": "A binding that transcends the surface level",
-                "category": "A fundamental part of a tradition or custom",
-                "specific": "A commitment that underpins a community's values",
-                "final": "The foundation upon which a shared ideal is built"
+                "vague": "A foundation built on unwavering faith.",
+                "category": "Something people often swear by or take an oath to.",
+                "specific": "A pledge or promise made with deep conviction, especially a public one.",
+                "final": "In many cultures, it's a solemn vow that holds great significance."
             },
             "stats": {
                 "difficulty": 0,
@@ -171,10 +135,10 @@
             "vowels": 2,
             "starts_with": "M",
             "hints": {
-                "vague": "Movement often has its price",
-                "category": "A common experience for many",
-                "specific": "Change can be unsettling, but necessary",
-                "final": "The act of transitioning often requires a push"
+                "vague": "A subtle shift, imperceptibly at first, in circumstances of daily life.",
+                "category": "Concepts related to change of place or role.",
+                "specific": "A person's ability to relocate or adapt, essential for growth and progress.",
+                "final": "A vital life skill that lets you navigate transitions, big or small, with confidence."
             },
             "stats": {
                 "difficulty": 0,
@@ -200,10 +164,10 @@
             "vowels": 1,
             "starts_with": "B",
             "hints": {
-                "vague": "A delicate balance that can easily tip the scales.",
-                "category": "Something you might find in a municipal code.",
-                "specific": "A standard or regulation that governs certain practices.",
-                "final": "The rules that shape the fabric of a community, often written by local authorities."
+                "vague": "A boundary that's often found in formal settings.",
+                "category": "Regulations or codes that govern local affairs.",
+                "specific": "A written rule that's typically established by a governing body.",
+                "final": "A municipal rule that outlines the norms of a place."
             },
             "stats": {
                 "difficulty": 0,
@@ -229,10 +193,10 @@
             "vowels": 2,
             "starts_with": "L",
             "hints": {
-                "vague": "Fragile bonds, sometimes found in quiet moments.",
-                "category": "Concepts people often have a strong opinion about",
-                "specific": "A feeling that can be overwhelming when it takes hold",
-                "final": "A sense of discomfort that can spread quickly among people."
+                "vague": "A feeling you might have after stepping on a cold floor",
+                "category": "Something you might find disturbing or unpleasant",
+                "specific": "A negative emotion brought on by an unwanted presence",
+                "final": "The kind of discomfort you feel when something's lingering nearby"
             },
             "stats": {
                 "difficulty": 0,
@@ -258,10 +222,10 @@
             "vowels": 1,
             "starts_with": "D",
             "hints": {
-                "vague": "Something that clings to your skin after being outside on a windy day.",
-                "category": "Associated with desert landscapes or areas with frequent storms.",
-                "specific": "It's what remains when the air is filled with fine particles",
-                "final": "Commonly found on old cars or worn-out furniture"
+                "vague": "A whisper from the past",
+                "category": "Something found on a forgotten shelf",
+                "specific": "A residue left behind by time and motion",
+                "final": "A reminder that all is not always new"
             },
             "stats": {
                 "difficulty": 0,
@@ -273,11 +237,40 @@
                 "definition": "covered or abounding with dust",
                 "pronunciation": "\u02c8d\u0259-st\u0113",
                 "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/dusty.mp3",
-                "etymology": "",
+                "etymology": "Etymology unavailable",
                 "example_sentence": "dusty scholarship",
                 "first_known_use": "13th century",
                 "synonyms": "[\"fine\",\"floury\",\"powdery\",\"bedraggled\",\"befouled\",\"begrimed\",\"bemired\",\"besmirched\",\"black\",\"blackened\",\"cruddy\",\"dingy\",\"dirty\",\"draggled\",\"filthy\"]",
                 "antonyms": "[\"coarse\",\"grainy\",\"granular\",\"granulated\",\"clean\",\"cleanly\",\"immaculate\",\"spick-and-span\",\"spotless\",\"stainless\"]"
+            }
+        },
+        "2026-05-20": {
+            "date": "2026-05-20",
+            "number": 1796,
+            "word": "WRECK",
+            "vowels": 1,
+            "starts_with": "W",
+            "hints": {
+                "vague": "Disassembled remnants of a past life",
+                "category": "Something one might find on the ocean floor or after a storm",
+                "specific": "A state of ruin or collapse, often resulting from external forces",
+                "final": "A destructive outcome, implying something once whole is now broken and beyond repair"
+            },
+            "stats": {
+                "difficulty": 0,
+                "average_guesses": 0,
+                "distribution": []
+            },
+            "dictionary": {
+                "part_of_speech": "noun",
+                "definition": "something cast up on the land by the sea especially after a shipwreck",
+                "pronunciation": "\u02c8rek",
+                "audio_url": "http:\/\/localhost\/todaywordle\/wp-content\/plugins\/Wordle-WPPlugin\/assets\/audio\/wreck.mp3",
+                "etymology": "Middle English wrec, wrek, borrowed from Anglo-French wrek & Medieval Latin wreccum, borrowed from Old Norse *wrek, rek, going back to *wrek-a- \"something driven,\" derivative of Germanic *wrekan- \"to drive out\" wreak",
+                "example_sentence": "was injured in a car wreck",
+                "first_known_use": "12th century",
+                "synonyms": "[\"ashes\",\"debris\",\"detritus\",\"flotsam\",\"remains\",\"residue\",\"rubble\",\"ruins\",\"wreckage\",\"shipwreck\",\"shipwrecking\",\"wreckage\",\"wrecking\",\"collision\",\"concussion\"]",
+                "antonyms": "[]"
             }
         }
     }

@@ -313,6 +313,11 @@ class Wordle_API {
 		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
 		$success = file_put_contents( $file_path, json_encode( $final_output, JSON_PRETTY_PRINT ) );
 		
+		// Refresh Wordle Solver JSON as well
+		if ( class_exists( 'Wordle_Solver' ) ) {
+			Wordle_Solver::generate_solver_json();
+		}
+
 		return $success !== false ? count( $puzzles_data ) : false;
 	}
 }
