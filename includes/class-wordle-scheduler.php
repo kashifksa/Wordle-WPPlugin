@@ -89,25 +89,54 @@ class Wordle_Scheduler {
 
 		// Handle Cron/Retry logic based on Today's success
 		if ( ! $error_occurred ) {
-			error_log( "Wordle Scraper: Job completed. Skipped: $skipped_count, New: " . ($success_count - $skipped_count) );
+			$msg = "Daily scrape job completed successfully. Handled: $success_count dates.";
+			error_log( "Wordle Scraper: $msg" );
+			if ( class_exists( 'Wordle_Admin' ) ) { Wordle_Admin::log( $msg, 'success' ); }
 			delete_transient( 'wordle_scrape_attempt' );
 			self::schedule_next_run();
-			return array( 'success' => true, 'message' => "Job finished. Total handled: $success_count" );
+			return array( 'success' => true, 'message' => $msg );
 		}
 
 		// Fail logic for today (Retry)
 		$attempt++;
 		if ( $attempt < $max_attempts ) {
-			set_transient( 'wordle_scrape_attempt', $attempt, HOUR_IN_SECONDS );
-			wp_schedule_single_event( time() + ( 5 * MINUTE_IN_SECONDS ), 'wordle_daily_scrape_cron' );
-			error_log( "Wordle Scraper: Today's scrape failed. Retrying in 5 mins. Error: " . $today_error );
-			return array( 'success' => false, 'message' => 'Today failed, retrying: ' . $today_error );
+			set_transient( 'wordle_scrape_attempt', $attempt, DAY_IN_SECONDS );
+			// Retry in 30 minutes
+			wp_schedule_single_event( time() + ( 30 * MINUTE_IN_SECONDS ), 'wordle_daily_scrape_cron' );
+			$msg = "Daily scrape failed. Retrying in 30m (Attempt $attempt/$max_attempts). Error: $today_error";
+			error_log( "Wordle Scraper: $msg" );
+			if ( class_exists( 'Wordle_Admin' ) ) { Wordle_Admin::log( $msg, 'warning' ); }
+			return array( 'success' => false, 'message' => $msg );
 		} else {
+			// FINAL FAILURE
 			delete_transient( 'wordle_scrape_attempt' );
-			self::schedule_next_run(); 
-			error_log( "Wordle Scraper: Max attempts reached for today." );
-			return array( 'success' => false, 'message' => 'Max attempts reached' );
+			self::schedule_next_run(); // Reset for tomorrow
+			self::send_failure_alert( $today_error );
+			$msg = "CRITICAL: Daily scraper failed after $max_attempts attempts. Admin notified. Final Error: $today_error";
+			error_log( "Wordle Scraper: $msg" );
+			if ( class_exists( 'Wordle_Admin' ) ) { Wordle_Admin::log( $msg, 'error' ); }
+			return array( 'success' => false, 'message' => $msg );
 		}
+	}
+
+	/**
+	 * Send an email alert to the site administrator.
+	 */
+	public static function send_failure_alert( $error_message ) {
+		$to = get_option( 'admin_email' );
+		$subject = '⚠ Wordle Hint Pro: Scraper Failure Alert';
+		$site_name = get_bloginfo( 'name' );
+		
+		$message = "Hello Admin,\n\n";
+		$message .= "The automated Wordle scraper for {$site_name} has failed after multiple retry attempts.\n\n";
+		$message .= "Last Error: {$error_message}\n";
+		$message .= "Date: " . current_time( 'mysql' ) . "\n\n";
+		$message .= "Please check your Wordle Hint settings and ensure the source URL is still active. You can also manually add the word in the plugin dashboard.\n\n";
+		$message .= "-- Wordle Hint Pro Robot";
+
+		$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+
+		wp_mail( $to, $subject, $message, $headers );
 	}
 }
 

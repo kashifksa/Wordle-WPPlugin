@@ -98,8 +98,8 @@ Add a "Logs" tab to display the last 50 scraper/AI events directly in the WordPr
 
 ---
 
-### Step 11 — 📋 Admin: Telemetry / Email Alerting
-Send an email notification to the site admin if the daily scraper fails after all retries.
+### Step 11 — ✅ Admin: Telemetry / Email Alerting (Completed)
+Send an email notification to the site admin if the daily scraper fails after all retries. (Fixed: Integrated wp_mail failure alerts into Wordle_Scheduler).
 
 ---
 
