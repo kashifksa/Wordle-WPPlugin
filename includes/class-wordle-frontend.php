@@ -18,6 +18,7 @@ class Wordle_Frontend {
 	public static function init_seo_hooks() {
 		add_filter( 'document_title_parts', array( __CLASS__, 'filter_seo_title' ), 20 );
 		add_action( 'wp_head',              array( __CLASS__, 'output_seo_meta' ), 5 );
+		add_action( 'wp_footer',            array( __CLASS__, 'output_faq_schema' ), 100 );
 
 		// Rank Math compatibility
 		add_filter( 'rank_math/frontend/title',       array( __CLASS__, 'filter_rankmath_title' ), 20 );
@@ -408,5 +409,60 @@ class Wordle_Frontend {
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+	/**
+	 * Outputs JSON-LD FAQ schema to the footer based on the active puzzle.
+	 */
+	public static function output_faq_schema() {
+		if ( ! self::$seo_puzzle || self::$seo_puzzle['puzzle_number'] === '---' ) {
+			return;
+		}
+
+		$puzzle = self::$seo_puzzle;
+		$date_str = self::get_formatted_date( $puzzle );
+		$number = $puzzle['puzzle_number'];
+		
+		$questions = array(
+			array(
+				'question' => "What are the Wordle hints for today, {$date_str}?",
+				'answer'   => "Today's Wordle #{$number} hints include: 1. " . esc_html($puzzle['hint1']) . " 2. " . esc_html($puzzle['hint2']) . " 3. " . esc_html($puzzle['hint3']) . " and a final clue: " . esc_html($puzzle['final_hint']) . "."
+			),
+			array(
+				'question' => "What does the Wordle word for today start with?",
+				'answer'   => "The Wordle word for puzzle #{$number} starts with the letter '" . esc_html($puzzle['first_letter']) . "'."
+			),
+			array(
+				'question' => "How many vowels are in today's Wordle?",
+				'answer'   => "There are " . esc_html($puzzle['vowel_count']) . " vowel(s) in today's Wordle word."
+			)
+		);
+
+		// Add dictionary FAQ if available
+		if ( ! empty( $puzzle['definition'] ) ) {
+			$questions[] = array(
+				'question' => "What is the definition of today's Wordle word?",
+				'answer'   => "The word is defined as: " . esc_html($puzzle['definition']) . "."
+			);
+		}
+
+		$schema = array(
+			'@context' => 'https://schema.org',
+			'@type'    => 'FAQPage',
+			'mainEntity' => array()
+		);
+
+		foreach ( $questions as $q ) {
+			$schema['mainEntity'][] = array(
+				'@type' => 'Question',
+				'name'  => $q['question'],
+				'acceptedAnswer' => array(
+					'@type' => 'Answer',
+					'text'  => $q['answer']
+				)
+			);
+		}
+
+		echo "\n<!-- Wordle Hint Pro: FAQ Schema -->\n";
+		echo '<script type="application/ld+json">' . json_encode( $schema ) . '</script>' . "\n";
 	}
 }

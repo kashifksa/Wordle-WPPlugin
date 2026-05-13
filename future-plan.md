@@ -118,8 +118,8 @@ Use `wp_cache_get`/`set` to complement the static JSON cache for faster REST API
 
 ---
 
-### Step 15 — 🎯 Frontend: FAQ Schema Integration
-Inject JSON-LD `FAQPage` schema into the daily hints page to capture "People Also Ask" snippets and improve CTR.
+### Step 15 — ✅ Frontend: FAQ Schema Integration (Completed)
+Inject JSON-LD `FAQPage` schema into the daily hints page to capture "People Also Ask" snippets and improve CTR. (Fixed: Implemented automated FAQ schema generator in Wordle_Frontend).
 
 ---
 
