@@ -41,10 +41,10 @@ Tasks marked `[x]` are already completed and kept for reference.
 
 ---
 
-### Step 2 — 🔴 Security: Add Pagination Cap to `/all` Endpoint
+### Step 2 — ✅ Security: Add Pagination Cap to `/all` Endpoint (Completed)
 **File**: `class-wordle-api.php`, `get_all_wordle()`
 No maximum on `$limit` — anyone can request `?limit=99999` and dump the full database.
-**Fix**: Add `$limit = min( 100, intval( $limit ) );`
+**Fix**: Add `$limit = min( 100, intval( $limit ) );` (Fixed: Now capped at 100).
 
 ---
 

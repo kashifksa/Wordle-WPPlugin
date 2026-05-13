@@ -387,3 +387,6 @@ Antigravity: I have successfully integrated **Section 9: Topical Authority & Str
 201: 
 202: User: ok do the task one by one after completing each task tell me how to test it and when i say next u do the next
 203: Antigravity: Understood! I'm starting with **Step 1: Fix API Key Fails Open**. I have updated `class-wordle-api.php` so that if no API key is configured in the settings, the protected endpoints (`/solution` and `/save`) will now correctly return a `401 Unauthorized` instead of allowing access. This "Fails Secure" approach protects your data from the moment the plugin is installed.
+204: 
+205: User: next and from next tell me the commands for git and github also i want to learn about them so after completion every task give me the git commands for branches and commit then after testing ask me to commit on my master branch go check my existing git repository for understanding
+206: Antigravity: I have completed **Step 2: Add Pagination Cap to `/all` Endpoint**. I modified `get_all_wordle()` to enforce a maximum limit of 100 records per request, preventing potential database dumping. Since you're currently on the `feature/security` branch, I'll provide the Git commands to save your progress and eventually merge it into `master`.

@@ -177,8 +177,12 @@ class Wordle_API {
 	}
 
 	public static function get_all_wordle( $request ) {
-		$page = $request->get_param( 'page' ) ?: 1;
+		$page  = $request->get_param( 'page' ) ?: 1;
 		$limit = $request->get_param( 'limit' ) ?: 20;
+		
+		// Cap limit to 100 to prevent data dumping
+		$limit = min( 100, intval( $limit ) );
+		
 		$locale = $request->get_param( 'locale' ) ?: 'global';
 		
 		global $wpdb;
