@@ -250,6 +250,11 @@ class Wordle_Frontend {
 
 				<div class="wh-hints-section">
 					<h3 class="wh-section-title">Wordle Hints</h3>
+					<div class="wh-share-actions">
+						<button id="wh-copy-clues" class="wh-action-btn" title="Copy hints to clipboard">
+							<span class="wh-btn-icon">📋</span> Copy Hints
+						</button>
+					</div>
 
 					<div class="wh-hint-card locked" data-hint="1">
 						<div class="wh-hint-overlay">

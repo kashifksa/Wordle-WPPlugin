@@ -1849,3 +1849,41 @@ input:checked + .ws-slider:before {
 body.dark-mode .ws-word-item {
     background: var(--wh-inner-card);
 }
+
+/* Share Actions */
+.wh-share-actions {
+    margin-top: -10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.wh-action-btn {
+    background: var(--wh-card);
+    border: 1px solid var(--wh-border);
+    color: var(--wh-text);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.wh-action-btn:hover {
+    background: var(--wh-border);
+    transform: translateY(-2px);
+}
+
+.wh-action-btn.success {
+    background: var(--wordle-green) !important;
+    border-color: var(--wordle-green) !important;
+    color: white !important;
+}
+
+.wh-btn-icon {
+    font-size: 1rem;
+}

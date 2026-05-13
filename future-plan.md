@@ -123,8 +123,8 @@ Inject JSON-LD `FAQPage` schema into the daily hints page to capture "People Als
 
 ---
 
-### Step 16 — 🎯 Frontend: "Copy Clues" Button
-One-click copy of all 4 hints (without the answer) formatted for Pinterest, Twitter/X, and WhatsApp sharing.
+### Step 16 — ✅ Frontend: "Copy Clues" Button (Completed)
+One-click copy of all 4 hints (without the answer) formatted for Pinterest, Twitter/X, and WhatsApp sharing. (Fixed: Added Copy Hints button with clipboard logic and visual feedback).
 
 ---
 

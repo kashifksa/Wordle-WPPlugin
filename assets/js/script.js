@@ -556,4 +556,50 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    // --- 7. COPY CLUES (SOCIAL SHARING) ---
+    jQuery(document).on('click', '#wh-copy-clues', function() {
+        const $btn = jQuery(this);
+        const $container = jQuery('.wordle-hint-container');
+        const puzzleNum = $container.find('.wh-puzzle-num').text();
+        const dateStr = $container.find('.wh-date').text();
+        // Remove query params for clean sharing
+        const siteUrl = window.location.href.split('?')[0];
+
+        // Gather Hints
+        let text = `🧩 Wordle Hints ${puzzleNum} (${dateStr})\n\n`;
+        
+        $container.find('.wh-hint-card').each(function(i) {
+            const label = jQuery(this).find('.wh-hint-label').text().split(':')[0];
+            const hint = jQuery(this).find('.wh-hint-text').text();
+            text += `${label}: ${hint}\n`;
+        });
+
+        text += `\nUnlock all hints at:\n🔗 ${siteUrl}`;
+
+        // Copy to Clipboard
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = $btn.html();
+                $btn.addClass('success').html('<span>✅</span> Copied!');
+                setTimeout(() => {
+                    $btn.removeClass('success').html(originalText);
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        } else {
+            // Fallback for non-HTTPS or older browsers
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+            const originalText = $btn.html();
+            $btn.addClass('success').html('<span>✅</span> Copied!');
+            setTimeout(() => {
+                $btn.removeClass('success').html(originalText);
+            }, 2000);
+        }
+    });
 });
