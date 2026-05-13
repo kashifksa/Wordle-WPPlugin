@@ -62,6 +62,7 @@ class Wordle_Hint_Pro {
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-archive.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-scheduler.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-solver.php';
+		require_once WORDLE_HINT_PATH . 'includes/class-wordle-analyzer.php';
 	}
 
 	/**

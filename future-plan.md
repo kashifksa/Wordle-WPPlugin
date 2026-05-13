@@ -144,11 +144,10 @@ Add ARIA labels, keyboard focus states, and screen-reader support for the reveal
 ---
 
 ### Step 20 — ♿ Frontend: High-Contrast "Colorblind Mode"
-Toggle to switch Green/Yellow tiles to Orange/Blue (WCAG compliant) for users with color vision deficiency.
-
----
-
-### Step 21 — 📊 Frontend: Positional Letter Frequency Insights
+- [x] **Step 19: WCAG Accessibility Hardening** (Keyboard nav, ARIA labels, focus rings)
+- [-] **Step 20: High-Contrast Colorblind Mode** (Skipped for now to maintain UI stability)
+- [x] **Step 21: Positional Letter Frequency Insights** (Completed: Strategy Corner cards added)
+- [ ] **Step 22: "On This Day" Historical Trivia** (New!)
 Surface "Strategy Insight" cards (e.g., *"S appears in position 1 in 15% of all Wordle words"*) for unique data value over competitors.
 
 ---

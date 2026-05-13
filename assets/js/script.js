@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
         jQuery('body').addClass('dark-mode');
     }
 
-    // 1. CENTRALIZE DATE LOGIC (User Browser Time)
+    // 1. CENTRALIZE DATE LOGIC (Support date and wh_date)
     const params = new URLSearchParams(window.location.search);
-    const testDate = params.get('date');
+    const testDate = params.get('date') || params.get('wh_date');
     
     const d = new Date();
     const today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -68,9 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
         navigateToDate(newDateStr);
     });
 
-    jQuery(document).on('click', '.wh-archive-link', function(e) {
-        const linkUrl = new URL(jQuery(this).attr('href'));
-        const dateParam = linkUrl.searchParams.get('date');
+    jQuery(document).on('click', '.wh-archive-link, .wh-compact-card', function(e) {
+        const href = jQuery(this).attr('href');
+        if (!href) return;
+        
+        const linkUrl = new URL(href, window.location.origin);
+        const dateParam = linkUrl.searchParams.get('date') || linkUrl.searchParams.get('wh_date');
         
         if (dateParam) {
             e.preventDefault();
@@ -107,17 +110,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1.8 INITIALIZE CALENDAR (Flatpickr) ---
     function initCalendar() {
-        if (typeof flatpickr === 'undefined') {
-            console.warn("Wordle Hint Pro - Flatpickr not loaded yet.");
-            return;
-        }
+        if (typeof flatpickr === 'undefined') return;
 
         const $datePickerInput = document.getElementById('wh-date-picker');
         if (!$datePickerInput) return;
 
-        // Initialize and store on window for global access if needed
+        // Initialize and store on window for global access
         window.whFlatpickr = flatpickr($datePickerInput, {
             dateFormat: "Y-m-d",
+            defaultDate: finalDate, // Start with the date from URL
             maxDate: "today",
             disableMobile: true,
             monthSelectorType: "static",
@@ -247,6 +248,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const $dateEl = $container.find('.wh-date');
         $dateEl.text(formattedDate).attr('data-current-date', puzzleDate);
+        
+        // Sync calendar instance if it exists
+        if (window.whFlatpickr) {
+            window.whFlatpickr.setDate(puzzleDate, false);
+        }
         
         // Toggle Next Button Visibility (Don't show if it's today)
         if (puzzleDate >= today) {

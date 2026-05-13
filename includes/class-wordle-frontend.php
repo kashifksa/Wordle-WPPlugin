@@ -247,7 +247,22 @@ class Wordle_Frontend {
 						?>
 					</div>
 				</div>
+				<!-- Strategy Insight Card -->
+				<?php 
+				$insight = Wordle_Analyzer::get_insight_for_word( $puzzle['word'] );
+				if ( ! empty( $insight ) ) : 
+				?>
+					<div class="wh-strategy-card" id="wh-strategy-insight">
+						<div class="wh-strategy-icon">💡</div>
+						<div class="wh-strategy-content">
+							<span class="wh-strategy-label">Strategy Corner</span>
+							<p class="wh-strategy-text"><?php echo $insight; ?></p>
+						</div>
+					</div>
+				<?php endif; ?>
 
+
+				<!-- Hints Section -->
 				<div class="wh-hints-section">
 					<h3 class="wh-section-title">Wordle Hints</h3>
 					<div class="wh-share-actions">
@@ -411,6 +426,40 @@ class Wordle_Frontend {
 						</div>
 					</div>
 				</div>
+
+				<!-- Historical Trivia (On This Day) -->
+				<?php 
+				$historical_dates = [
+					'1 year ago'  => date( 'Y-m-d', strtotime( '-1 year', strtotime( $puzzle['date'] ) ) ),
+					'2 years ago' => date( 'Y-m-d', strtotime( '-2 years', strtotime( $puzzle['date'] ) ) ),
+				];
+				$history = [];
+				foreach ( $historical_dates as $label => $h_date ) {
+					$h_puzzle = Wordle_DB::get_puzzle_by_date( $h_date, $atts['locale'] );
+					if ( $h_puzzle ) {
+						$history[$label] = $h_puzzle;
+					}
+				}
+				if ( ! empty( $history ) ) : 
+				?>
+					<div class="wh-history-section" style="margin-top:20px; padding-top:20px; border-top:1px solid #eee;">
+						<h3 class="wh-section-title" style="text-align:center; font-size:12px; letter-spacing:2px; color:#888; margin-bottom:15px;">WORDLE ON THIS DAY</h3>
+						<div class="wh-timeline-container" style="display:flex; flex-direction:column; gap:8px;">
+							<?php foreach ( $history as $label => $h_p ) : ?>
+								<a href="?wh_date=<?php echo esc_attr( $h_p['date'] ); ?>" class="wh-compact-card" style="display:flex !important; align-items:center !important; justify-content:space-between !important; background:#f9f9f9; border:1px solid #eee; border-radius:10px; padding:8px 15px; text-decoration:none !important; transition:all 0.3s ease;">
+									<div style="display:flex; align-items:center; gap:12px;">
+										<span style="font-size:10px; font-weight:900; color:#c9b458; background:rgba(201,180,88,0.1); padding:2px 6px; border-radius:4px;"><?php echo esc_html( strtoupper( $label ) ); ?></span>
+										<span style="font-size:14px; font-weight:700; color:#333;">Puzzle #<?php echo esc_html( $h_p['puzzle_number'] ); ?></span>
+									</div>
+									<div style="display:flex; align-items:center; gap:8px;">
+										<span style="font-size:12px; color:#888;"><?php echo date( 'M j, Y', strtotime( $h_p['date'] ) ); ?></span>
+										<span style="font-size:16px; color:#ccc;">→</span>
+									</div>
+								</a>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				<?php endif; ?>
 		</div>
 		<?php
 		return ob_get_clean();
