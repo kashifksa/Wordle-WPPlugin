@@ -192,7 +192,7 @@ class Wordle_Frontend {
 		?>
 		<div class="wordle-hint-container" id="wordle-hint-pro">
 				<div class="wh-header">
-					<div class="wh-theme-toggle" id="wh-theme-toggle" title="Toggle Day/Night Mode">
+					<div class="wh-theme-toggle" id="wh-theme-toggle" title="Toggle Day/Night Mode" role="button" tabindex="0" aria-label="Toggle between dark and light mode">
 						<span class="wh-toggle-icon">☀️</span>
 						<span class="wh-toggle-icon">🌙</span>
 						<div class="wh-toggle-knob"></div>
@@ -216,10 +216,10 @@ class Wordle_Frontend {
 						<?php } ?>
 						<span class="wh-separator">•</span>
 						<div class="wh-date-nav">
-							<button id="wh-prev-date" class="wh-nav-btn" title="Previous Day">←</button>
-							<span class="wh-date" id="wh-calendar-trigger" data-current-date="<?php echo esc_attr( $puzzle['date'] ); ?>" title="Click to select date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
+							<button id="wh-prev-date" class="wh-nav-btn" title="Previous Day" aria-label="Go to previous day's puzzle">←</button>
+							<span class="wh-date" id="wh-calendar-trigger" data-current-date="<?php echo esc_attr( $puzzle['date'] ); ?>" title="Click to select date" role="button" tabindex="0" aria-label="Open calendar to pick a date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
 							<input type="text" id="wh-date-picker" style="position:absolute; opacity:0; width:0; height:0; border:none; padding:0; pointer-events:none;" readonly>
-							<button id="wh-next-date" class="wh-nav-btn" title="Next Day">→</button>
+							<button id="wh-next-date" class="wh-nav-btn" title="Next Day" aria-label="Go to next day's puzzle">→</button>
 						</div>
 						<span class="wh-separator">•</span>
 						<span class="wh-stat-item">Vowels: <span class="wh-highlight"><?php echo esc_html( $puzzle['vowel_count'] ); ?></span></span>
@@ -251,7 +251,7 @@ class Wordle_Frontend {
 				<div class="wh-hints-section">
 					<h3 class="wh-section-title">Wordle Hints</h3>
 					<div class="wh-share-actions">
-						<button id="wh-copy-clues" class="wh-action-btn" title="Copy hints to clipboard">
+						<button id="wh-copy-clues" class="wh-action-btn" title="Copy hints to clipboard" aria-label="Copy all Wordle hints to your clipboard">
 							<span class="wh-btn-icon">📋</span> Copy Hints
 						</button>
 					</div>
@@ -301,7 +301,7 @@ class Wordle_Frontend {
 					<div class="wh-answer-label">Today's Answer</div>
 					<div class="wh-grid" id="wh-answer-grid" data-word="<?php echo esc_attr( $puzzle['word'] ); ?>">
 						<?php for ( $i = 0; $i < 5; $i++ ) : ?>
-							<div class="wh-box" data-index="<?php echo $i; ?>" title="Click to reveal letter">
+							<div class="wh-box" data-index="<?php echo $i; ?>" title="Click to reveal letter" role="button" tabindex="0" aria-label="Reveal Wordle letter <?php echo $i + 1; ?>">
 								<div class="wh-box-inner">
 									<div class="wh-box-front"></div>
 									<div class="wh-box-back"></div>
@@ -311,7 +311,7 @@ class Wordle_Frontend {
 					</div>
 
 					<div class="wh-reveal-controls">
-						<button id="reveal-answer-btn" class="wh-reveal-main-btn">
+						<button id="reveal-answer-btn" class="wh-reveal-main-btn" aria-label="Instantly reveal the full Wordle answer">
 							<span class="btn-text">Show Today's Answer</span>
 						</button>
 
@@ -322,16 +322,16 @@ class Wordle_Frontend {
 								$is_today = ( $puzzle['date'] === date( 'Y-m-d' ) );
 								$nav_label = $is_today ? 'Yesterday' : 'Previous Day';
 								?>
-								<button id="wh-toolbar-prev" class="wh-toolbar-btn" title="<?php echo $nav_label; ?>'s Puzzle">
+								<button id="wh-toolbar-prev" class="wh-toolbar-btn" title="<?php echo $nav_label; ?>'s Puzzle" aria-label="View <?php echo $nav_label; ?>'s puzzle">
 									<span class="icon">←</span> <span class="label"><?php echo $nav_label; ?></span>
 								</button>
-								<button id="wh-toolbar-calendar" class="wh-toolbar-btn" title="Open Calendar">
+								<button id="wh-toolbar-calendar" class="wh-toolbar-btn" title="Open Calendar" aria-label="Open calendar selector">
 									<span class="icon">📅</span>
 								</button>
 							</div>
 
 							<div class="wh-toolbar-segment wh-share-segment">
-								<button id="wh-copy-results" class="wh-share-btn">
+								<button id="wh-copy-results" class="wh-share-btn" aria-label="Copy your Wordle result emoji grid">
 									<span class="icon">📋</span> <span class="label">Copy Results</span>
 								</button>
 							</div>
@@ -341,7 +341,7 @@ class Wordle_Frontend {
 									<span class="next-label">NEXT WORDLE</span>
 									<span class="wh-timer-val next-time">00:00:00</span>
 								</div>
-								<button id="wh-replay-reveal" class="wh-replay-btn" title="Replay Animation">
+								<button id="wh-replay-reveal" class="wh-replay-btn" title="Replay Animation" aria-label="Replay the letter reveal animation">
 									<span class="icon">↻</span>
 								</button>
 							</div>

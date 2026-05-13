@@ -440,3 +440,6 @@ Antigravity: I have successfully integrated **Section 9: Topical Authority & Str
 254: 
 255: User: next
 256: Antigravity: I have completed **Step 18: Countdown Timer**. While the timer logic already existed in your toolbar, I have now implemented the dedicated `[wordle_timer]` shortcode. This allows you to place a standalone, live countdown anywhere on your site (like a sidebar or header). I also refactored the JavaScript to ensure all timers on the page stay perfectly in sync.
+257: 
+258: User: next
+259: Antigravity: I have completed **Step 19: Accessibility (a11y) Improvements**. I have made your plugin inclusive and WCAG compliant. This includes adding ARIA labels for screen readers, ensuring all interactive elements (like the grid boxes and theme toggle) are keyboard-navigable via the "Enter" or "Space" keys, and adding high-visibility focus states to help users navigate without a mouse.

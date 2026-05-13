@@ -626,4 +626,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2000);
         }
     });
+    // --- 8. ACCESSIBILITY: KEYBOARD SUPPORT ---
+    jQuery(document).on('keydown', '.wh-theme-toggle, .wh-date, .wh-box', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            jQuery(this).trigger('click');
+        }
+    });
 });

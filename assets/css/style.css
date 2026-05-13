@@ -437,6 +437,38 @@ body.dark-mode .wh-toggle-knob {
     font-size: 16px !important;
 }
 
+/* --- ACCESSIBILITY FOCUS STATES --- */
+.wordle-hint-container *:focus-visible {
+    outline: 2px solid var(--wordle-green);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(106, 170, 100, 0.2);
+}
+
+/* Specific Focus for Boxes */
+.wh-box:focus-visible {
+    border-color: var(--wordle-green);
+    transform: scale(1.05);
+}
+
+/* Toolbar Buttons Focus */
+.wh-toolbar-btn:focus-visible,
+.wh-share-btn:focus-visible,
+.wh-replay-btn:focus-visible {
+    background: var(--wh-border) !important;
+}
+
+/* Theme Toggle Focus */
+.wh-theme-toggle:focus-visible {
+    background: var(--wh-border);
+    border-radius: 12px;
+}
+
+/* Date Navigator Focus */
+.wh-date:focus-visible {
+    background: var(--wh-card);
+    border-radius: 4px;
+}
+
 /* Responsive Toolbar */
 @media (max-width: 600px) {
     .wh-post-reveal-toolbar {
