@@ -87,109 +87,7 @@ class Wordle_Admin {
 
 	public static function dashboard_page() {
 		?>
-		<div class="dashboard-wrapper">
-
-			<form method="post" action="options.php">
-				<?php settings_fields( 'wordle_hint_settings_group' ); ?>
-				<?php do_settings_sections( 'wordle_hint_settings_group' ); ?>
-				<table class="form-table">
-					<tr valign="top">
-						<th scope="row">Scrape URL</th>
-						<td>
-							<input type="text" name="wordle_hint_scrape_url" value="<?php echo esc_attr( get_option( 'wordle_hint_scrape_url' ) ); ?>" placeholder="https://www.nytimes.com/svc/wordle/v2/" class="large-text" />
-							<p class="description">Leave empty to use the default NYT Wordle v2 endpoint. The date will be appended automatically.</p>
-						</td>
-					</tr>
-					<tr valign="top" style="background: #f9f9f9; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd;">
-						<th scope="row"><h3>Manual Wordle Entry</h3></th>
-						<td>
-							<div class="manual-entry-container" style="padding: 10px 0;">
-								<div style="margin-bottom: 10px;">
-									<label for="manual_wordle_word"><strong>Wordle Word:</strong></label><br>
-									<input type="text" id="manual_wordle_word" maxlength="5" class="regular-text" style="text-transform: uppercase;" placeholder="ENTER" />
-									<p class="description">Exactly 5 letters.</p>
-								</div>
-								<div style="margin-bottom: 10px;">
-									<label for="manual_wordle_number"><strong>Wordle Number:</strong></label><br>
-									<input type="number" id="manual_wordle_number" class="regular-text" placeholder="1234" />
-								</div>
-								<div style="margin-bottom: 10px;">
-									<label for="manual_wordle_date"><strong>Date:</strong></label><br>
-									<input type="date" id="manual_wordle_date" value="<?php echo current_time( 'Y-m-d' ); ?>" class="regular-text" />
-								</div>
-								<button type="button" id="save-manual-wordle" class="button button-secondary">Save Wordle Entry</button>
-								<div id="manual-status-msg" style="margin-top: 10px; font-weight: bold;"></div>
-							</div>
-						</td>
-					</tr>
-					<tr valign="top" style="background: #fff; border-bottom: 1px solid #ddd;">
-						<th scope="row"><h3>Bulk CSV Upload (Archive)</h3></th>
-						<td>
-							<div class="csv-upload-container" style="padding: 10px 0;">
-								<input type="file" id="wordle_csv_file" accept=".csv" />
-								<button type="button" id="upload-wordle-csv" class="button button-secondary">Upload CSV Archive</button>
-								<p class="description">Upload a CSV with headers: Date, Wordle_Number, Answer, Vowel_Count, Consonant_Count, Repeated_Letters, First_Letter</p>
-								<div id="csv-status-msg" style="margin-top: 10px; font-weight: bold;"></div>
-							</div>
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">Primary AI API Key (Groq/OpenAI/Gemini)</th>
-						<td><input type="password" name="wordle_hint_ai_api_key" value="<?php echo esc_attr( get_option( 'wordle_hint_ai_api_key' ) ); ?>" class="large-text" /></td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">Primary AI Model</th>
-						<td><input type="text" name="wordle_hint_ai_model" value="<?php echo esc_attr( get_option( 'wordle_hint_ai_model', 'llama-3.1-8b-instant' ) ); ?>" class="regular-text" /></td>
-					</tr>
-					<tr valign="top" style="border-top: 1px dashed #ccc;">
-						<th scope="row">Fallback AI API Key (Optional)</th>
-						<td><input type="password" name="wordle_hint_ai_api_key_fallback" value="<?php echo esc_attr( get_option( 'wordle_hint_ai_api_key_fallback' ) ); ?>" class="large-text" /></td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">Fallback AI Model</th>
-						<td><input type="text" name="wordle_hint_ai_model_fallback" value="<?php echo esc_attr( get_option( 'wordle_hint_ai_model_fallback' ) ); ?>" class="regular-text" placeholder="e.g. gemini-1.5-flash" /></td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">AI Prompt Template</th>
-						<td>
-							<textarea name="wordle_hint_ai_prompt" rows="6" class="large-text"><?php echo esc_textarea( get_option( 'wordle_hint_ai_prompt', "Generate 4 progressive Wordle hints for the word {{WORD}}.\n\nRules:\n- FORBIDDEN: Do NOT use the word '{{WORD}}' or its plural.\n- FORBIDDEN: Do NOT use direct synonyms.\n- FORBIDDEN: Do NOT mention it has 5 letters (this is implied).\n- FORBIDDEN: Do NOT use rhymes.\n\nHint 1: Cryptic/Vague\nHint 2: Category/Context\nHint 3: Definition-style clue\nHint 4: Strong final hint" ) ); ?></textarea>
-							<p class="description">Use {{WORD}} as a placeholder. Be strict with the AI rules for better clues.</p>
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">Internal API Key (for protection)</th>
-						<td><input type="text" name="wordle_hint_api_key" value="<?php echo esc_attr( get_option( 'wordle_hint_api_key' ) ); ?>" class="regular-text" /></td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">Timezone</th>
-						<td><input type="text" name="wordle_hint_timezone" value="<?php echo esc_attr( get_option( 'wordle_hint_timezone', 'Asia/Karachi' ) ); ?>" class="regular-text" /></td>
-					</tr>
-					<tr valign="top" style="border-top: 1px solid #ccc;">
-						<th scope="row">Merriam-Webster Dictionary Key</th>
-						<td>
-							<input type="password" name="wordle_mw_dictionary_key" value="<?php echo esc_attr( get_option( 'wordle_mw_dictionary_key' ) ); ?>" class="large-text" />
-							<p class="description">Required for definitions, pronunciation, and etymology. Get a key at <a href="https://dictionaryapi.com/" target="_blank">dictionaryapi.com</a> (Collegiate Dictionary).</p>
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">Merriam-Webster Thesaurus Key</th>
-						<td>
-							<input type="password" name="wordle_mw_thesaurus_key" value="<?php echo esc_attr( get_option( 'wordle_mw_thesaurus_key' ) ); ?>" class="large-text" />
-							<p class="description">Optional. Used for synonyms and antonyms (Collegiate Thesaurus).</p>
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">Stats Refresh Interval (Hours)</th>
-						<td>
-							<input type="number" name="wordle_stats_refresh_interval" value="<?php echo esc_attr( get_option( 'wordle_stats_refresh_interval', 4 ) ); ?>" min="1" max="24" class="small-text" />
-							<p class="description">How often to refresh the local statistics file from Engaging Data. Recommended: 2-6 hours to catch both preliminary and finalized WordleBot stats.</p>
-						</td>
-					</tr>
-				</table>
-				<?php submit_button(); ?>
-			</form>
-			
-			<hr>
+		<div class="dashboard-wrapper" style="margin-top: 20px;">
 			<h2>System Health (Last 7 Days)</h2>
 			<table class="wp-list-table widefat fixed striped" style="max-width: 800px; margin-bottom: 20px;">
 				<thead>
@@ -241,44 +139,28 @@ class Wordle_Admin {
 			</table>
 
 			<hr>
-			<h2>Actions</h2>
-			<button id="run-scraper-now" class="button button-primary">Run Scraper Now</button>
-			<button id="fetch-save-json" class="button button-primary">Fetch & Save JSON</button>
-			<button id="backfill-stats" class="button button-secondary" style="background: #6aaa64; color: white; border-color: #5a9a54;">Backfill Missing WordleBot Stats</button>
-			<button id="backfill-dictionary" class="button button-secondary" style="background: #2271b1; color: white; border-color: #135e96;">Backfill Dictionary Enrichment</button>
-			<button id="regenerate-fallbacks" class="button button-secondary">Regenerate Fallback Hints</button>
-			<button id="test-ai-connection" class="button button-secondary">Test Primary AI</button>
-			<button id="test-fallback-ai" class="button button-secondary">Test Fallback AI</button>
-			<div style="background: #fff; border: 1px solid #ccd0d4; padding: 15px; margin: 20px 0; border-radius: 4px; display: block; max-width: 800px; box-shadow: 0 1px 1px rgba(0,0,0,.04);">
-				<h4 style="margin-top: 0; margin-bottom: 10px; color: #1d2327;">Bulk AI Hint Generator</h4>
-				<span class="description" style="margin-right: 5px;">AI Engine:</span>
-				<select id="batch_ai_engine" style="vertical-align: middle; margin-right: 15px;">
-					<option value="default">Default (Primary + Fallback)</option>
-					<option value="primary">Primary AI Only</option>
-					<option value="fallback">Fallback AI Only</option>
-				</select>
-				
-				<span class="description" style="margin-right: 5px;">Batch Size:</span>
-				<input type="number" id="batch_size_input" value="10" min="1" max="100" style="width: 70px; height: 30px; vertical-align: middle; margin-right: 15px;" title="Records per batch" />
-				
-				<button id="batch-generate-ai" class="button button-primary" style="background: #2271b1; border-color: #2271b1;">Batch Generate AI Hints (Archive)</button>
-				<button id="stop-batch-ai" class="button button-link-delete" style="display:none; vertical-align: middle; margin-left: 10px;">Stop Generation</button>
-				<p class="description" style="margin-top: 10px; margin-bottom: 0;">Processes records missing hints in chunks. Recommended: 10-20 for stability.</p>
+			<h2>Quick Actions</h2>
+			<div class="action-buttons" style="margin-bottom: 20px;">
+				<button id="run-scraper-now" class="button button-primary">Run Scraper Now</button>
+				<button id="fetch-save-json" class="button button-primary">Fetch & Save JSON</button>
+				<button id="backfill-stats" class="button button-secondary" style="background: #6aaa64; color: white; border-color: #5a9a54;">Backfill WordleBot Stats</button>
+				<button id="backfill-dictionary" class="button button-secondary" style="background: #2271b1; color: white; border-color: #135e96;">Backfill Dictionary</button>
+				<button id="regenerate-fallbacks" class="button button-secondary">Regenerate Fallbacks</button>
+				<button id="test-ai-connection" class="button button-secondary">Test Primary AI</button>
+				<button id="test-fallback-ai" class="button button-secondary">Test Fallback AI</button>
 			</div>
-			<div id="scraper-log" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; display:none;"></div>
+
+			<div id="scraper-log" style="margin-top: 10px; padding: 15px; background: #f0f0f0; border: 1px solid #ccc; max-height: 300px; overflow-y: auto; display:none; border-radius: 4px; font-family: monospace;"></div>
 			
 			<script>
 			jQuery(document).ready(function($) {
+				// Action Handlers
 				$('#run-scraper-now').click(function() {
 					var $btn = $(this);
 					var $log = $('#scraper-log');
 					$btn.prop('disabled', true).text('Running...');
 					$log.show().html('Starting scraper...');
-					
-					$.post(ajaxurl, {
-						action: 'run_wordle_scraper',
-						nonce: '<?php echo wp_create_nonce("wordle_scraper_nonce"); ?>'
-					}, function(response) {
+					$.post(ajaxurl, { action: 'run_wordle_scraper', nonce: '<?php echo wp_create_nonce("wordle_scraper_nonce"); ?>' }, function(response) {
 						$log.append('<br>' + response.data.message);
 						$btn.prop('disabled', false).text('Run Scraper Now');
 					});
@@ -288,306 +170,237 @@ class Wordle_Admin {
 					var $btn = $(this);
 					var $log = $('#scraper-log');
 					$btn.prop('disabled', true).text('Refreshing...');
-					
-					if (isManual !== false) {
-						$log.show().html('Starting JSON cache generation...');
-					} else {
-						$log.append('<br>Starting JSON cache generation...');
-					}
+					if (isManual !== false) $log.show().html('Starting JSON cache generation...');
+					else $log.append('<br>Starting JSON cache generation...');
 					
 					$.post({
 						url: '<?php echo get_rest_url(null, "wordle/v1/refresh-json"); ?>',
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader('X-WP-Nonce', '<?php echo wp_create_nonce("wp_rest"); ?>');
-						},
-						success: function(response) {
-							$log.append('<br>Success: ' + response.message);
-						},
-						error: function() {
-							$log.append('<br>Error: Failed to refresh JSON cache');
-						},
-						complete: function() {
-							$btn.prop('disabled', false).text('Fetch & Save JSON');
-						}
-					});
-				});
-
-				$('#save-manual-wordle').click(function() {
-					var $btn = $(this);
-					var $status = $('#manual-status-msg');
-					var word = $('#manual_wordle_word').val().trim().toUpperCase();
-					var number = $('#manual_wordle_number').val();
-					var date = $('#manual_wordle_date').val();
-
-					if (word.length !== 5) {
-						$status.css('color', 'red').text('❌ Word must be exactly 5 letters.');
-						return;
-					}
-					if (!number) {
-						$status.css('color', 'red').text('❌ Please enter a Wordle number.');
-						return;
-					}
-					if (!date) {
-						$status.css('color', 'red').text('❌ Please select a date.');
-						return;
-					}
-
-					$btn.prop('disabled', true).text('Saving...');
-					$status.css('color', 'blue').text('Saving data...');
-
-					$.post(ajaxurl, {
-						action: 'save_manual_wordle',
-						nonce: '<?php echo wp_create_nonce("wordle_manual_nonce"); ?>',
-						word: word,
-						number: number,
-						date: date
-					}, function(response) {
-						if (response.success) {
-							$status.css('color', 'green').text('✔ ' + response.data.message);
-							// Trigger cache refresh
-							$('#fetch-save-json').click();
-						} else {
-							$status.css('color', 'red').text('❌ ' + response.data.message);
-						}
-						$btn.prop('disabled', false).text('Save Wordle Entry');
-					});
-				});
-
-				$('#regenerate-fallbacks').click(function() {
-					var $btn = $(this);
-					var $log = $('#scraper-log');
-					$btn.prop('disabled', true).text('Regenerating...');
-					$log.show().html('Scanning for low-quality fallback hints...');
-					
-					$.post(ajaxurl, {
-						action: 'regenerate_wordle_fallbacks',
-						nonce: '<?php echo wp_create_nonce("wordle_regen_nonce"); ?>'
-					}, function(response) {
-						$log.append('<br>' + response.data.message);
-						if (response.success) {
-							$('#fetch-save-json').click(); // Refresh JSON too
-						}
-						$btn.prop('disabled', false).text('Regenerate Fallback Hints');
+						beforeSend: function(xhr) { xhr.setRequestHeader('X-WP-Nonce', '<?php echo wp_create_nonce("wp_rest"); ?>'); },
+						success: function(response) { $log.append('<br>Success: ' + response.message); },
+						error: function() { $log.append('<br>Error: Failed to refresh JSON cache'); },
+						complete: function() { $btn.prop('disabled', false).text('Fetch & Save JSON'); }
 					});
 				});
 
 				$('#backfill-stats').click(function() {
 					var $btn = $(this);
 					var $log = $('#scraper-log');
-					
-					if (!confirm('This will fetch WordleBot difficulty stats for all records missing them. Proceed?')) return;
-					
-					$btn.prop('disabled', true).text('Backfilling Stats...');
+					if (!confirm('Backfill WordleBot difficulty stats?')) return;
+					$btn.prop('disabled', true).text('Backfilling...');
 					$log.show().html('<strong>Starting WordleBot Stats Backfill...</strong><br>');
-					
 					function runStatsBatch() {
-						$.post(ajaxurl, {
-							action: 'backfill_wordle_stats',
-							nonce: '<?php echo wp_create_nonce("wordle_stats_nonce"); ?>'
-						}, function(response) {
+						$.post(ajaxurl, { action: 'backfill_wordle_stats', nonce: '<?php echo wp_create_nonce("wordle_stats_nonce"); ?>' }, function(response) {
 							if (response.success) {
 								$log.append(response.data.message + '<br>');
-								if (response.data.remaining > 0) {
-									runStatsBatch(); // Recursive call
-								} else {
+								if (response.data.remaining > 0) runStatsBatch();
+								else {
 									$log.append('<strong>✔ Stats backfill complete!</strong>');
-									$btn.prop('disabled', false).text('Backfill Missing WordleBot Stats');
-									$('#fetch-save-json').click(); // Refresh JSON
+									$btn.prop('disabled', false).text('Backfill WordleBot Stats');
+									$('#fetch-save-json').click();
 								}
-							} else {
-								$log.append('<br><span style="color:red;">Error:</span> ' + response.data.message);
-								$btn.prop('disabled', false).text('Backfill Missing WordleBot Stats');
 							}
 						});
 					}
-					
 					runStatsBatch();
 				});
-				
+
 				$('#backfill-dictionary').click(function() {
 					var $btn = $(this);
 					var $log = $('#scraper-log');
-					
-					if (!confirm('This will fetch Dictionary & Thesaurus data from Merriam-Webster for all records missing definitions. Proceed?')) return;
-					
-					$btn.prop('disabled', true).text('Backfilling Dictionary...');
+					if (!confirm('Backfill Dictionary data from Merriam-Webster?')) return;
+					$btn.prop('disabled', true).text('Backfilling...');
 					$log.show().html('<strong>Starting Dictionary Enrichment Backfill...</strong><br>');
-					
 					function runDictBatch() {
-						$.post(ajaxurl, {
-							action: 'backfill_wordle_dictionary',
-							nonce: '<?php echo wp_create_nonce("wordle_dict_nonce"); ?>'
-						}, function(response) {
+						$.post(ajaxurl, { action: 'backfill_wordle_dictionary', nonce: '<?php echo wp_create_nonce("wordle_dict_nonce"); ?>' }, function(response) {
 							if (response.success) {
 								$log.append(response.data.message + '<br>');
-								if (response.data.remaining > 0) {
-									setTimeout(runDictBatch, 1000); // 1s pause between batches
-								} else {
+								if (response.data.remaining > 0) setTimeout(runDictBatch, 1000);
+								else {
 									$log.append('<strong>✔ Dictionary enrichment complete!</strong>');
-									$btn.prop('disabled', false).text('Backfill Dictionary Enrichment');
-									$('#fetch-save-json').trigger('click', [false]); // Refresh JSON without clearing log
+									$btn.prop('disabled', false).text('Backfill Dictionary');
+									$('#fetch-save-json').trigger('click', [false]);
 								}
-							} else {
-								$log.append('<br><span style="color:red;">Error:</span> ' + response.data.message);
-								$btn.prop('disabled', false).text('Backfill Dictionary Enrichment');
 							}
 						});
 					}
-					
 					runDictBatch();
+				});
+
+				$('#regenerate-fallbacks').click(function() {
+					var $btn = $(this);
+					var $log = $('#scraper-log');
+					$btn.prop('disabled', true).text('Regenerating...');
+					$log.show().html('Scanning for low-quality fallbacks...');
+					$.post(ajaxurl, { action: 'regenerate_wordle_fallbacks', nonce: '<?php echo wp_create_nonce("wordle_regen_nonce"); ?>' }, function(response) {
+						$log.append('<br>' + response.data.message);
+						if (response.success) $('#fetch-save-json').click();
+						$btn.prop('disabled', false).text('Regenerate Fallbacks');
+					});
 				});
 
 				$('#test-ai-connection').click(function() {
 					var $btn = $(this);
 					var $log = $('#scraper-log');
 					$btn.prop('disabled', true).text('Testing...');
-					$log.show().html('Testing Primary AI connection with model: ' + $('input[name="wordle_hint_ai_model"]').val() + '...');
-					
-					$.post(ajaxurl, {
-						action: 'test_wordle_ai',
-						nonce: '<?php echo wp_create_nonce("wordle_test_ai_nonce"); ?>'
-					}, function(response) {
-						if (response.success) {
-							$log.append('<br><span style="color:green;">✔ Primary Success!</span> AI hints generated: ' + JSON.stringify(response.data.hints));
-						} else {
-							$log.append('<br><span style="color:red;">❌ Primary Error:</span> ' + response.data.message);
-						}
+					$log.show().html('Testing Primary AI connection...');
+					$.post(ajaxurl, { action: 'test_wordle_ai', nonce: '<?php echo wp_create_nonce("wordle_test_ai_nonce"); ?>' }, function(response) {
+						if (response.success) $log.append('<br><span style="color:green;">✔ Success!</span> AI hints generated.');
+						else $log.append('<br><span style="color:red;">❌ Error:</span> ' + response.data.message);
 						$btn.prop('disabled', false).text('Test Primary AI');
 					});
 				});
-				
+
 				$('#test-fallback-ai').click(function() {
 					var $btn = $(this);
 					var $log = $('#scraper-log');
 					$btn.prop('disabled', true).text('Testing...');
-					$log.show().html('Testing Fallback AI connection with model: ' + $('input[name="wordle_hint_ai_model_fallback"]').val() + '...');
-					
-					$.post(ajaxurl, {
-						action: 'test_wordle_fallback_ai',
-						nonce: '<?php echo wp_create_nonce("wordle_test_fallback_nonce"); ?>'
-					}, function(response) {
-						if (response.success) {
-							$log.append('<br><span style="color:green;">✔ Fallback Success!</span> AI hints generated: ' + JSON.stringify(response.data.hints));
-						} else {
-							$log.append('<br><span style="color:red;">❌ Fallback Error:</span> ' + response.data.message);
-						}
+					$log.show().html('Testing Fallback AI connection...');
+					$.post(ajaxurl, { action: 'test_wordle_fallback_ai', nonce: '<?php echo wp_create_nonce("wordle_test_fallback_nonce"); ?>' }, function(response) {
+						if (response.success) $log.append('<br><span style="color:green;">✔ Success!</span> AI hints generated.');
+						else $log.append('<br><span style="color:red;">❌ Error:</span> ' + response.data.message);
 						$btn.prop('disabled', false).text('Test Fallback AI');
+					});
+				});
+			});
+			</script>
+		</div>
+		<?php
+	}
+
+	public static function settings_page() {
+		?>
+		<div class="settings-wrapper" style="margin-top: 20px;">
+			<form method="post" action="options.php">
+				<?php settings_fields( 'wordle_hint_settings_group' ); ?>
+				<?php do_settings_sections( 'wordle_hint_settings_group' ); ?>
+				<table class="form-table">
+					<tr valign="top">
+						<th scope="row">Scrape URL</th>
+						<td>
+							<input type="text" name="wordle_hint_scrape_url" value="<?php echo esc_attr( get_option( 'wordle_hint_scrape_url' ) ); ?>" placeholder="https://www.nytimes.com/svc/wordle/v2/" class="large-text" />
+							<p class="description">Default: NYT Wordle v2 endpoint.</p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">Primary AI API Key</th>
+						<td><input type="password" name="wordle_hint_ai_api_key" value="<?php echo esc_attr( get_option( 'wordle_hint_ai_api_key' ) ); ?>" class="large-text" /></td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">Primary AI Model</th>
+						<td><input type="text" name="wordle_hint_ai_model" value="<?php echo esc_attr( get_option( 'wordle_hint_ai_model', 'llama-3.1-8b-instant' ) ); ?>" class="regular-text" /></td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">Fallback AI API Key</th>
+						<td><input type="password" name="wordle_hint_ai_api_key_fallback" value="<?php echo esc_attr( get_option( 'wordle_hint_ai_api_key_fallback' ) ); ?>" class="large-text" /></td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">Fallback AI Model</th>
+						<td><input type="text" name="wordle_hint_ai_model_fallback" value="<?php echo esc_attr( get_option( 'wordle_hint_ai_model_fallback' ) ); ?>" class="regular-text" /></td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">AI Prompt Template</th>
+						<td>
+							<textarea name="wordle_hint_ai_prompt" rows="6" class="large-text"><?php echo esc_textarea( get_option( 'wordle_hint_ai_prompt' ) ); ?></textarea>
+							<p class="description">Use {{WORD}} as placeholder.</p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">Merriam-Webster Dictionary Key</th>
+						<td><input type="password" name="wordle_mw_dictionary_key" value="<?php echo esc_attr( get_option( 'wordle_mw_dictionary_key' ) ); ?>" class="large-text" /></td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">Stats Refresh Interval (Hours)</th>
+						<td><input type="number" name="wordle_stats_refresh_interval" value="<?php echo esc_attr( get_option( 'wordle_stats_refresh_interval', 4 ) ); ?>" class="small-text" /></td>
+					</tr>
+				</table>
+				<?php submit_button(); ?>
+			</form>
+
+			<hr>
+			<h3>Manual Entry & Data Management</h3>
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row">Manual Entry</th>
+					<td>
+						<input type="text" id="manual_wordle_word" maxlength="5" placeholder="WORD" style="text-transform:uppercase; width: 80px;" />
+						<input type="number" id="manual_wordle_number" placeholder="No." style="width: 80px;" />
+						<input type="date" id="manual_wordle_date" value="<?php echo current_time('Y-m-d'); ?>" />
+						<button type="button" id="save-manual-wordle" class="button">Save Entry</button>
+						<div id="manual-status-msg"></div>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">CSV Archive Upload</th>
+					<td>
+						<input type="file" id="wordle_csv_file" accept=".csv" />
+						<button type="button" id="upload-wordle-csv" class="button">Upload CSV</button>
+						<div id="csv-status-msg"></div>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">Bulk AI Generation</th>
+					<td>
+						<select id="batch_ai_engine">
+							<option value="default">Default</option>
+							<option value="primary">Primary Only</option>
+						</select>
+						<input type="number" id="batch_size_input" value="10" style="width:60px;" />
+						<button id="batch-generate-ai" class="button button-primary">Start Batch</button>
+						<button id="stop-batch-ai" class="button" style="display:none;">Stop</button>
+					</td>
+				</tr>
+			</table>
+
+			<script>
+			jQuery(document).ready(function($) {
+				$('#save-manual-wordle').click(function() {
+					var $btn = $(this);
+					var $status = $('#manual-status-msg');
+					$btn.prop('disabled', true).text('Saving...');
+					$.post(ajaxurl, {
+						action: 'save_manual_wordle',
+						nonce: '<?php echo wp_create_nonce("wordle_manual_nonce"); ?>',
+						word: $('#manual_wordle_word').val(),
+						number: $('#manual_wordle_number').val(),
+						date: $('#manual_wordle_date').val()
+					}, function(response) {
+						$status.text(response.data.message);
+						$btn.prop('disabled', false).text('Save Entry');
 					});
 				});
 
 				$('#upload-wordle-csv').click(function() {
 					var file_data = $('#wordle_csv_file').prop('files')[0];
-					if (!file_data) {
-						alert('Please select a CSV file.');
-						return;
-					}
-
-					var $btn = $(this);
-					var $status = $('#csv-status-msg');
+					if (!file_data) return;
 					var form_data = new FormData();
 					form_data.append('file', file_data);
 					form_data.append('action', 'upload_wordle_csv');
 					form_data.append('nonce', '<?php echo wp_create_nonce("wordle_csv_nonce"); ?>');
-
-					$btn.prop('disabled', true).text('Uploading...');
-					$status.css('color', 'blue').text('Processing CSV... This may take a moment.');
-
 					$.ajax({
-						url: ajaxurl,
-						type: 'POST',
-						data: form_data,
-						contentType: false,
-						processData: false,
-						success: function(response) {
-							if (response.success) {
-								$status.css('color', 'green').text('✔ ' + response.data.message);
-								$('#fetch-save-json').click(); // Refresh JSON too
-							} else {
-								$status.css('color', 'red').text('❌ ' + response.data.message);
-							}
-							$btn.prop('disabled', false).text('Upload CSV Archive');
-						},
-						error: function() {
-							$status.css('color', 'red').text('❌ Upload failed.');
-							$btn.prop('disabled', false).text('Upload CSV Archive');
-						}
+						url: ajaxurl, type: 'POST', data: form_data, contentType: false, processData: false,
+						success: function(response) { $('#csv-status-msg').text(response.data.message); }
 					});
 				});
 
-				// Batch AI Generation
 				var isBatchRunning = false;
-
-				$('#stop-batch-ai').click(function() {
-					isBatchRunning = false;
-					$(this).hide();
-					$('#batch-generate-ai').prop('disabled', false).text('Batch Generate AI Hints (Archive)');
-					$('#scraper-log').append('<span style="color:red;"><strong>✔ Generation stopped by user.</strong></span><br>');
-				});
-
 				$('#batch-generate-ai').click(function() {
-					if (!confirm('This will call the AI for all records missing hints. Depending on your archive size, this may take a while. Continue?')) return;
-					
 					isBatchRunning = true;
-					var $btn = $(this);
-					var $log = $('#scraper-log');
-					var $stopBtn = $('#stop-batch-ai');
-
-					$btn.prop('disabled', true).text('Processing Batch...');
-					$stopBtn.show();
-					$log.show().html('<strong>Starting Batch AI Generation...</strong><br>');
-
-					function processNextBatch() {
+					$('#stop-batch-ai').show();
+					function runBatch() {
 						if (!isBatchRunning) return;
-
-						$.ajax({
-							url: ajaxurl,
-							type: 'POST',
-							data: {
-								action: 'batch_generate_ai_hints',
-								nonce: '<?php echo wp_create_nonce("wordle_batch_ai_nonce"); ?>',
-								batch_size: $('#batch_size_input').val(),
-								engine: $('#batch_ai_engine').val()
-							},
-							success: function(response) {
-								if (!isBatchRunning) return;
-
-								if (response.success) {
-									$log.append(response.data.message + '<br>');
-									$log.scrollTop($log[0].scrollHeight);
-									
-									if (response.data.remaining > 0) {
-										if (response.data.paused) {
-											$log.append('<span style="color:orange;">⚠ Batch paused to avoid rate limits. Resuming in 30 seconds...</span><br>');
-											setTimeout(processNextBatch, 30000); // 30s delay if paused
-										} else if (parseInt(response.data.processed) === 0 && parseInt(response.data.errors) > 0) {
-											$log.append('<span style="color:red;">❌ Multiple failures. Stopping to prevent loop. Please check your API keys or quota.</span><br>');
-											$btn.prop('disabled', false).text('Batch Generate AI Hints (Archive)');
-											$stopBtn.hide();
-										} else {
-											processNextBatch(); // Recursively call for next batch
-										}
-									} else {
-										$log.append('<strong>✔ All AI hints generated successfully!</strong>');
-										$btn.prop('disabled', false).text('Batch Generate AI Hints (Archive)');
-										$stopBtn.hide();
-										$('#fetch-save-json').click(); // Final cache refresh
-									}
-								} else {
-									$log.append('<span style="color:red;">❌ Error: ' + response.data.message + '</span><br>');
-									$btn.prop('disabled', false).text('Batch Generate AI Hints (Archive)');
-									$stopBtn.hide();
-								}
-							},
-							error: function() {
-								if (!isBatchRunning) return;
-								$log.append('<span style="color:red;">❌ Connection error. Retrying in 5 seconds...</span><br>');
-								setTimeout(processNextBatch, 5000);
-							}
+						$.post(ajaxurl, {
+							action: 'batch_generate_ai_hints',
+							nonce: '<?php echo wp_create_nonce("wordle_batch_ai_nonce"); ?>',
+							batch_size: $('#batch_size_input').val(),
+							engine: $('#batch_ai_engine').val()
+						}, function(response) {
+							if (response.data.remaining > 0) runBatch();
+							else $('#stop-batch-ai').hide();
 						});
 					}
-
-					processNextBatch();
+					runBatch();
 				});
+				$('#stop-batch-ai').click(function() { isBatchRunning = false; $(this).hide(); });
 			});
 			</script>
 		</div>
@@ -638,6 +451,7 @@ class Wordle_Admin {
 				</tbody>
 			</table>
 		</div>
+		<?php
 	}
 }
 
