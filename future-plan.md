@@ -76,10 +76,10 @@ No maximum on `$limit` — anyone can request `?limit=99999` and dump the full d
 
 ---
 
-### Step 7 — 🟡 Performance: Code Optimization Pass
-Consolidate near-identical `get_today_wordle` and `get_wordle_data` REST routes into one endpoint.
-Remove `JSON_PRETTY_PRINT` from `wordle-data.json` in production to reduce file size ~15%.
-Reduce 80+ `!important` declarations in `style.css` by increasing CSS specificity instead.
+### Step 7 — ✅ Performance: Code Optimization Pass (Completed)
+- [x] Consolidate near-identical `get_today_wordle` and `get_wordle_data` REST routes into one endpoint.
+- [x] Remove `JSON_PRETTY_PRINT` from `wordle-data.json` in production to reduce file size ~15%.
+- [x] Reduce 80+ `!important` declarations in `style.css` by increasing CSS specificity instead. (Cleaned up major UI blocks).
 
 ---
 

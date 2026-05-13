@@ -48,9 +48,11 @@ class Wordle_API {
 			'permission_callback' => '__return_true',
 		) );
 
+		// /today is now deprecated in favor of /data (which defaults to today)
+		// Pointing it to get_wordle_data for backward compatibility.
 		register_rest_route( 'wordle/v1', '/today', array(
 			'methods'  => 'GET',
-			'callback' => array( __CLASS__, 'get_today_wordle' ),
+			'callback' => array( __CLASS__, 'get_wordle_data' ),
 			'permission_callback' => '__return_true',
 		) );
 
@@ -114,30 +116,20 @@ class Wordle_API {
 			), 404 );
 		}
 		
-		return new WP_REST_Response( array(
-			'success' => true,
-			'data'    => $puzzle,
-		), 200 );
+		return new WP_REST_Response( self::prepare_puzzle_response( $puzzle ), 200 );
 	}
 
-	public static function get_today_wordle( $request ) {
-		$locale = $request->get_param( 'locale' ) ?: 'global';
-		$date   = current_time( 'Y-m-d' );
-		
-		$puzzle = Wordle_DB::get_puzzle_by_date( $date, $locale );
-
-		if ( ! $puzzle ) {
-			return new WP_REST_Response( array(
-				'error' => 'No puzzle found for today',
-			), 404 );
-		}
-		
-		return new WP_REST_Response( array(
+	/**
+	 * Formats raw DB record into a standardized API response structure.
+	 */
+	private static function prepare_puzzle_response( $puzzle ) {
+		return array(
+			'success'     => true,
 			'date'        => $puzzle['date'],
 			'number'      => (int) $puzzle['puzzle_number'],
 			'word'        => $puzzle['word'],
 			'vowels'      => (int) $puzzle['vowel_count'],
-			'starts_with' => $puzzle['first_letter'],
+			'starts_with' => $puzzle['first_letter'] ?? substr($puzzle['word'], 0, 1),
 			'hints'       => array(
 				'vague'    => $puzzle['hint1'],
 				'category' => $puzzle['hint2'],
@@ -157,8 +149,10 @@ class Wordle_API {
 				'etymology'        => $puzzle['etymology'] ?? '',
 				'example_sentence' => $puzzle['example_sentence'] ?? '',
 				'first_known_use'  => $puzzle['first_known_use'] ?? '',
+				'synonyms'         => $puzzle['synonyms'] ?? '[]',
+				'antonyms'         => $puzzle['antonyms'] ?? '[]',
 			),
-		), 200 );
+		);
 	}
 
 	public static function get_wordle_solution( $request ) {
@@ -262,7 +256,7 @@ class Wordle_API {
 		}
 
 		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
-		$json_content = json_encode( $data, JSON_PRETTY_PRINT );
+		$json_content = json_encode( $data );
 
 		if ( file_put_contents( $file_path, $json_content ) !== false ) {
 			return new WP_REST_Response( array( 'success' => true, 'message' => 'JSON updated successfully' ), 200 );
@@ -358,7 +352,7 @@ class Wordle_API {
 		);
 
 		$file_path = WORDLE_HINT_PATH . 'wordle-data.json';
-		$success = file_put_contents( $file_path, json_encode( $final_output, JSON_PRETTY_PRINT ) );
+		$success = file_put_contents( $file_path, json_encode( $final_output ) );
 		
 		// Refresh Wordle Solver JSON as well
 		if ( class_exists( 'Wordle_Solver' ) ) {

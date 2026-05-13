@@ -105,10 +105,10 @@ body.dark-mode {
     border: 1px solid var(--wh-border);
 }
 
-.wh-nav-btn {
-    background: var(--wh-inner-card) !important;
-    color: var(--wh-text) !important;
-    border: 1px solid var(--wh-border) !important;
+.wordle-hint-container .wh-nav-btn {
+    background: var(--wh-inner-card);
+    color: var(--wh-text);
+    border: 1px solid var(--wh-border);
     width: 28px;
     height: 28px;
     display: flex;
@@ -119,23 +119,19 @@ body.dark-mode {
     font-size: 14px;
     font-weight: 800;
     transition: all 0.2s ease;
-    padding: 0 !important;
+    padding: 0;
     line-height: 1;
 }
 
-.wh-nav-btn:hover {
-    background: var(--wordle-yellow) !important;
-    color: #000 !important;
-    border-color: var(--wordle-yellow) !important;
+.wordle-hint-container .wh-nav-btn:hover {
+    background: var(--wordle-yellow);
+    color: #000;
+    border-color: var(--wordle-yellow);
     transform: scale(1.1);
 }
 
-.wh-nav-btn:active {
-    transform: scale(0.9);
-}
-
-body.dark-mode .wh-nav-btn:hover {
-    color: #000 !important;
+body.dark-mode .wordle-hint-container .wh-nav-btn:hover {
+    color: #000;
 }
 
 .wh-date {
@@ -307,27 +303,27 @@ body.dark-mode .wh-toggle-knob {
     margin-top: 0.5rem;
 }
 
-.wh-reveal-main-btn {
-    background-color: var(--wordle-green) !important;
-    color: white !important;
-    border: none !important;
-    padding: 1.1rem 3rem !important;
-    font-size: 1.1rem !important;
-    font-weight: 800 !important;
-    border-radius: 12px !important;
-    cursor: pointer !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    box-shadow: 0 4px 14px rgba(106, 170, 100, 0.3) !important;
-    transition: all 0.3s ease, opacity 0.3s ease !important;
+.wordle-hint-container .wh-reveal-main-btn {
+    background-color: var(--wordle-green);
+    color: white;
+    border: none;
+    padding: 1.1rem 3rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border-radius: 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 14px rgba(106, 170, 100, 0.3);
+    transition: all 0.3s ease, opacity 0.3s ease;
     z-index: 5;
 }
 
-.wh-reveal-main-btn:hover {
-    transform: translateY(-2px) scale(1.04) !important;
-    box-shadow: 0 6px 20px rgba(201, 180, 88, 0.3) !important;
-    background-color: var(--wordle-yellow-dark) !important;
-    color: #000000 !important;
+.wordle-hint-container .wh-reveal-main-btn:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 20px rgba(201, 180, 88, 0.3);
+    background-color: var(--wordle-yellow-dark);
+    color: #000000;
 }
 
 .wh-hidden {
@@ -374,25 +370,29 @@ body.dark-mode .wh-toggle-knob {
     gap: 8px;
 }
 
-.wh-toolbar-btn, .wh-share-btn, .wh-replay-btn {
-    background: var(--wh-inner-card) !important;
-    border: 1px solid var(--wh-border) !important;
-    color: var(--wh-text) !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
+.wordle-hint-container .wh-toolbar-btn, 
+.wordle-hint-container .wh-share-btn, 
+.wordle-hint-container .wh-replay-btn {
+    background: var(--wh-inner-card);
+    border: 1px solid var(--wh-border);
+    color: var(--wh-text);
+    border-radius: 8px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease !important;
-    font-size: 0.85rem !important;
-    font-weight: 700 !important;
-    padding: 6px 12px !important;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 6px 12px;
 }
 
-.wh-toolbar-btn:hover, .wh-share-btn:hover, .wh-replay-btn:hover {
-    background: var(--wordle-yellow) !important;
-    border-color: var(--wordle-yellow) !important;
-    color: #000 !important;
+.wordle-hint-container .wh-toolbar-btn:hover, 
+.wordle-hint-container .wh-share-btn:hover, 
+.wordle-hint-container .wh-replay-btn:hover {
+    background: var(--wordle-yellow);
+    border-color: var(--wordle-yellow);
+    color: #000;
 }
 
 .wh-share-btn {
