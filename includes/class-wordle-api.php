@@ -8,7 +8,9 @@ class Wordle_API {
 
 	public static function init() {
 		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
-		add_action( 'init', array( __CLASS__, 'maybe_refresh_cache' ) );
+		if ( ! is_admin() ) {
+			add_action( 'init', array( __CLASS__, 'maybe_refresh_cache' ) );
+		}
 	}
 
 	/**

@@ -55,10 +55,10 @@ No maximum on `$limit` — anyone can request `?limit=99999` and dump the full d
 
 ---
 
-### Step 4 — 🟡 Performance: Restrict Cache Check to Frontend Only
+### Step 4 — ✅ Performance: Restrict Cache Check to Frontend Only (Completed)
 **File**: `class-wordle-api.php`, L11
 `maybe_refresh_cache()` fires on every `init` including admin pages, calling `filemtime()` on every load.
-**Fix**: Wrap logic in `if ( ! is_admin() )` check.
+**Fix**: Wrap logic in `if ( ! is_admin() )` check. (Fixed: Restricted to frontend).
 
 ---
 

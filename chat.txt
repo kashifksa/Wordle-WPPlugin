@@ -393,3 +393,6 @@ Antigravity: I have successfully integrated **Section 9: Topical Authority & Str
 207: 
 208: User: next step 3
 209: Antigravity: I have completed **Step 3: Sanitize `/save` Endpoint Inputs**. I implemented a strict whitelist of 20+ allowed database fields and applied individual sanitization (like `intval`, `sanitize_text_field`, and `esc_url_raw`) to each. This prevents "Mass Assignment" attacks where a malicious user could try to overwrite internal database columns like `id` or `created_at`.
+210: 
+211: User: next
+212: Antigravity: I have completed **Step 4: Restrict Cache Check to Frontend Only**. I modified `includes/class-wordle-api.php` to wrap the `maybe_refresh_cache` hook in an `!is_admin()` check. This ensures the plugin no longer performs unnecessary file system checks (`filemtime`) on every admin dashboard page load, slightly improving the performance of your WordPress backend.
