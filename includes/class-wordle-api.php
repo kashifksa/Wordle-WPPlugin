@@ -91,7 +91,10 @@ class Wordle_API {
 		$key = $request->get_header( 'Authorization' );
 		$stored_key = get_option( 'wordle_hint_api_key' );
 		
-		if ( ! $stored_key ) return true; // If not set, allow
+		// If no key is set, fail secure (return false) instead of fail open.
+		if ( ! $stored_key ) {
+			return false;
+		}
 		
 		return ( 'Bearer ' . $stored_key === $key );
 	}

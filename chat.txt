@@ -384,3 +384,6 @@ Antigravity: I audited your `TopicalMap.txt` and identified 4 high-value strateg
 
 User: yeh just add only dont do anything
 Antigravity: I have successfully integrated **Section 9: Topical Authority & Strategic Growth 🚀** into your `future-plan.md`. This new phase focuses on long-term SEO growth, inclusivity, and user retention based on your Enterprise Topical Authority Map.
+201: 
+202: User: ok do the task one by one after completing each task tell me how to test it and when i say next u do the next
+203: Antigravity: Understood! I'm starting with **Step 1: Fix API Key Fails Open**. I have updated `class-wordle-api.php` so that if no API key is configured in the settings, the protected endpoints (`/solution` and `/save`) will now correctly return a `401 Unauthorized` instead of allowing access. This "Fails Secure" approach protects your data from the moment the plugin is installed.

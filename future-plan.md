@@ -34,10 +34,10 @@ Tasks marked `[x]` are already completed and kept for reference.
 
 ## 🚀 Implementation Queue (Do In Order)
 
-### Step 1 — 🔴 Security: Fix API Key Fails Open
+### Step 1 — ✅ Security: Fix API Key Fails Open (Completed)
 **File**: `class-wordle-api.php`, L94
 `if ( ! $stored_key ) return true;` makes `/solution` and `/save` fully public when no key is set.
-**Fix**: Return `false` when no key is configured, or log a WP site-health warning.
+**Fix**: Return `false` when no key is configured, or log a WP site-health warning. (Fixed: Now fails secure).
 
 ---
 
