@@ -103,6 +103,9 @@ class Wordle_Scraper {
 			Wordle_API::refresh_json_cache();
 		}
 
+		// Fire custom action for other components (like the Solver) to update
+		do_action( 'wordle_after_scrape' );
+
 		return $data;
 	}
 

@@ -62,10 +62,10 @@ No maximum on `$limit` — anyone can request `?limit=99999` and dump the full d
 
 ---
 
-### Step 5 — 🟡 Code Quality: Fix Dead Action Hook
+### Step 5 — ✅ Code Quality: Fix Dead Action Hook (Completed)
 **File**: `class-wordle-solver.php`, L15
 `add_action('wordle_after_scrape', ...)` is registered but `do_action('wordle_after_scrape')` is never called anywhere.
-**Fix**: Fire `do_action('wordle_after_scrape')` in the scraper after a successful save, or remove the dead hook.
+**Fix**: Fire `do_action('wordle_after_scrape')` in the scraper after a successful save. (Fixed: Action added to Scraper).
 
 ---
 

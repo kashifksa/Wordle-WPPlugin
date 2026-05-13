@@ -396,3 +396,6 @@ Antigravity: I have successfully integrated **Section 9: Topical Authority & Str
 210: 
 211: User: next
 212: Antigravity: I have completed **Step 4: Restrict Cache Check to Frontend Only**. I modified `includes/class-wordle-api.php` to wrap the `maybe_refresh_cache` hook in an `!is_admin()` check. This ensures the plugin no longer performs unnecessary file system checks (`filemtime`) on every admin dashboard page load, slightly improving the performance of your WordPress backend.
+213: 
+214: User: next
+215: Antigravity: I have completed **Step 5: Fix Dead Action Hook**. I identified that the Wordle Solver was listening for an event (`wordle_after_scrape`) that was never being fired. I have now added `do_action( 'wordle_after_scrape' )` to `includes/class-wordle-scraper.php`. Now, every time a new Wordle is successfully scraped, the Solver will automatically trigger its own data refresh, ensuring the solver's dictionary is always up to date.
