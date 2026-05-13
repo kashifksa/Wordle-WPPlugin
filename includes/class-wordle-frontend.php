@@ -217,7 +217,7 @@ class Wordle_Frontend {
 						<span class="wh-separator">•</span>
 						<div class="wh-date-nav">
 							<button id="wh-prev-date" class="wh-nav-btn" title="Previous Day">←</button>
-							<span class="wh-date" id="wh-calendar-trigger" title="Click to select date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
+							<span class="wh-date" id="wh-calendar-trigger" data-current-date="<?php echo esc_attr( $puzzle['date'] ); ?>" title="Click to select date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
 							<input type="text" id="wh-date-picker" style="position:absolute; opacity:0; width:0; height:0; border:none; padding:0; pointer-events:none;" readonly>
 							<button id="wh-next-date" class="wh-nav-btn" title="Next Day">→</button>
 						</div>

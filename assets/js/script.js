@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(apiRes => {
                 if (apiRes.success) {
-                    populateUI(apiRes.data);
+                    populateUI(apiRes);
                     
                     // Update URL without refresh
                     const newUrl = new URL(window.location.href);
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(wordleHintData.apiUrl + 'data?date=' + popDate)
             .then(res => res.json())
             .then(apiRes => {
-                if (apiRes.success) populateUI(apiRes.data);
+                if (apiRes.success) populateUI(apiRes);
             });
     };
 
@@ -474,16 +474,41 @@ document.addEventListener('DOMContentLoaded', () => {
             const $btn = jQuery(this);
             const originalHtml = $btn.html();
 
-            // Wordle grid results (always green for the answer reveal)
-            const gridString = "🟩🟩🟩🟩🟩";
-            const shareText = `Wordle ${puzzleNum}\n${dateStr}\n\n${gridString}\n\nSolve it here: ${window.location.href}`;
+            // NYT Style Grid: 🟩🟩🟩🟩🟩
+            // We represent hints used as yellow rows (to avoid giving away the letters but showing effort)
+            const unlockedHints = $container.find('.wh-hint-card:not(.locked)').length;
+            
+            let gridString = "";
+            if (unlockedHints > 0) {
+                for (let i = 0; i < Math.min(unlockedHints, 4); i++) {
+                    gridString += "🟨🟨🟨🟨🟨\n";
+                }
+            }
+            gridString += "🟩🟩🟩🟩🟩";
 
-            navigator.clipboard.writeText(shareText).then(() => {
-                $btn.html('<span>✅ Copied!</span>').addClass('copied');
+            const siteUrl = window.location.href.split('?')[0];
+            const shareText = `Wordle ${puzzleNum} (${unlockedHints}/4 Hints)\n${dateStr}\n\n${gridString}\n\nSolved at:\n🔗 ${siteUrl}`;
+
+            const copySuccess = () => {
+                $btn.html('<span class="icon">✅</span> <span class="label">Copied!</span>').addClass('copied');
                 setTimeout(() => {
                     $btn.html(originalHtml).removeClass('copied');
                 }, 2000);
-            });
+            };
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText).then(copySuccess).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = shareText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                copySuccess();
+            }
         });
 
         function revealBox(index) {
