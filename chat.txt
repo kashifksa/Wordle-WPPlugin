@@ -399,3 +399,6 @@ Antigravity: I have successfully integrated **Section 9: Topical Authority & Str
 213: 
 214: User: next
 215: Antigravity: I have completed **Step 5: Fix Dead Action Hook**. I identified that the Wordle Solver was listening for an event (`wordle_after_scrape`) that was never being fired. I have now added `do_action( 'wordle_after_scrape' )` to `includes/class-wordle-scraper.php`. Now, every time a new Wordle is successfully scraped, the Solver will automatically trigger its own data refresh, ensuring the solver's dictionary is always up to date.
+216: 
+217: User: next
+218: Antigravity: I have completed **Step 6: Optimize Solver Deduplication**. I refactored the `generate_solver_json()` method in `includes/class-wordle-solver.php` to use an associative array (map) for word deduplication instead of `array_unique()`. This technical optimization makes the cache generation significantly faster, especially as your dictionary and database grow over time.

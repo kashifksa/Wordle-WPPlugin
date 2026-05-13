@@ -69,10 +69,10 @@ No maximum on `$limit` — anyone can request `?limit=99999` and dump the full d
 
 ---
 
-### Step 6 — 🟡 Performance: Optimize Solver Deduplication
+### Step 6 — ✅ Performance: Optimize Solver Deduplication (Completed)
 **File**: `class-wordle-solver.php`, L171
 `array_unique()` + `sort()` on a flat array is inefficient on every cache refresh.
-**Fix**: Use `$words[$word] = true` associative map during collection, then `array_keys()` at the end.
+**Fix**: Use `$words[$word] = true` associative map during collection, then `array_keys()` at the end. (Fixed: Switched to map-based deduplication).
 
 ---
 

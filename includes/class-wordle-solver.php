@@ -134,7 +134,7 @@ class Wordle_Solver {
 	 * Merges CSV and DB datasets into one JSON source of truth.
 	 */
 	public static function generate_solver_json() {
-		$words = array();
+		$words_map = array();
 		
 		// 1. Load from CSV
 		$csv_file = WORDLE_HINT_PATH . 'wordle_dataset_enriched.csv';
@@ -145,7 +145,7 @@ class Wordle_Solver {
 					if ( isset( $data[2] ) ) {
 						$word = strtoupper( trim( $data[2] ) );
 						if ( strlen( $word ) === 5 ) {
-							$words[] = $word;
+							$words_map[$word] = true;
 						}
 					}
 				}
@@ -162,18 +162,18 @@ class Wordle_Solver {
 			foreach ( $db_words as $w ) {
 				$word = strtoupper( trim( $w ) );
 				if ( strlen( $word ) === 5 ) {
-					$words[] = $word;
+					$words_map[$word] = true;
 				}
 			}
 		}
 
-		// 3. Deduplicate and Clean
-		$words = array_unique( $words );
+		// 3. Extract and Sort
+		$words = array_keys( $words_map );
 		sort( $words );
 
 		// 4. Save to JSON
 		$final_data = array(
-			'words' => array_values( $words ),
+			'words' => $words,
 			'last_updated' => current_time( 'mysql' )
 		);
 
