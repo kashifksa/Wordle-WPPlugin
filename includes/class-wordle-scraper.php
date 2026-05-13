@@ -28,6 +28,7 @@ class Wordle_Scraper {
 		) );
 
 		if ( is_wp_error( $response ) ) {
+			if ( class_exists( 'Wordle_Admin' ) ) { Wordle_Admin::log( "Scraper Network Error: " . $response->get_error_message(), 'error' ); }
 			error_log( "Wordle Scraper Error: " . $response->get_error_message() );
 			return $response;
 		}
@@ -105,6 +106,8 @@ class Wordle_Scraper {
 
 		// Fire custom action for other components (like the Solver) to update
 		do_action( 'wordle_after_scrape' );
+
+		if ( class_exists( 'Wordle_Admin' ) ) { Wordle_Admin::log( "Successfully scraped Wordle #{$data['puzzle_number']} ({$data['word']})", 'success' ); }
 
 		return $data;
 	}

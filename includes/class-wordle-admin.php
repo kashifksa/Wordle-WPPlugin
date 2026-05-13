@@ -11,33 +11,63 @@ class Wordle_Admin {
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 	}
 
+	/**
+	 * Simple logging system to track the last 50 events.
+	 */
+	public static function log( $message, $type = 'info' ) {
+		$logs = get_option( 'wordle_hint_logs', array() );
+		$new_log = array(
+			'time' => current_time( 'mysql' ),
+			'msg'  => $message,
+			'type' => $type
+		);
+		array_unshift( $logs, $new_log );
+		$logs = array_slice( $logs, 0, 50 ); // Keep only last 50
+		update_option( 'wordle_hint_logs', $logs );
+	}
+
 	public static function add_admin_menu() {
 		add_menu_page(
 			'Wordle Hint Pro',
 			'Wordle Hint',
 			'manage_options',
 			'wordle-hint-settings',
-			array( __CLASS__, 'settings_page' ),
+			array( __CLASS__, 'unified_admin_page' ),
 			'dashicons-lightbulb'
 		);
+	}
 
-		add_submenu_page(
-			'wordle-hint-settings',
-			'Manage Puzzles',
-			'Manage Puzzles',
-			'manage_options',
-			'wordle-hint-manage',
-			array( __CLASS__, 'manage_puzzles_page' )
-		);
+	public static function unified_admin_page() {
+		$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard';
+		?>
+		<div class="wrap">
+			<h1>Wordle Hint Pro</h1>
+			<h2 class="nav-tab-wrapper">
+				<a href="?page=wordle-hint-settings&tab=dashboard" class="nav-tab <?php echo $active_tab == 'dashboard' ? 'nav-tab-active' : ''; ?>">Dashboard</a>
+				<a href="?page=wordle-hint-settings&tab=manage" class="nav-tab <?php echo $active_tab == 'manage' ? 'nav-tab-active' : ''; ?>">Manage Puzzles</a>
+				<a href="?page=wordle-hint-settings&tab=logs" class="nav-tab <?php echo $active_tab == 'logs' ? 'nav-tab-active' : ''; ?>">System Logs</a>
+				<a href="?page=wordle-hint-settings&tab=settings" class="nav-tab <?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>">Settings</a>
+			</h2>
 
-		add_submenu_page(
-			'wordle-hint-settings',
-			'Settings',
-			'Settings',
-			'manage_options',
-			'wordle-hint-settings',
-			array( __CLASS__, 'settings_page' )
-		);
+			<?php
+			switch ( $active_tab ) {
+				case 'manage':
+					self::manage_puzzles_page();
+					break;
+				case 'logs':
+					self::logs_page();
+					break;
+				case 'settings':
+					self::settings_page();
+					break;
+				case 'dashboard':
+				default:
+					self::dashboard_page();
+					break;
+			}
+			?>
+		</div>
+		<?php
 	}
 
 	public static function register_settings() {
@@ -55,10 +85,10 @@ class Wordle_Admin {
 		register_setting( 'wordle_hint_settings_group', 'wordle_stats_refresh_interval' );
 	}
 
-	public static function settings_page() {
+	public static function dashboard_page() {
 		?>
-		<div class="wrap">
-			<h1>Wordle Hint Pro Settings</h1>
+		<div class="dashboard-wrapper">
+
 			<form method="post" action="options.php">
 				<?php settings_fields( 'wordle_hint_settings_group' ); ?>
 				<?php do_settings_sections( 'wordle_hint_settings_group' ); ?>
@@ -160,10 +190,43 @@ class Wordle_Admin {
 			</form>
 			
 			<hr>
-			<h2>System Status</h2>
-			<table class="wp-list-table widefat fixed striped">
+			<h2>System Health (Last 7 Days)</h2>
+			<table class="wp-list-table widefat fixed striped" style="max-width: 800px; margin-bottom: 20px;">
+				<thead>
+					<tr>
+						<th style="width: 150px;">Date</th>
+						<th style="width: 120px;">Status</th>
+						<th style="width: 100px;">Word</th>
+						<th>Source</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php 
+					global $wpdb;
+					$table_name = Wordle_DB::get_table_name();
+					for ( $i = 0; $i < 7; $i++ ) : 
+						$date = date( 'Y-m-d', strtotime( "-$i days" ) );
+						$entry = $wpdb->get_row( $wpdb->prepare( "SELECT entry_source, word FROM $table_name WHERE date = %s", $date ) );
+						?>
+						<tr>
+							<td><strong><?php echo ($i === 0) ? 'Today' : date( 'M j, Y', strtotime( $date ) ); ?></strong></td>
+							<td>
+								<?php if ( $entry ) : ?>
+									<span style="color: #6aaa64; font-weight: bold;">✅ Success</span>
+								<?php else : ?>
+									<span style="color: #d32f2f; font-weight: bold;">❌ Missing</span>
+								<?php endif; ?>
+							</td>
+							<td><code><?php echo $entry ? esc_html( $entry->word ) : '-----'; ?></code></td>
+							<td><?php echo $entry ? ucfirst( esc_html( $entry->entry_source ) ) : '<em style="color: #999;">Not fetched yet</em>'; ?></td>
+						</tr>
+					<?php endfor; ?>
+				</tbody>
+			</table>
+
+			<table class="wp-list-table widefat fixed striped" style="max-width: 800px;">
 				<tr>
-					<td><strong>JSON Cache Status:</strong></td>
+					<td style="width: 150px;"><strong>JSON Cache Status:</strong></td>
 					<td>
 						<?php 
 						$file = WORDLE_HINT_PATH . 'wordle-data.json';
@@ -536,15 +599,45 @@ class Wordle_Admin {
 		$list_table = new Wordle_List_Table();
 		$list_table->prepare_items();
 		?>
-		<div class="wrap">
-			<h1 class="wp-heading-inline">Manage Wordle Puzzles</h1>
-			<hr class="wp-header-end">
-			
+		<div class="manage-wrapper" style="margin-top: 20px;">
 			<form method="post">
 				<?php $list_table->display(); ?>
 			</form>
 		</div>
 		<?php
+	}
+
+	public static function logs_page() {
+		$logs = get_option( 'wordle_hint_logs', array() );
+		?>
+		<div class="logs-wrapper" style="margin-top: 20px;">
+			<table class="wp-list-table widefat fixed striped">
+				<thead>
+					<tr>
+						<th style="width: 180px;">Timestamp</th>
+						<th style="width: 100px;">Type</th>
+						<th>Event Message</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php if ( empty( $logs ) ) : ?>
+						<tr><td colspan="3">No logs recorded yet.</td></tr>
+					<?php else : ?>
+						<?php foreach ( $logs as $log ) : ?>
+							<tr>
+								<td><code><?php echo esc_html( $log['time'] ); ?></code></td>
+								<td>
+									<span class="status-badge" style="padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; background: <?php echo $log['type'] === 'error' ? '#f8d7da' : '#d1ecf1'; ?>; color: <?php echo $log['type'] === 'error' ? '#721c24' : '#0c5460'; ?>;">
+										<?php echo esc_html( $log['type'] ); ?>
+									</span>
+								</td>
+								<td><?php echo esc_html( $log['msg'] ); ?></td>
+							</tr>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				</tbody>
+			</table>
+		</div>
 	}
 }
 

@@ -88,13 +88,13 @@ Build a professional `WP_List_Table` in admin to view, edit, and delete past puz
 
 ---
 
-### Step 9 — 📋 Admin: Status Dashboard
-Create a "System Health" table in admin settings showing the last 7 days with status icons (✅ Success / ⚠️ Manual / ❌ Missing).
+### Step 9 — ✅ Admin: Status Dashboard (Completed)
+Create a "System Health" table in admin settings showing the last 7 days with status icons (✅ Success / ⚠️ Manual / ❌ Missing). (Fixed: Added System Health overview to Settings page).
 
 ---
 
-### Step 10 — 📋 Admin: Integrated Log Viewer
-Add a "Logs" tab to display the last 50 scraper/AI events directly in the WordPress admin panel.
+### Step 10 — ✅ Admin: Integrated Log Viewer (Completed)
+Add a "Logs" tab to display the last 50 scraper/AI events directly in the WordPress admin panel. (Fixed: Implemented persistent logging system and unified tabbed interface).
 
 ---
 

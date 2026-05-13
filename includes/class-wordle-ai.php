@@ -129,6 +129,7 @@ class Wordle_AI {
 		
 		if ( $status_code !== 200 ) {
 			$error_msg = $body['error']['message'] ?? 'Unknown API Error';
+			if ( class_exists( 'Wordle_Admin' ) ) { Wordle_Admin::log( "AI API Error ($model) [{$status_code}]: " . $error_msg, 'error' ); }
 			error_log( "Wordle AI API Error ({$status_code}): " . $error_msg );
 			return new WP_Error( 'ai_api_error', "API Error {$status_code}: {$error_msg}" );
 		}
@@ -136,6 +137,7 @@ class Wordle_AI {
 		if ( isset( $body['choices'][0]['message']['content'] ) ) {
 			$json_content = self::extract_json( $body['choices'][0]['message']['content'] );
 			if ( $json_content && ( ! empty( $json_content['hint1'] ) || ! empty( $json_content['final_hint'] ) ) ) {
+				if ( class_exists( 'Wordle_Admin' ) ) { Wordle_Admin::log( "AI hints generated for '{$word}' via $model", 'success' ); }
 				return array(
 					'hint1'      => $json_content['hint1'] ?? '',
 					'hint2'      => $json_content['hint2'] ?? '',
@@ -180,6 +182,7 @@ class Wordle_AI {
 		
 		if ( $status_code !== 200 ) {
 			$error_msg = $body['error']['message'] ?? 'Unknown Gemini Error';
+			if ( class_exists( 'Wordle_Admin' ) ) { Wordle_Admin::log( "Gemini API Error ($model) [{$status_code}]: " . $error_msg, 'error' ); }
 			error_log( "Wordle AI: Gemini API Error ({$status_code}): " . $error_msg );
 			return new WP_Error( 'gemini_api_error', "Gemini API Error {$status_code}: {$error_msg}" );
 		}
@@ -189,6 +192,7 @@ class Wordle_AI {
 			$json_content = self::extract_json( $text );
 			
 			if ( $json_content && ( ! empty( $json_content['hint1'] ) || ! empty( $json_content['final_hint'] ) ) ) {
+				if ( class_exists( 'Wordle_Admin' ) ) { Wordle_Admin::log( "Gemini hints generated for '{$word}' using $model", 'success' ); }
 				return array(
 					'hint1'      => $json_content['hint1'] ?? '',
 					'hint2'      => $json_content['hint2'] ?? '',
