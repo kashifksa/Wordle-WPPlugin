@@ -153,19 +153,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1.8.5 SMART TOOLBAR TIMER ---
     function initToolbarTimer() {
-        const $timer = jQuery('#wh-timer-val');
-        if (!$timer.length) return;
+        const $timers = jQuery('.wh-timer-val');
+        if (!$timers.length) return;
 
         function updateTimer() {
             const now = new Date();
-            // Next puzzle is at midnight UTC/local transition or usually 00:00:00
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             tomorrow.setHours(0, 0, 0, 0);
 
             const diff = tomorrow - now;
             if (diff <= 0) {
-                $timer.text("00:00:00");
+                $timers.text("00:00:00");
                 return;
             }
 
@@ -173,11 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const m = Math.floor((diff % 3600000) / 60000);
             const s = Math.floor((diff % 60000) / 1000);
 
-            $timer.text(
-                String(h).padStart(2, '0') + ":" + 
-                String(m).padStart(2, '0') + ":" + 
-                String(s).padStart(2, '0')
-            );
+            const timeStr = String(h).padStart(2, '0') + ":" + 
+                            String(m).padStart(2, '0') + ":" + 
+                            String(s).padStart(2, '0');
+            
+            $timers.text(timeStr);
         }
 
         updateTimer();

@@ -339,7 +339,7 @@ class Wordle_Frontend {
 							<div class="wh-toolbar-segment wh-timer-segment">
 								<div class="wh-next-countdown">
 									<span class="next-label">NEXT WORDLE</span>
-									<span id="wh-timer-val" class="next-time">00:00:00</span>
+									<span class="wh-timer-val next-time">00:00:00</span>
 								</div>
 								<button id="wh-replay-reveal" class="wh-replay-btn" title="Replay Animation">
 									<span class="icon">↻</span>
@@ -469,5 +469,21 @@ class Wordle_Frontend {
 
 		echo "\n<!-- Wordle Hint Pro: FAQ Schema -->\n";
 		echo '<script type="application/ld+json">' . json_encode( $schema ) . '</script>' . "\n";
+	}
+
+	/**
+	 * Renders a standalone countdown timer.
+	 */
+	public static function render_timer( $atts ) {
+		ob_start();
+		?>
+		<div class="wh-standalone-timer">
+			<div class="wh-next-countdown">
+				<span class="next-label">NEXT WORDLE IN</span>
+				<span class="wh-timer-val next-time">00:00:00</span>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
 	}
 }

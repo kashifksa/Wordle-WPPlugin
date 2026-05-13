@@ -133,8 +133,8 @@ Refine "Copy Results" to generate a pixel-perfect NYT-style emoji grid (🟩🟨
 
 ---
 
-### Step 18 — ⏱️ Frontend: Countdown Timer (`[wordle_timer]`)
-Live shortcode countdown until the next Wordle puzzle drops at midnight.
+### Step 18 — ✅ Frontend: Countdown Timer (`[wordle_timer]`) (Completed)
+Live shortcode countdown until the next Wordle puzzle drops at midnight. (Fixed: Implemented standalone shortcode and synced with existing toolbar timer).
 
 ---
 
