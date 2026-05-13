@@ -101,6 +101,20 @@ class Wordle_DB {
 		), ARRAY_A );
 	}
 
+	public static function get_puzzles_for_month( $month, $year, $locale = 'global' ) {
+		global $wpdb;
+		$table_name = self::get_table_name();
+		$start_date = "{$year}-{$month}-01";
+		$end_date   = date( 'Y-m-t', strtotime( $start_date ) );
+		
+		return $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM $table_name WHERE locale = %s AND date >= %s AND date <= %s ORDER BY date ASC",
+			$locale,
+			$start_date,
+			$end_date
+		), ARRAY_A );
+	}
+
 	public static function get_paginated_puzzles( $page = 1, $limit = 24, $locale = 'global', $max_date = null ) {
 		global $wpdb;
 		$table_name = self::get_table_name();

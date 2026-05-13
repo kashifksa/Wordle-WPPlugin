@@ -124,8 +124,96 @@ class Wordle_Frontend {
 	}
 
 	// -------------------------------------------------------------------------
-	// SHORTCODE RENDERER
+	// SHORTCODE RENDERERS
 	// -------------------------------------------------------------------------
+
+	/**
+	 * Renders a monthly roundup list of puzzles.
+	 * Usage: [wordle_monthly_roundup month="05" year="2026"]
+	 */
+	public static function render_monthly_roundup( $atts ) {
+		$atts = shortcode_atts( array(
+			'month'  => current_time( 'm' ),
+			'year'   => current_time( 'Y' ),
+			'locale' => 'global',
+		), $atts, 'wordle_monthly_roundup' );
+
+		$puzzles = Wordle_DB::get_puzzles_for_month( $atts['month'], $atts['year'], $atts['locale'] );
+		$month_name = date( 'F', mktime( 0, 0, 0, $atts['month'], 10 ) );
+
+		if ( empty( $puzzles ) ) {
+			return "<div class='wh-no-puzzles'>No puzzles found for {$month_name} {$atts['year']}.</div>";
+		}
+
+		// Calculate Statistics
+		$total_puzzles = count( $puzzles );
+		$avg_diff      = 0;
+		$diff_count    = 0;
+		$starting_letters = [];
+
+		foreach ( $puzzles as $p ) {
+			if ( ! empty( $p['difficulty'] ) ) {
+				$avg_diff += floatval( $p['difficulty'] );
+				$diff_count++;
+			}
+			if ( ! empty( $p['first_letter'] ) ) {
+				$starting_letters[] = $p['first_letter'];
+			}
+		}
+
+		$final_avg_diff = $diff_count > 0 ? round( $avg_diff / $diff_count, 2 ) : 'N/A';
+		$counts = array_count_values( $starting_letters );
+		arsort( $counts );
+		$top_letter = ! empty( $counts ) ? array_key_first( $counts ) : 'N/A';
+
+		ob_start();
+		?>
+		<div class="wh-roundup-container">
+			<div class="wh-roundup-header">
+				<h2 class="wh-roundup-title">Wordle Answers: <?php echo "{$month_name} {$atts['year']}"; ?></h2>
+				<div class="wh-roundup-stats">
+					<div class="wh-roundup-stat-box">
+						<span class="wh-stat-label">Avg. Difficulty</span>
+						<span class="wh-stat-val"><?php echo $final_avg_diff; ?></span>
+					</div>
+					<div class="wh-roundup-stat-box">
+						<span class="wh-stat-label">Total Puzzles</span>
+						<span class="wh-stat-val"><?php echo $total_puzzles; ?></span>
+					</div>
+					<div class="wh-roundup-stat-box">
+						<span class="wh-stat-label">Top Start Letter</span>
+						<span class="wh-stat-val"><?php echo $top_letter; ?></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="wh-roundup-list">
+				<?php 
+				$today_date = current_time( 'Y-m-d' );
+				foreach ( $puzzles as $p ) : 
+					// Future Guard: Skip if date is ahead of site time
+					if ( $p['date'] > $today_date ) continue;
+
+					$formatted_date = date( 'M j', strtotime( $p['date'] ) );
+					$diff_val = floatval( $p['difficulty'] );
+					if ( $diff_val <= 3.7 ) $diff_label = 'Easy';
+					elseif ( $diff_val <= 4.0 ) $diff_label = 'Moderate';
+					elseif ( $diff_val <= 4.3 ) $diff_label = 'Hard';
+					else $diff_label = 'Insane';
+				?>
+					<div class="wh-roundup-row" data-date="<?php echo $p['date']; ?>">
+						<div class="wh-roundup-date"><?php echo $formatted_date; ?></div>
+						<div class="wh-roundup-puzzle">#<?php echo $p['puzzle_number']; ?></div>
+						<div class="wh-roundup-word"><?php echo esc_html( strtoupper( $p['word'] ) ); ?></div>
+						<div class="wh-roundup-diff wh-diff-<?php echo strtolower( $diff_label ); ?>"><?php echo $diff_label; ?></div>
+						<a href="?wh_date=<?php echo $p['date']; ?>" class="wh-roundup-link">View Hints →</a>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
 
 	public static function render_hints( $atts ) {
 		$atts = shortcode_atts( array(

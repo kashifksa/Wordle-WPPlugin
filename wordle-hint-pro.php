@@ -87,6 +87,7 @@ class Wordle_Hint_Pro {
 		add_shortcode( 'wordle-archive', array( 'Wordle_Archive', 'render_archive' ) );
 		add_shortcode( 'wordle_timer', array( 'Wordle_Frontend', 'render_timer' ) );
 		add_shortcode( 'wordle-timer', array( 'Wordle_Frontend', 'render_timer' ) );
+		add_shortcode( 'wordle_monthly_roundup', array( 'Wordle_Frontend', 'render_monthly_roundup' ) );
 	}
 
 	/**

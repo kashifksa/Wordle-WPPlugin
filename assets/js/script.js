@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Wordle Hint Pro - Target Date:", finalDate);
 
     // --- 1.5 ARCHIVE TIMEZONE FILTER (Hide future dates) ---
-    jQuery('.wh-archive-card').each(function() {
+    jQuery('.wh-archive-card, .wh-roundup-row').each(function() {
         const cardDate = jQuery(this).attr('data-date');
         if (cardDate && cardDate > today) {
             jQuery(this).remove();
@@ -226,7 +226,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const puzzleNum = data.number || data.puzzle_number;
         const vowels = (data.vowels !== undefined) ? data.vowels : data.vowel_count;
         const startsWith = data.starts_with || data.first_letter;
-        const word = data.word || '';
+        
+        // Defensive Word Extraction: Don't overwrite if word is missing in new data
+        const newWord = data.word || data.answer || data.puzzle_word || '';
+        const currentWord = $container.find('#wh-answer-grid').attr('data-word') || '';
+        const word = (newWord && newWord.length === 5) ? newWord : currentWord;
 
         // Extract hints safely
         let h1 = '', h2 = '', h3 = '', h4 = '';
@@ -273,9 +277,9 @@ document.addEventListener('DOMContentLoaded', () => {
             $diffBadge.show().attr('data-value', difficulty);
             
             let diffLabel = 'Moderate';
-            if (difficulty <= 2.2) diffLabel = 'Very Easy';
-            else if (difficulty <= 3.2) diffLabel = 'Moderate';
-            else if (difficulty <= 4.4) diffLabel = 'Hard';
+            if (difficulty <= 3.7) diffLabel = 'Very Easy';
+            else if (difficulty <= 4.0) diffLabel = 'Moderate';
+            else if (difficulty <= 4.3) diffLabel = 'Hard';
             else diffLabel = 'Insane';
             
             $diffBadge.find('.wh-difficulty-label').text(diffLabel);
@@ -362,13 +366,14 @@ document.addEventListener('DOMContentLoaded', () => {
             $prevBtnLabel.text('Yesterday');
         }
 
-        const letters = word.toUpperCase().split('');
-        const tiles = $container.find('.wh-box-back');
-        letters.forEach((letter, index) => {
-            if (tiles[index]) {
-                jQuery(tiles[index]).text(letter);
-            }
-        });
+        // Inject Letters into the back of each tile
+        if (word && word.length === 5) {
+            const letters = word.toUpperCase().split('');
+            $container.find('.wh-box').each(function(i) {
+                const letter = letters[i] || '';
+                jQuery(this).find('.wh-box-back').text(letter);
+            });
+        }
 
         // Update Discovery Section (Handle both flat raw DB and nested Cache formats)
         const dict = data.dictionary || data;
@@ -517,13 +522,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function revealBox(index) {
-            if (!word || index < 0 || index >= word.length) return;
+            const $grid = $container.find('#wh-answer-grid');
+            const currentWord = $grid.attr('data-word') || '';
+            if (!currentWord || index < 0 || index >= currentWord.length) return;
+            
             const $box = $container.find(`.wh-box[data-index="${index}"]`);
             if ($box.length && !$box.hasClass('revealed')) {
+                // Hard Injection: Set the text right before revealing
+                const letter = currentWord[index].toUpperCase();
+                $box.find('.wh-box-back').text(letter);
+                
                 $box.addClass('revealing');
                 setTimeout(() => { 
                     $box.addClass('revealed');
-                    checkAllRevealed(); // Check completion after the class is actually added
+                    checkAllRevealed(); 
                 }, 50);
                 setTimeout(() => { $box.removeClass('revealing'); }, 600);
             }
