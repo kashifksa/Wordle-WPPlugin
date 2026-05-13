@@ -83,8 +83,8 @@ No maximum on `$limit` — anyone can request `?limit=99999` and dump the full d
 
 ---
 
-### Step 8 — 📋 Admin: Entry Management (CRUD Table)
-Build a professional `WP_List_Table` in admin to view, edit, and delete past puzzle entries in bulk — replacing the current manual save form.
+### Step 8 — ✅ Admin: Entry Management (CRUD Table) (Completed)
+Build a professional `WP_List_Table` in admin to view, edit, and delete past puzzle entries in bulk — replacing the current manual save form. (Fixed: Implemented Wordle_List_Table and Manage Puzzles page).
 
 ---
 

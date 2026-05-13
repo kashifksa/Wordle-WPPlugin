@@ -13,12 +13,30 @@ class Wordle_Admin {
 
 	public static function add_admin_menu() {
 		add_menu_page(
-			'Wordle Hint Settings',
+			'Wordle Hint Pro',
 			'Wordle Hint',
 			'manage_options',
 			'wordle-hint-settings',
 			array( __CLASS__, 'settings_page' ),
 			'dashicons-lightbulb'
+		);
+
+		add_submenu_page(
+			'wordle-hint-settings',
+			'Manage Puzzles',
+			'Manage Puzzles',
+			'manage_options',
+			'wordle-hint-manage',
+			array( __CLASS__, 'manage_puzzles_page' )
+		);
+
+		add_submenu_page(
+			'wordle-hint-settings',
+			'Settings',
+			'Settings',
+			'manage_options',
+			'wordle-hint-settings',
+			array( __CLASS__, 'settings_page' )
 		);
 	}
 
@@ -509,6 +527,22 @@ class Wordle_Admin {
 				});
 			});
 			</script>
+		</div>
+		<?php
+	}
+
+	public static function manage_puzzles_page() {
+		require_once WORDLE_HINT_PATH . 'includes/class-wordle-list-table.php';
+		$list_table = new Wordle_List_Table();
+		$list_table->prepare_items();
+		?>
+		<div class="wrap">
+			<h1 class="wp-heading-inline">Manage Wordle Puzzles</h1>
+			<hr class="wp-header-end">
+			
+			<form method="post">
+				<?php $list_table->display(); ?>
+			</form>
 		</div>
 		<?php
 	}
