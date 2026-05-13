@@ -9,6 +9,7 @@ class Wordle_Admin {
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'add_admin_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
+		add_action( 'admin_init', array( __CLASS__, 'handle_export' ) );
 	}
 
 	/**
@@ -334,6 +335,7 @@ class Wordle_Admin {
 					<td>
 						<input type="file" id="wordle_csv_file" accept=".csv" />
 						<button type="button" id="upload-wordle-csv" class="button">Upload CSV</button>
+						<a href="<?php echo wp_nonce_url( admin_url('admin.php?page=wordle-hint-settings&tab=settings&action=wordle_export_csv'), 'wordle_export_nonce' ); ?>" class="button button-secondary" style="margin-left: 10px;">Export All Puzzles (CSV)</a>
 						<div id="csv-status-msg"></div>
 					</td>
 				</tr>
@@ -452,6 +454,49 @@ class Wordle_Admin {
 			</table>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Handle CSV Export request
+	 */
+	public static function handle_export() {
+		if ( ! isset( $_GET['action'] ) || $_GET['action'] !== 'wordle_export_csv' ) {
+			return;
+		}
+
+		check_admin_referer( 'wordle_export_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( 'Unauthorized' );
+		}
+
+		global $wpdb;
+		$table_name = Wordle_DB::get_table_name();
+		$results = $wpdb->get_results( "SELECT * FROM $table_name ORDER BY date DESC", ARRAY_A );
+
+		if ( empty( $results ) ) {
+			wp_die( 'No data to export.' );
+		}
+
+		$filename = 'wordle-export-' . date('Y-m-d') . '.csv';
+
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=' . $filename );
+
+		$output = fopen( 'php://output', 'w' );
+
+		// Add header row
+		fputcsv( $output, array_keys( $results[0] ) );
+
+		// Add data rows
+		foreach ( $results as $row ) {
+			fputcsv( $output, $row );
+		}
+
+		fclose( $output );
+		
+		self::log( "User exported entire database to CSV ($filename)", 'info' );
+		exit;
 	}
 }
 

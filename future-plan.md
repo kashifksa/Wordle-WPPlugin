@@ -103,13 +103,13 @@ Send an email notification to the site admin if the daily scraper fails after al
 
 ---
 
-### Step 12 — 📋 Admin: Export/Import Utility
-Tool to export all Wordle data as CSV for backups or migration to other WordPress sites.
+### Step 12 — ✅ Admin: Export/Import Utility (Completed)
+Tool to export all Wordle data as CSV for backups or migration to other WordPress sites. (Fixed: Added CSV export engine and integrated buttons into Settings tab).
 
 ---
 
-### Step 13 — 🌐 API: Rate Limiting
-Implement basic IP-based rate limiting for public REST endpoints using WordPress transients.
+### Step 13 — ✅ API: Rate Limiting (Completed)
+Implement basic IP-based rate limiting for public REST endpoints using WordPress transients. (Fixed: Added 60req/min threshold for /data, /today, and /all endpoints).
 
 ---
 

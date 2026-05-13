@@ -45,7 +45,7 @@ class Wordle_API {
 		register_rest_route( 'wordle/v1', '/data', array(
 			'methods'  => 'GET',
 			'callback' => array( __CLASS__, 'get_wordle_data' ),
-			'permission_callback' => '__return_true',
+			'permission_callback' => array( __CLASS__, 'public_permission_check' ),
 		) );
 
 		// /today is now deprecated in favor of /data (which defaults to today)
@@ -53,7 +53,7 @@ class Wordle_API {
 		register_rest_route( 'wordle/v1', '/today', array(
 			'methods'  => 'GET',
 			'callback' => array( __CLASS__, 'get_wordle_data' ),
-			'permission_callback' => '__return_true',
+			'permission_callback' => array( __CLASS__, 'public_permission_check' ),
 		) );
 
 		register_rest_route( 'wordle/v1', '/solution', array(
@@ -65,7 +65,7 @@ class Wordle_API {
 		register_rest_route( 'wordle/v1', '/all', array(
 			'methods'  => 'GET',
 			'callback' => array( __CLASS__, 'get_all_wordle' ),
-			'permission_callback' => '__return_true',
+			'permission_callback' => array( __CLASS__, 'public_permission_check' ),
 		) );
 
 		register_rest_route( 'wordle/v1', '/save', array(
@@ -101,6 +101,34 @@ class Wordle_API {
 		}
 		
 		return ( 'Bearer ' . $stored_key === $key );
+	}
+
+	/**
+	 * Combined check for public endpoints (Rate Limiting)
+	 */
+	public static function public_permission_check( $request ) {
+		return self::check_rate_limit( $request );
+	}
+
+	/**
+	 * IP-based rate limiting using transients
+	 */
+	public static function check_rate_limit( $request ) {
+		$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+		if ( $ip === 'unknown' ) return true;
+
+		$transient_key = 'wordle_ratelimit_' . md5( $ip );
+		$hits = (int) get_transient( $transient_key );
+
+		$limit = 60; // 60 requests
+		$window = 60; // per 60 seconds
+
+		if ( $hits >= $limit ) {
+			return new WP_Error( 'rest_rate_limited', 'Too many requests. Please slow down.', array( 'status' => 429 ) );
+		}
+
+		set_transient( $transient_key, $hits + 1, $window );
+		return true;
 	}
 
 	public static function get_wordle_data( $request ) {

@@ -417,3 +417,9 @@ Antigravity: I have successfully integrated **Section 9: Topical Authority & Str
 231: 
 232: User: next
 233: Antigravity: I have completed **Step 11: Telemetry / Email Alerting**. I integrated an automated email notification system into the daily scheduler. If the scraper fails to fetch today's Wordle after all 12 retry attempts, it will now immediately send a detailed alert email to the site administrator. This ensures you are always informed of data issues without having to check the logs manually.
+234: 
+235: User: next
+236: Antigravity: I have completed **Step 12: Export/Import Utility**. I added a robust CSV Export engine that allows you to download your entire Wordle database with a single click. I also polished the Import tool, making it easy to migrate data between environments or restore from a backup. You can find the new "Export All Puzzles" button in your **Settings** tab.
+237: 
+238: User: next
+239: Antigravity: I have completed **Step 13: API Rate Limiting**. I implemented a security layer for your public REST endpoints. Each user (tracked by IP address) is now limited to 60 requests per minute for the `/data` and `/all` endpoints. This prevents malicious bots from scraping your hints and protects your server from being overwhelmed.
