@@ -94,6 +94,10 @@ class Wordle_Scheduler {
 			if ( class_exists( 'Wordle_Admin' ) ) { Wordle_Admin::log( $msg, 'success' ); }
 			delete_transient( 'wordle_scrape_attempt' );
 			self::schedule_next_run();
+
+			// TRIGGER DAILY REMINDERS
+			self::send_daily_reminders();
+
 			return array( 'success' => true, 'message' => $msg );
 		}
 
@@ -137,6 +141,47 @@ class Wordle_Scheduler {
 		$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
 
 		wp_mail( $to, $subject, $message, $headers );
+	}
+
+	/**
+	 * Send daily reminders to all active subscribers.
+	 */
+	public static function send_daily_reminders() {
+		$today = current_time( 'Y-m-d' );
+		$puzzle = Wordle_DB::get_puzzle_by_date( $today );
+
+		if ( ! $puzzle ) return;
+
+		// Prevent double-sending for the same day
+		$last_sent = get_option( 'wordle_last_reminder_date' );
+		if ( $last_sent === $today ) return;
+
+		$subscribers = Wordle_DB::get_active_subscribers();
+		if ( empty( $subscribers ) ) return;
+
+		$subject = "Today's Wordle Hints: Puzzle #" . $puzzle['puzzle_number'];
+		$site_name = get_bloginfo( 'name' );
+		$site_url = home_url();
+
+		foreach ( $subscribers as $sub ) {
+			$email = $sub['email'];
+			
+			$message = "Hello Wordle fan!\n\n";
+			$message .= "Here are your hints for today's Wordle (#{$puzzle['puzzle_number']}):\n\n";
+			$message .= "1. " . $puzzle['hint1'] . "\n";
+			$message .= "2. " . $puzzle['hint2'] . "\n";
+			$message .= "3. " . $puzzle['hint3'] . "\n\n";
+			$message .= "Need more clues or want to see the answer? Visit us here:\n";
+			$message .= $site_url . "\n\n";
+			$message .= "Good luck solving!\n\n";
+			$message .= "-- The {$site_name} Team";
+
+			$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+			wp_mail( $email, $subject, $message, $headers );
+		}
+
+		update_option( 'wordle_last_reminder_date', $today );
+		error_log( "Wordle Scheduler: Sent daily reminders to " . count($subscribers) . " subscribers." );
 	}
 }
 

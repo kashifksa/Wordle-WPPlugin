@@ -13,7 +13,7 @@ class Wordle_DB {
 
 	public static function create_table() {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = $wpdb->prefix . 'wordle_data';
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE $table_name (
@@ -21,40 +21,73 @@ class Wordle_DB {
 			date date NOT NULL,
 			puzzle_number int(11) NOT NULL,
 			word varchar(10) NOT NULL,
-			hint1 text,
-			hint2 text,
-			hint3 text,
-			final_hint text,
-			vowel_count int(11),
-			consonant_count int(11),
-			repeated_letters varchar(32),
-			first_letter varchar(1),
-			url varchar(255),
-			difficulty decimal(3,1),
-			average_guesses decimal(3,1),
+			hint1 text NOT NULL,
+			hint2 text NOT NULL,
+			hint3 text NOT NULL,
+			final_hint text NOT NULL,
+			vowel_count int(11) NOT NULL,
+			consonant_count int(11) NOT NULL,
+			starts_with varchar(1) NOT NULL,
+			difficulty decimal(4,2),
+			average_guesses decimal(4,2),
 			guess_distribution text,
-			part_of_speech varchar(32),
+			part_of_speech varchar(100),
 			definition text,
-			pronunciation varchar(128),
-			audio_url varchar(255),
 			etymology text,
-			first_known_use varchar(32),
+			pronunciation varchar(255),
+			audio_url varchar(255),
 			synonyms text,
 			antonyms text,
 			example_sentence text,
-			num_definitions tinyint(4),
+			first_known_use varchar(100),
 			definitions_json text,
-			entry_source varchar(16) DEFAULT 'automatic',
-			locale varchar(16) DEFAULT 'global',
+			locale varchar(20) DEFAULT 'global',
 			created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 			PRIMARY KEY  (id),
-			UNIQUE KEY puzzle_number (puzzle_number),
-			KEY date (date),
-			KEY locale_date (locale, date)
+			UNIQUE KEY puzzle_number (puzzle_number)
 		) $charset_collate;";
 
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		// Subscribers Table
+		$sub_table = $wpdb->prefix . 'wordle_subscribers';
+		$sql_sub = "CREATE TABLE $sub_table (
+			id bigint(20) NOT NULL AUTO_INCREMENT,
+			email varchar(100) NOT NULL,
+			status varchar(20) DEFAULT 'active',
+			created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY email (email)
+		) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
+		dbDelta( $sql_sub );
+	}
+
+	/**
+	 * Adds a new subscriber.
+	 */
+	public static function add_subscriber( $email ) {
+		global $wpdb;
+		$table = $wpdb->prefix . 'wordle_subscribers';
+		
+		return $wpdb->insert(
+			$table,
+			array(
+				'email'      => sanitize_email( $email ),
+				'status'     => 'active',
+				'created_at' => current_time( 'mysql' ),
+			),
+			array( '%s', '%s', '%s' )
+		);
+	}
+
+	/**
+	 * Retrieves all active subscribers.
+	 */
+	public static function get_active_subscribers() {
+		global $wpdb;
+		$table = $wpdb->prefix . 'wordle_subscribers';
+		return $wpdb->get_results( "SELECT email FROM $table WHERE status = 'active'", ARRAY_A );
 	}
 
 	public static function insert_puzzle( $data ) {

@@ -152,13 +152,13 @@ Add ARIA labels, keyboard focus states, and screen-reader support for the reveal
 
 ---
 
-### Step 24 — 🖼️ Frontend: Social Image Generator
-Auto-generate a "Hint Card" image (PNG/JPG) using PHP GD library for Pinterest/Instagram social sharing.
+### Step 24 — ✅ Frontend: Social Image Generator (Completed)
+Auto-generate a "Hint Card" image (PNG/JPG) using PHP GD library for Pinterest/Instagram social sharing. (Fixed: Added support for Social landscape and Mobile Story portrait formats, and integrated into Open Graph meta tags).
 
 ---
 
-### Step 25 — 📧 Engagement: Daily Reminder Opt-in
-"Never Miss a Hint" email capture or browser push notification to build a recurring audience.
+### Step 25 — ✅ Engagement: Daily Reminder Opt-in (Completed)
+"Never Miss a Hint" email capture or browser push notification to build a recurring audience. (Fixed: Implemented subscription table, REST endpoint, glassmorphic frontend widget, and automated daily email reminders via WP Cron).
 
 ---
 

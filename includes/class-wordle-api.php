@@ -95,6 +95,52 @@ class Wordle_API {
 			'callback' => array( 'Wordle_Image_Generator', 'serve_image' ),
 			'permission_callback' => '__return_true',
 		) );
+
+		register_rest_route( 'wordle/v1', '/subscribe', array(
+			'methods'  => 'POST',
+			'callback' => array( __CLASS__, 'subscribe_email' ),
+			'permission_callback' => '__return_true',
+		) );
+	}
+
+	/**
+	 * Handles a new email subscription via REST API.
+	 */
+	public static function subscribe_email( $request ) {
+		$email = sanitize_email( $request->get_param( 'email' ) );
+
+		if ( ! is_email( $email ) ) {
+			return new WP_REST_Response( array(
+				'success' => false,
+				'message' => 'Please provide a valid email address.',
+			), 400 );
+		}
+
+		// Check if already subscribed
+		global $wpdb;
+		$table = $wpdb->prefix . 'wordle_subscribers';
+		$exists = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $table WHERE email = %s", $email ) );
+
+		if ( $exists ) {
+			return new WP_REST_Response( array(
+				'success' => true,
+				'message' => 'You are already on our list! Get ready for daily hints.',
+			), 200 );
+		}
+
+		$added = Wordle_DB::add_subscriber( $email );
+
+		if ( $added ) {
+			return new WP_REST_Response( array(
+				'success' => true,
+				'message' => 'Welcome! You will now receive daily Wordle hints.',
+			), 200 );
+		}
+
+		return new WP_REST_Response( array(
+			'success' => false,
+			'message' => 'Subscription failed. Please try again later.',
+		), 500 );
 	}
 
 	public static function check_api_key( $request ) {

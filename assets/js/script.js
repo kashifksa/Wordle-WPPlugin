@@ -361,14 +361,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Dynamic Button Text (Past dates shouldn't say "Today's")
         if (puzzleDate < today) {
             $revealBtn.find('.btn-text').text('Show Answer');
-            $prevBtnLabel.text('Previous');
+            $prevBtnLabel.text('Previous Day');
         } else {
             $revealBtn.find('.btn-text').text("Show Today's Answer");
-            $prevBtnLabel.text('Yesterday');
+            $prevBtnLabel.text('Previous Day');
         }
 
-        // Update Download Card date for AJAX switches
-        $container.find('#wh-download-card').attr('data-date', puzzleDate);
+        // Update Download Card dates for AJAX switches
+        $container.find('#wh-download-card, #wh-download-story').attr('data-date', puzzleDate);
 
         // Inject Letters into the back of each tile
         if (word && word.length === 5) {
@@ -581,26 +581,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        $container.off('click', '#wh-download-card').on('click', '#wh-download-card', function(e) {
+        $container.off('click', '#wh-download-card, #wh-download-story').on('click', '#wh-download-card, #wh-download-story', function(e) {
             e.preventDefault();
-            const date = jQuery(this).attr('data-date');
-            console.log("Wordle Hint Pro - Share Card requested for:", date);
+            const $btn = jQuery(this);
+            const date = $btn.attr('data-date');
+            const isStory = $btn.attr('id') === 'wh-download-story';
             
             if (!date) {
-                console.error("Wordle Hint Pro - No date found on share button");
+                console.error("Wordle Hint Pro - No date found on button");
                 return;
             }
             
-            const $btn = jQuery(this);
             const originalHtml = $btn.html();
             $btn.html('<span class="icon">⏳</span> <span class="label">Preparing...</span>').prop('disabled', true);
             
-            const imageUrl = wordleHintData.apiUrl + 'share-image/' + date;
+            let baseUrl = wordleHintData.apiUrl;
+            if (baseUrl.endsWith('/')) {
+                baseUrl = baseUrl.slice(0, -1);
+            }
+            const imageUrl = baseUrl + '/share-image/' + date + (isStory ? '?format=mobile' : '');
+            console.log("Wordle Hint Pro - Download URL:", imageUrl);
             
             // Trigger download via hidden link
             const link = document.createElement('a');
             link.href = imageUrl;
-            link.download = `wordle-hints-${date}.png`;
+            link.download = `wordle-hints-${date}${isStory ? '-story' : ''}.png`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -624,6 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
     // --- 7. COPY CLUES (SOCIAL SHARING) ---
     jQuery(document).on('click', '#wh-copy-clues', function() {
         const $btn = jQuery(this);
@@ -670,7 +676,48 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2000);
         }
     });
-    // --- 8. ACCESSIBILITY: KEYBOARD SUPPORT ---
+
+    // --- 8. SUBSCRIPTION FORM LOGIC (GLOBAL) ---
+    jQuery(document).on('submit', '#wh-subscribe-form', function(e) {
+        e.preventDefault();
+        const $form = jQuery(this);
+        const $btn = $form.find('.wh-subscribe-btn');
+        const $msg = $form.parent().find('#wh-subscribe-message');
+        const email = $form.find('input[name="email"]').val();
+
+        $btn.prop('disabled', true);
+        $btn.find('.wh-btn-text').hide();
+        $btn.find('.wh-btn-loading').show();
+        $msg.removeClass('success error').hide();
+
+        fetch(wordleHintData.apiUrl + 'subscribe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-WP-Nonce': wordleHintData.nonce
+            },
+            body: JSON.stringify({ email: email })
+        })
+        .then(res => res.json())
+        .then(data => {
+            $btn.prop('disabled', false);
+            $btn.find('.wh-btn-text').show();
+            $btn.find('.wh-btn-loading').hide();
+            
+            $msg.text(data.message).addClass(data.success ? 'success' : 'error').fadeIn();
+            if (data.success) {
+                $form.find('input').val('');
+            }
+        })
+        .catch(() => {
+            $btn.prop('disabled', false);
+            $btn.find('.wh-btn-text').show();
+            $btn.find('.wh-btn-loading').hide();
+            $msg.text('An error occurred. Please try again later.').addClass('error').fadeIn();
+        });
+    });
+
+    // --- 9. ACCESSIBILITY: KEYBOARD SUPPORT ---
     jQuery(document).on('keydown', '.wh-theme-toggle, .wh-date, .wh-box', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();

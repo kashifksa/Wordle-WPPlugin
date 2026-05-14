@@ -97,6 +97,16 @@ class Wordle_Frontend {
 		if ( $desc ) {
 			echo '<meta name="description" content="' . esc_attr( $desc ) . '">' . "\n";
 		}
+
+		// Open Graph Image (Social Hint Card)
+		if ( self::$seo_puzzle && self::$seo_puzzle['puzzle_number'] !== '---' ) {
+			$share_image_url = get_rest_url( null, 'wordle/v1/share-image/' . self::$seo_puzzle['date'] );
+			echo '<meta property="og:image" content="' . esc_url( $share_image_url ) . '">' . "\n";
+			echo '<meta property="og:image:width" content="1200">' . "\n";
+			echo '<meta property="og:image:height" content="630">' . "\n";
+			echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+			echo '<meta name="twitter:image" content="' . esc_url( $share_image_url ) . '">' . "\n";
+		}
 	}
 
 	/** Rank Math title filter */
@@ -305,7 +315,7 @@ class Wordle_Frontend {
 						<span class="wh-separator">•</span>
 						<div class="wh-date-nav">
 							<button id="wh-prev-date" class="wh-nav-btn" title="Previous Day" aria-label="Go to previous day's puzzle">←</button>
-							<span class="wh-date" id="wh-calendar-trigger" data-current-date="<?php echo esc_attr( $puzzle['date'] ); ?>" title="Click to select date" role="button" tabindex="0" aria-label="Open calendar to pick a date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
+							<span class="wh-date" id="wh-calendar-trigger" data-current-date="<?php echo esc_attr( $puzzle['date'] ); ?>" title="Jump to Any Past Puzzle" role="button" tabindex="0" aria-label="Open calendar to pick a date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
 							<input type="text" id="wh-date-picker" style="position:absolute; opacity:0; width:0; height:0; border:none; padding:0; pointer-events:none;" readonly>
 							<button id="wh-next-date" class="wh-nav-btn" title="Next Day" aria-label="Go to next day's puzzle">→</button>
 						</div>
@@ -423,12 +433,12 @@ class Wordle_Frontend {
 							<div class="wh-toolbar-segment wh-nav-segment">
 								<?php 
 								$is_today = ( $puzzle['date'] === date( 'Y-m-d' ) );
-								$nav_label = ( $puzzle['date'] === date( 'Y-m-d' ) ) ? 'Yesterday' : 'Previous';
+								$nav_label = ( $puzzle['date'] === date( 'Y-m-d' ) ) ? 'Previous Day' : 'Previous Day'; // Force consistency as requested
 								?>
-								<button id="wh-toolbar-prev" class="wh-toolbar-btn" title="<?php echo $nav_label; ?>'s Puzzle" aria-label="View <?php echo $nav_label; ?>'s puzzle">
-									<span class="icon">←</span> <span class="label"><?php echo $nav_label; ?></span>
+								<button id="wh-toolbar-prev" class="wh-toolbar-btn" title="Go to Previous Day's Puzzle" aria-label="View previous day's puzzle">
+									<span class="icon">←</span> <span class="label">Previous Day</span>
 								</button>
-								<button id="wh-toolbar-calendar" class="wh-toolbar-btn" title="Open Calendar" aria-label="Open calendar selector">
+								<button id="wh-toolbar-calendar" class="wh-toolbar-btn" title="Jump to Any Past Puzzle" aria-label="Open calendar selector">
 									<i data-lucide="calendar-days"></i>
 								</button>
 							</div>
@@ -437,7 +447,10 @@ class Wordle_Frontend {
 								<button id="wh-copy-results" class="wh-toolbar-btn" title="Copy Emoji Results" aria-label="Copy your Wordle result emoji grid">
 									<i data-lucide="copy"></i>
 								</button>
-								<button id="wh-download-card" class="wh-share-btn" title="Download Hint Card for Social Media" data-date="<?php echo esc_attr($puzzle['date']); ?>">
+								<button id="wh-download-card" class="wh-share-btn" style="display:none;" title="Download Hint Card for Social Media" data-date="<?php echo esc_attr($puzzle['date']); ?>">
+									<i data-lucide="share-2"></i> <span class="label">Share Card</span>
+								</button>
+								<button id="wh-download-story" class="wh-share-btn" title="Download Share Card (Mobile Optimized)" data-date="<?php echo esc_attr($puzzle['date']); ?>">
 									<i data-lucide="share-2"></i> <span class="label">Share Card</span>
 								</button>
 							</div>
@@ -606,6 +619,42 @@ class Wordle_Frontend {
 
 		echo "\n<!-- Wordle Hint Pro: FAQ Schema -->\n";
 		echo '<script type="application/ld+json">' . json_encode( $schema ) . '</script>' . "\n";
+	}
+
+	/**
+	 * Renders a standalone subscription form.
+	 * Usage: [wordle_subscription]
+	 */
+	public static function render_subscription_form() {
+		ob_start();
+		?>
+		<div class="wordle-hint-container wh-standalone-subscribe">
+			<div class="wh-subscribe-widget" id="wh-subscribe-widget">
+				<div class="wh-subscribe-icon">
+					<i data-lucide="bell"></i>
+				</div>
+				<div class="wh-subscribe-content">
+					<h4 class="wh-subscribe-title">Never Miss a Hint</h4>
+					<p class="wh-subscribe-text">Get daily Wordle insights delivered to your inbox every morning.</p>
+					<form id="wh-subscribe-form" class="wh-subscribe-form">
+						<input type="email" name="email" placeholder="Enter your email..." required aria-label="Email Address">
+						<button type="submit" class="wh-subscribe-btn">
+							<span class="wh-btn-text">Subscribe</span>
+							<span class="wh-btn-loading" style="display:none;">⏳</span>
+						</button>
+					</form>
+					<div id="wh-subscribe-message" class="wh-subscribe-message"></div>
+				</div>
+			</div>
+		</div>
+		<script>
+			// Ensure Lucide icons are rendered for standalone shortcode
+			if (typeof lucide !== 'undefined') {
+				lucide.createIcons();
+			}
+		</script>
+		<?php
+		return ob_get_clean();
 	}
 
 	/**
