@@ -250,8 +250,28 @@ class Wordle_Frontend {
 				$target_date = $matches[1];
 			}
 		}
+		
+		$today_date = current_time( 'Y-m-d' );
+		$is_future = ( $target_date > $today_date );
+		$is_admin = current_user_can( 'manage_options' );
 
-		$puzzle             = Wordle_DB::get_puzzle_by_date( $target_date, $atts['locale'] );
+		// SPOILER GUARD: Block future puzzles for non-admins
+		if ( $is_future && ! $is_admin ) {
+			// Fetch to get puzzle number but scrub sensitive data
+			$puzzle = Wordle_DB::get_puzzle_by_date( $target_date, $atts['locale'] );
+			if ( $puzzle ) {
+				$puzzle['word'] = '?????';
+				$puzzle['hint1'] = 'This hint is locked until ' . date( 'M j', strtotime( $target_date ) ) . '.';
+				$puzzle['hint2'] = 'The clues will be revealed when your local clock hits midnight.';
+				$puzzle['hint3'] = 'Stay tuned!';
+				$puzzle['final_hint'] = 'Hidden until release.';
+				$puzzle['definition'] = 'Locked';
+				$puzzle['etymology'] = 'Locked';
+			}
+		} else {
+			$puzzle = Wordle_DB::get_puzzle_by_date( $target_date, $atts['locale'] );
+		}
+
 		$is_archive_request = isset( $_GET['date'] ) || isset( $_GET['wh_date'] );
 
 		if ( ! $puzzle && ! $is_archive_request ) {
@@ -288,7 +308,24 @@ class Wordle_Frontend {
 
 		ob_start();
 		?>
-		<div class="wordle-hint-container" id="wordle-hint-pro">
+		<div class="wordle-hint-container <?php echo $is_future ? 'wh-is-future' : ''; ?>" id="wordle-hint-pro" data-is-future="<?php echo $is_future ? '1' : '0'; ?>">
+			<?php if ( $is_future && ! $is_admin ) : ?>
+				<div class="wh-future-overlay">
+					<div class="wh-future-notice">
+						<span class="wh-future-icon">⏳</span>
+						<h2>Coming Soon</h2>
+						<p>This puzzle is locked. It will be revealed on <strong><?php echo date( 'F j, Y', strtotime( $target_date ) ); ?></strong>.</p>
+						<p class="wh-future-timezone-note">Reveals automatically based on your local timezone.</p>
+						<a href="<?php echo home_url(); ?>" class="wh-back-home">View Today's Hints</a>
+					</div>
+				</div>
+			<?php endif; ?>
+			<?php if ( $is_future && $is_admin ) : ?>
+				<div class="wh-admin-preview-notice" style="background: #ffc107; color: #000; padding: 10px; text-align: center; font-weight: bold; border-radius: 8px 8px 0 0;">
+					⚠️ ADMIN PREVIEW: This puzzle is scheduled for <?php echo $target_date; ?>.
+				</div>
+			<?php endif; ?>
+
 				<div class="wh-header">
 					<div class="wh-theme-toggle" id="wh-theme-toggle" title="Toggle Day/Night Mode" role="button" tabindex="0" aria-label="Toggle between dark and light mode">
 						<span class="wh-toggle-icon">☀️</span>
@@ -314,10 +351,10 @@ class Wordle_Frontend {
 						<?php } ?>
 						<span class="wh-separator">•</span>
 						<div class="wh-date-nav">
-							<button id="wh-prev-date" class="wh-nav-btn" title="Previous Day" aria-label="Go to previous day's puzzle">←</button>
-							<span class="wh-date" id="wh-calendar-trigger" data-current-date="<?php echo esc_attr( $puzzle['date'] ); ?>" title="Jump to Any Past Puzzle" role="button" tabindex="0" aria-label="Open calendar to pick a date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
+							<button id="wh-prev-date" class="wh-nav-btn" title="Previous Day" aria-label="Go to previous day's Wordle">←</button>
+							<span class="wh-date" id="wh-calendar-trigger" data-current-date="<?php echo esc_attr( $puzzle['date'] ); ?>" title="Jump to Any Past Wordle" role="button" tabindex="0" aria-label="Open calendar to pick a date"><?php echo date( 'F j, Y', strtotime( $puzzle['date'] ) ); ?></span>
 							<input type="text" id="wh-date-picker" style="position:absolute; opacity:0; width:0; height:0; border:none; padding:0; pointer-events:none;" readonly>
-							<button id="wh-next-date" class="wh-nav-btn" title="Next Day" aria-label="Go to next day's puzzle">→</button>
+							<button id="wh-next-date" class="wh-nav-btn" title="Next Day" aria-label="Go to next day's Wordle">→</button>
 						</div>
 						<span class="wh-separator">•</span>
 						<span class="wh-stat-item">Vowels: <span class="wh-highlight"><?php echo esc_html( $puzzle['vowel_count'] ); ?></span></span>
@@ -363,11 +400,7 @@ class Wordle_Frontend {
 				<!-- Hints Section -->
 				<div class="wh-hints-section">
 					<h3 class="wh-section-title">Wordle Hints</h3>
-					<div class="wh-share-actions">
-						<button id="wh-copy-clues" class="wh-action-btn" title="Copy hints to clipboard" aria-label="Copy all Wordle hints to your clipboard">
-							<span class="wh-btn-icon">📋</span> Copy Hints
-						</button>
-					</div>
+
 
 					<div class="wh-hint-card locked" data-hint="1">
 						<div class="wh-hint-overlay">
@@ -435,10 +468,10 @@ class Wordle_Frontend {
 								$is_today = ( $puzzle['date'] === date( 'Y-m-d' ) );
 								$nav_label = ( $puzzle['date'] === date( 'Y-m-d' ) ) ? 'Previous Day' : 'Previous Day'; // Force consistency as requested
 								?>
-								<button id="wh-toolbar-prev" class="wh-toolbar-btn" title="Go to Previous Day's Puzzle" aria-label="View previous day's puzzle">
+								<button id="wh-toolbar-prev" class="wh-toolbar-btn" title="Go to Previous Day's Wordle" aria-label="View previous day's Wordle">
 									<span class="icon">←</span> <span class="label">Previous Day</span>
 								</button>
-								<button id="wh-toolbar-calendar" class="wh-toolbar-btn" title="Jump to Any Past Puzzle" aria-label="Open calendar selector">
+								<button id="wh-toolbar-calendar" class="wh-toolbar-btn" title="Jump to Any Past Wordle" aria-label="Open calendar selector">
 									<i data-lucide="calendar-days"></i>
 								</button>
 							</div>
@@ -549,8 +582,8 @@ class Wordle_Frontend {
 							<?php foreach ( $history as $label => $h_p ) : ?>
 								<a href="?wh_date=<?php echo esc_attr( $h_p['date'] ); ?>" class="wh-compact-card" style="display:flex !important; align-items:center !important; justify-content:space-between !important; background:#f9f9f9; border:1px solid #eee; border-radius:10px; padding:8px 15px; text-decoration:none !important; transition:all 0.3s ease;">
 									<div style="display:flex; align-items:center; gap:12px;">
-										<span style="font-size:10px; font-weight:900; color:#c9b458; background:rgba(201,180,88,0.1); padding:2px 6px; border-radius:4px;"><?php echo esc_html( strtoupper( $label ) ); ?></span>
-										<span style="font-size:14px; font-weight:700; color:#333;">Puzzle #<?php echo esc_html( $h_p['puzzle_number'] ); ?></span>
+										<span style="font-size:10px; font-weight:900; color:#c9b458; background:rgba(201,180,88,0.1); padding:2px 6px; border-radius:4px; width: 85px; text-align: center; display: inline-block;"><?php echo esc_html( strtoupper( $label ) ); ?></span>
+										<span style="font-size:14px; font-weight:700; color:#333;">Wordle #<?php echo esc_html( $h_p['puzzle_number'] ); ?></span>
 									</div>
 									<div style="display:flex; align-items:center; gap:8px;">
 										<span style="font-size:12px; color:#888;"><?php echo date( 'M j, Y', strtotime( $h_p['date'] ) ); ?></span>

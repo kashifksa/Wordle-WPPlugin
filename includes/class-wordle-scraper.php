@@ -70,8 +70,19 @@ class Wordle_Scraper {
 		$analysis = self::analyze_word( $data['word'] );
 		$data = array_merge( $data, $analysis );
 
-		// Generate hints via AI
-		$hints = Wordle_AI::generate_hints( $data['word'] );
+		// Step 1: Enrichment FIRST — Merriam-Webster Dictionary
+		$dictionary = Wordle_Dictionary::fetch_enrichment( $data['word'] );
+		if ( ! is_wp_error( $dictionary ) ) {
+			$data = array_merge( $data, $dictionary );
+		}
+
+		// Step 2: Generate AI hints — now with full context (definition, etymology, pos)
+		$enrichment_context = array(
+			'definition'     => $data['definition']     ?? '',
+			'etymology'      => $data['etymology']      ?? '',
+			'part_of_speech' => $data['part_of_speech'] ?? '',
+		);
+		$hints = Wordle_AI::generate_hints( $data['word'], 'default', $enrichment_context );
 		if ( ! is_wp_error( $hints ) ) {
 			$data = array_merge( $data, $hints );
 		} else {
@@ -79,16 +90,10 @@ class Wordle_Scraper {
 			$data = array_merge( $data, self::generate_fallback_hints( $data['word'] ) );
 		}
 
-		// Try to fetch WordleBot stats for this puzzle
+		// Step 3: WordleBot stats
 		$stats = self::fetch_wordlebot_stats( $data['puzzle_number'] );
 		if ( ! is_wp_error( $stats ) && $stats ) {
 			$data = array_merge( $data, $stats );
-		}
-
-		// Enrichment: Merriam-Webster Dictionary
-		$dictionary = Wordle_Dictionary::fetch_enrichment( $data['word'] );
-		if ( ! is_wp_error( $dictionary ) ) {
-			$data = array_merge( $data, $dictionary );
 		}
 
 		// Save to DB (Insert or Update)

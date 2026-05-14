@@ -101,6 +101,103 @@ class Wordle_API {
 			'callback' => array( __CLASS__, 'subscribe_email' ),
 			'permission_callback' => '__return_true',
 		) );
+
+		register_rest_route( 'wordle/v1', '/network-data', array(
+			'methods'  => 'GET',
+			'callback' => array( __CLASS__, 'get_network_data' ),
+			'permission_callback' => '__return_true', // Validation happens inside callback
+		) );
+	}
+
+	/**
+	 * Securely shares raw puzzle data with authorized satellite sites.
+	 * Step 26: Master Hub API
+	 */
+	public static function get_network_data( $request ) {
+		$master_key = get_option( 'wordle_network_sharing_key' );
+		$provided_key = $request->get_header( 'X-Wordle-Key' );
+
+		// 1. Security Check: API Key is required
+		if ( empty( $master_key ) ) {
+			return new WP_REST_Response( array( 'success' => false, 'message' => 'Network sharing is not configured on Master Hub.' ), 500 );
+		}
+
+		if ( $provided_key !== $master_key ) {
+			return new WP_REST_Response( array( 'success' => false, 'message' => 'Unauthorized: Invalid API Key.' ), 401 );
+		}
+
+		// 2. Fetch Data (Single Date or Bulk Sync)
+		$start_date = $request->get_param( 'start_date' );
+		$date = $request->get_param( 'date' );
+		
+		global $wpdb;
+		$table = Wordle_DB::get_table_name();
+		$results = array();
+
+		if ( $start_date ) {
+			// Bulk Sync Mode (Fetch all puzzles from start_date onwards)
+			$rows = $wpdb->get_results( $wpdb->prepare(
+				"SELECT * FROM $table WHERE date >= %s ORDER BY date ASC LIMIT 30",
+				$start_date
+			), ARRAY_A );
+			if ( $rows ) {
+				foreach ( $rows as $row ) {
+					$results[] = self::sanitize_puzzle_for_api( $row );
+				}
+			}
+		} else {
+			// Single Date Mode
+			if ( ! $date ) $date = current_time( 'Y-m-d' );
+			$puzzle = Wordle_DB::get_puzzle_by_date( $date );
+			if ( $puzzle ) {
+				$results = self::sanitize_puzzle_for_api( $puzzle );
+			}
+		}
+
+		if ( empty( $results ) ) {
+			return new WP_REST_Response( array( 'success' => false, 'message' => "No puzzle data found." ), 404 );
+		}
+
+		// 3. Return Clean Raw Data
+		$response_data = array(
+			'success' => true,
+			'data'    => $results
+		);
+
+		$response = new WP_REST_Response( $response_data, 200 );
+		
+		// 4. CORS Support
+		$response->header( 'Access-Control-Allow-Origin', '*' );
+		$response->header( 'Access-Control-Allow-Methods', 'GET' );
+		$response->header( 'Access-Control-Allow-Headers', 'X-Wordle-Key' );
+
+		return $response;
+	}
+
+	/**
+	 * Helper to remove internal DB fields from API response
+	 */
+	private static function sanitize_puzzle_for_api( $puzzle ) {
+		return array(
+			'word'               => $puzzle['word'],
+			'puzzle_number'      => $puzzle['puzzle_number'],
+			'date'               => $puzzle['date'],
+			'vowel_count'        => $puzzle['vowel_count'],
+			'consonant_count'    => $puzzle['consonant_count'],
+			'starts_with'        => $puzzle['starts_with'],
+			'difficulty'         => $puzzle['difficulty'],
+			'average_guesses'    => $puzzle['average_guesses'],
+			'guess_distribution' => $puzzle['guess_distribution'],
+			'part_of_speech'     => $puzzle['part_of_speech'],
+			'definition'         => $puzzle['definition'],
+			'etymology'          => $puzzle['etymology'],
+			'pronunciation'      => $puzzle['pronunciation'],
+			'audio_url'          => $puzzle['audio_url'],
+			'synonyms'           => $puzzle['synonyms'],
+			'antonyms'           => $puzzle['antonyms'],
+			'example_sentence'   => $puzzle['example_sentence'],
+			'definitions_json'   => $puzzle['definitions_json'],
+		);
 	}
 
 	/**
@@ -392,9 +489,15 @@ class Wordle_API {
 		foreach ( $dates as $date ) {
 			$puzzle = Wordle_DB::get_puzzle_by_date( $date, $locale );
 			
-			// If missing from DB, try to scrape it now
+			// If missing from DB, try to get it
 			if ( ! $puzzle ) {
-				Wordle_Scraper::fetch_and_process( $date );
+				$mode = get_option( 'wordle_operation_mode', 'master' );
+				if ( $mode === 'client' ) {
+					// In Client mode, we don't scrape; we just log that it's missing.
+					// Sync cron will handle it, or user can manual sync.
+				} else {
+					Wordle_Scraper::fetch_and_process( $date );
+				}
 				$puzzle = Wordle_DB::get_puzzle_by_date( $date, $locale );
 			}
 

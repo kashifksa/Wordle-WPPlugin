@@ -1,176 +1,90 @@
-# Wordle Hint Pro - Implementation Roadmap
+# Wordle Hint Pro — Development Roadmap
 
-This document is ordered by **implementation priority** — top to bottom, one task at a time.
-Tasks marked `[x]` are already completed and kept for reference.
+## Phase 1 — Core Architecture ✅
+- [x] **Step 1: Plugin Initialization** (Completed)
+- [x] **Step 2: Database Schema (v1)** (Completed)
+- [x] **Step 3: HTML Scraper Module** (Completed)
+- [x] **Step 4: Local Analyzer (PHP)** (Completed)
+- [x] **Step 5: WP-Cron Scheduler** (Completed)
+- [x] **Step 6: Admin Dashboard (Basic)** (Completed)
 
----
+## Phase 2 — AI & Enrichment ✅
+- [x] **Step 7: Groq AI Integration** (Completed)
+- [x] **Step 8: Dictionary Enrichment (MW API)** (Completed)
+- [x] **Step 9: Audio Pronunciation Support** (Completed)
+- [x] **Step 10: JSON Cache Layer** (Completed)
+- [x] **Step 11: Error Logging & Retries** (Completed)
 
-## ✅ Already Completed (Reference)
-
-- [x] **One-Click Regeneration**: Admin action to "Regenerate AI Hints" for existing entries.
-- [x] **JSON Cache Status Display**: Shows `last_updated` timestamp in admin System Status panel.
-- [x] **Archive Shortcode (`[wordle_archive]`)**: Grid of past puzzles with `?date=YYYY-MM-DD` links.
-- [x] **Dynamic SEO Meta Tags**: Hooks into Rank Math, Yoast, and WP core `document_title_parts`.
-- [x] **Structured Data (Schema)**: Handled via Rank Math — no custom code needed.
-- [x] **Dark Mode Persistence**: Restores theme preference from `localStorage` on every load.
-- [x] **URL Date Override**: Supports `?date=YYYY-MM-DD` with strict `preg_match` validation.
-- [x] **Pre-emptive Scraping**: Fetches 3–7 days in advance if source allows.
-- [x] **AI Safety Filter**: Verifies hints do not contain the actual `WORD`.
-- [x] **AI Safety Filter — Retry Validation**: Both initial and retry responses are validated before returning.
-- [x] **Contextual Prompts**: Prompt forbids direct synonyms or revealing word length.
-- [x] **Advanced Fallback Clues**: Local static dictionary as tertiary AI fallback.
-- [x] **Smart Cache-Busting**: Versioned JSON fetching (`?v=YYYY-MM-DD`) per user's local date.
-- [x] **Standardized JSON Cache Structure**: Stable `{ meta, data: { "YYYY-MM-DD": {...} } }` format.
-- [x] **UTC Date Bug Fix**: Replaced `toISOString()` with local date component building.
-- [x] **Future-Puzzle Fallback Bug Fix**: `WHERE date <= today` cap prevents future data leaking.
-- [x] **Date Input Sanitization**: `preg_match` validates `?date=` before it hits the DB.
-- [x] **Update `AGENTS.md`**: Synchronized to reflect PHP/WordPress architecture.
-- [x] **WordleBot Statistics**: Difficulty ratings, avg guesses, distributions via Engaging Data.
-- [x] **Performance Badges**: Difficulty labels (Easy/Hard/Insane) and Avg. Guesses on frontend.
-- [x] **Advanced Linguistics**: Letter frequency scoring and dictionary-based enrichment fields.
-- [x] **Merriam-Webster Integration**: `part_of_speech`, `definition`, `etymology`, `synonyms` populated.
-
----
-
-## 🚀 Implementation Queue (Do In Order)
-
-### Step 1 — ✅ Security: Fix API Key Fails Open (Completed)
-**File**: `class-wordle-api.php`, L94
-`if ( ! $stored_key ) return true;` makes `/solution` and `/save` fully public when no key is set.
-**Fix**: Return `false` when no key is configured, or log a WP site-health warning. (Fixed: Now fails secure).
-
----
-
-### Step 2 — ✅ Security: Add Pagination Cap to `/all` Endpoint (Completed)
-**File**: `class-wordle-api.php`, `get_all_wordle()`
-No maximum on `$limit` — anyone can request `?limit=99999` and dump the full database.
-**Fix**: Add `$limit = min( 100, intval( $limit ) );` (Fixed: Now capped at 100).
-
----
-
-### Step 3 — ✅ Security: Sanitize `/save` Endpoint Inputs (Completed)
-**File**: `class-wordle-api.php`, `save_wordle()`
-`$request->get_params()` passed raw to `insert_puzzle()` — allows mass-assignment of any DB column.
-**Fix**: Whitelist and sanitize only known fields before inserting. (Fixed: Implemented strict whitelist).
-
----
-
-### Step 4 — ✅ Performance: Restrict Cache Check to Frontend Only (Completed)
-**File**: `class-wordle-api.php`, L11
-`maybe_refresh_cache()` fires on every `init` including admin pages, calling `filemtime()` on every load.
-**Fix**: Wrap logic in `if ( ! is_admin() )` check. (Fixed: Restricted to frontend).
-
----
-
-### Step 5 — ✅ Code Quality: Fix Dead Action Hook (Completed)
-**File**: `class-wordle-solver.php`, L15
-`add_action('wordle_after_scrape', ...)` is registered but `do_action('wordle_after_scrape')` is never called anywhere.
-**Fix**: Fire `do_action('wordle_after_scrape')` in the scraper after a successful save. (Fixed: Action added to Scraper).
-
----
-
-### Step 6 — ✅ Performance: Optimize Solver Deduplication (Completed)
-**File**: `class-wordle-solver.php`, L171
-`array_unique()` + `sort()` on a flat array is inefficient on every cache refresh.
-**Fix**: Use `$words[$word] = true` associative map during collection, then `array_keys()` at the end. (Fixed: Switched to map-based deduplication).
-
----
-
-### Step 7 — ✅ Performance: Code Optimization Pass (Completed)
-- [x] Consolidate near-identical `get_today_wordle` and `get_wordle_data` REST routes into one endpoint.
-- [x] Remove `JSON_PRETTY_PRINT` from `wordle-data.json` in production to reduce file size ~15%.
-- [x] Reduce 80+ `!important` declarations in `style.css` by increasing CSS specificity instead. (Cleaned up major UI blocks).
-
----
-
-### Step 8 — ✅ Admin: Entry Management (CRUD Table) (Completed)
-Build a professional `WP_List_Table` in admin to view, edit, and delete past puzzle entries in bulk — replacing the current manual save form. (Fixed: Implemented Wordle_List_Table and Manage Puzzles page).
-
----
-
-### Step 9 — ✅ Admin: Status Dashboard (Completed)
-Create a "System Health" table in admin settings showing the last 7 days with status icons (✅ Success / ⚠️ Manual / ❌ Missing). (Fixed: Added System Health overview to Settings page).
-
----
-
-### Step 10 — ✅ Admin: Integrated Log Viewer (Completed)
-Add a "Logs" tab to display the last 50 scraper/AI events directly in the WordPress admin panel. (Fixed: Implemented persistent logging system and unified tabbed interface).
-
----
-
-### Step 11 — ✅ Admin: Telemetry / Email Alerting (Completed)
-Send an email notification to the site admin if the daily scraper fails after all retries. (Fixed: Integrated wp_mail failure alerts into Wordle_Scheduler).
-
----
-
-### Step 12 — ✅ Admin: Export/Import Utility (Completed)
-Tool to export all Wordle data as CSV for backups or migration to other WordPress sites. (Fixed: Added CSV export engine and integrated buttons into Settings tab).
-
----
-
-### Step 13 — ✅ API: Rate Limiting (Completed)
-Implement basic IP-based rate limiting for public REST endpoints using WordPress transients. (Fixed: Added 60req/min threshold for /data, /today, and /all endpoints).
-
----
-
-### Step 14 — ✅ Performance: Object Cache Integration (Completed)
-Use `wp_cache_get`/`set` to complement the static JSON cache for faster REST API responses. (Fixed: Integrated WordPress Object Cache with 1-hour TTL and smart invalidation).
-
----
-
-### Step 15 — ✅ Frontend: FAQ Schema Integration (Completed)
-Inject JSON-LD `FAQPage` schema into the daily hints page to capture "People Also Ask" snippets and improve CTR. (Fixed: Implemented automated FAQ schema generator in Wordle_Frontend).
-
----
-
-### Step 16 — ✅ Frontend: "Copy Clues" Button (Completed)
-One-click copy of all 4 hints (without the answer) formatted for Pinterest, Twitter/X, and WhatsApp sharing. (Fixed: Added Copy Hints button with clipboard logic and visual feedback).
-
----
-
-### Step 17 — ✅ Frontend: Advanced Share Emoji Grid (Completed)
-Refine "Copy Results" to generate a pixel-perfect NYT-style emoji grid (🟩🟨⬜) for viral sharing. (Fixed: Refined Copy Results to include dynamic hint-based progress grid).
-
----
-
-### Step 18 — ✅ Frontend: Countdown Timer (`[wordle_timer]`) (Completed)
-Live shortcode countdown until the next Wordle puzzle drops at midnight. (Fixed: Implemented standalone shortcode and synced with existing toolbar timer).
-
----
-
-### Step 19 — ✅ Frontend: Accessibility (a11y) Improvements (Completed)
-Add ARIA labels, keyboard focus states, and screen-reader support for the reveal grid and theme toggle. (Fixed: Added ARIA labels, semantic roles, focus-visible styles, and keyboard event handlers).
-
----
-
-### Step 20 — ♿ Frontend: High-Contrast "Colorblind Mode"
-- [x] **Step 19: WCAG Accessibility Hardening** (Keyboard nav, ARIA labels, focus rings)
-- [-] **Step 20: High-Contrast Colorblind Mode** (Skipped for now to maintain UI stability)
-- [x] **Step 21: Positional Letter Frequency Insights** (Completed: Strategy Corner cards added)
+## Phase 3 — Frontend & Aesthetics ✅
+- [x] **Step 12: Premium Glassmorphic UI** (Completed)
+- [x] **Step 13: Interactive Hint Cards** (Completed)
+- [x] **Step 14: Dark Mode / Day Mode Support** (Completed)
+- [x] **Step 15: Responsive Mobile Layout** (Completed)
+- [x] **Step 16: AJAX Navigation (Date Switching)** (Completed)
+- [x] **Step 17: "Reveal Answer" Mechanic** (Completed)
+- [x] **Step 18: SEO Meta Tag Generation** (Completed)
+- [x] **Step 19: Lucide Icon Integration** (Completed)
+- [x] **Step 20: Archive Calendar Integration** (Completed)
+- [x] **Step 21: Positional Letter Frequency Insights** (Completed)
 - [x] **Step 22: "On This Day" Historical Trivia** (Completed)
 - [x] **Step 23: Monthly Roundup Generator** (Completed)
 
 ---
 
-### Step 24 — ✅ Frontend: Social Image Generator (Completed)
-Auto-generate a "Hint Card" image (PNG/JPG) using PHP GD library for Pinterest/Instagram social sharing. (Fixed: Added support for Social landscape and Mobile Story portrait formats, and integrated into Open Graph meta tags).
+## Phase 4 — Multi-Site & AI Scaling ✅
+- [x] **Step 24: Social Image Generator** (Completed)
+- [x] **Step 25: Engagement: Daily Reminder** (Completed)
+- [x] **Step 26: Master Hub: Security & API** (Completed)
+- [x] **Step 27: Unified "Smart" Plugin (Client Mode)** (Completed)
+- [x] **Step 28: AI Scaling: Gemini Fallback & Unique Personas** (Completed)
+- [x] **Step 30: Future Sync & Spoiler Guard** (Completed)
+- [x] **Step 31: Network Dashboard & Audit Logs** (Completed)
 
 ---
 
-### Step 25 — ✅ Engagement: Daily Reminder Opt-in (Completed)
-"Never Miss a Hint" email capture or browser push notification to build a recurring audience. (Fixed: Implemented subscription table, REST endpoint, glassmorphic frontend widget, and automated daily email reminders via WP Cron).
+## Phase 5 — Final Optimization ✅
+- [x] **Step 32: Performance & SEO Audit** (Completed)
+- [x] **Step 33: Network Validation & Multi-Mode Stability** (Completed)
+- [x] **Step 34: Project Finalization & Handover** (Completed)
 
 ---
 
-### Step 26 — 🌍 Multi-Site: CORS Headers
-Add appropriate CORS headers so external client sites can fetch `wordle-cache.json` without browser blocking.
+## Technical Notes
+- **Persistence**: Strict rule applied - Database never deletes historical data.
+- **Security**: Master Hub protected via `X-Wordle-Key` and CORS.
+- **Aesthetics**: Glassmorphic UI maintained across all modes and overlays.
+- **Redundancy**: Dual AI (Groq/Gemini) and Dual Hub (Primary/Fallback) support implemented.
 
 ---
 
-### Step 27 — 🌍 Multi-Site: Client Plugin
-Lightweight WordPress plugin for client sites that reads from this plugin's `wordle-cache.json` instead of scraping NYT directly.
+## Phase 6 — Live Deployment 🚀
 
----
+### Hosting Details
+- **Domain:** `todaywordlehint.com`
+- **Hosting:** Hostinger Business (Shared)
+- **Theme:** Kadence (configured per `kadence.md`)
 
-### Step 28 — 🌍 Multi-Site: Client Plugin Auth
-Optionally protect the JSON cache endpoint with a shared API key for trusted client sites only.
+### Pre-Launch Migration Checklist (XAMPP → Hostinger)
+- [ ] Export DB from XAMPP phpMyAdmin
+- [ ] Use **Hostinger's WordPress Auto-Installer** (not manual install)
+- [ ] Use **All-in-One WP Migration** plugin to transfer site
+- [ ] Point `todaywordlehint.com` DNS to Hostinger nameservers
+- [ ] Verify plugin works correctly on live server
+- [ ] Test daily scraper + AI pipeline on live cron
+
+### Post-Launch Priority Order
+- [ ] **1. Install Cloudflare** (free) — CDN + DDoS protection between domain and Hostinger
+- [ ] **2. Install Rank Math** — SEO plugin, configure sitewide
+- [ ] **3. Install WP Rocket** — caching, lazy load, JS defer *(ask for exact settings guide)*
+- [ ] **4. Google Search Console** — submit sitemap
+- [ ] **5. Google Analytics 4** — install via Rank Math or manually
+
+### Hostinger-Specific Config (hPanel)
+- Set **PHP execution time limit** → `120 seconds` minimum (for AI + scraper tasks)
+- Set up **real server cron job** via hPanel for WP-Cron reliability (not just WordPress pseudo-cron)
+
+### WP Rocket Notes *(full setup guide to be done in a future session)*
+- Settings will be optimized specifically for Kadence theme + custom plugin
+- Key areas: page caching, JS/CSS minification, lazy load images, database cleanup
+- Cloudflare integration inside WP Rocket will need to be configured
+

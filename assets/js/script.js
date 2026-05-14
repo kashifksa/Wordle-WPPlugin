@@ -726,4 +726,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     if (window.lucide) lucide.createIcons();
+    // --- 1.10 SPOILER GUARD & TIMEZONE CHECK ---
+    function checkSpoilerLock() {
+        const $container = jQuery('.wordle-hint-container');
+        if (!$container.length) return;
+
+        const isFuture = $container.attr('data-is-future') === '1';
+        const puzzleDateStr = $container.find('.wh-date').attr('data-current-date');
+
+        if (isFuture && puzzleDateStr) {
+            const now = new Date();
+            // Local date in YYYY-MM-DD
+            const userTodayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+            
+            if (userTodayStr >= puzzleDateStr) {
+                // Time to reveal! But PHP sent locked data based on server time.
+                const $notice = $container.find('.wh-future-notice');
+                if ($notice.length) {
+                    $notice.find('h2').text("Puzzle Available!");
+                    $notice.find('p').first().html("This puzzle is now live in your timezone. Please refresh to unlock the hints.");
+                    $notice.find('.wh-back-home').text("Unlock Hints Now").attr('href', window.location.href);
+                }
+            }
+        }
+    }
+    checkSpoilerLock();
 });
+

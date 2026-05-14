@@ -195,7 +195,11 @@ class Wordle_Dictionary {
 		}
 
 		// First Known Use
-		$data['first_known_use'] = self::clean_mw_text( $entry['date'] ?? '' );
+		$fku = self::clean_mw_text( $entry['date'] ?? '' );
+		if ( preg_match( '/^[0-9]{4}$/', $fku ) ) {
+			$fku .= ' AD';
+		}
+		$data['first_known_use'] = $fku;
 
 		// Example Sentence
 		if ( ! empty( $entry['def'] ) ) {

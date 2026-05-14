@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Wordle Hint Pro
- * Plugin URI:  https://github.com/yourusername/wordle-hint-pro
+ * Plugin URI:  https://wordlehintsai.com
  * Description: A premium Wordle hint service with automated scraping, AI-powered hint generation, and a stunning frontend.
- * Version:     1.0.0
- * Author:      Antigravity
- * Author URI:  https://google.com
+ * Version:     1.0.6
+ * Author:      Wordle Hint Pro
+ * Author URI:  https://wordlehintsai.com
  * Text Domain: wordle-hint-pro
  * License:     GPL2
  */
@@ -64,6 +64,7 @@ class Wordle_Hint_Pro {
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-solver.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-image-generator.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-analyzer.php';
+		require_once WORDLE_HINT_PATH . 'includes/class-wordle-sync.php';
 	}
 
 	/**

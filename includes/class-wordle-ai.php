@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Wordle_AI {
 
-	public static function generate_hints( $word, $engine = 'default' ) {
+	public static function generate_hints( $word, $engine = 'default', $context = array() ) {
 		$primary_key   = get_option( 'wordle_hint_ai_api_key' );
 		$primary_model = get_option( 'wordle_hint_ai_model', 'llama-3.1-8b-instant' );
 		$fallback_key   = get_option( 'wordle_hint_ai_api_key_fallback' );
@@ -16,13 +16,13 @@ class Wordle_AI {
 
 		// Try Primary AI if selected or default
 		if ( $engine === 'default' || $engine === 'primary' ) {
-			$result = self::execute_ai_request( $word, $primary_key, $primary_model );
+			$result = self::execute_ai_request( $word, $primary_key, $primary_model, $context );
 			
 			// If Rate Limited, wait 10s and try once more before giving up
 			if ( is_wp_error( $result ) && strpos( $result->get_error_message(), '429' ) !== false ) {
 				error_log( "Wordle AI: Rate limited. Cooling off for 10s..." );
 				sleep( 10 );
-				$result = self::execute_ai_request( $word, $primary_key, $primary_model );
+				$result = self::execute_ai_request( $word, $primary_key, $primary_model, $context );
 			}
 
 			if ( ! is_wp_error( $result ) ) {
@@ -30,7 +30,7 @@ class Wordle_AI {
 				if ( self::is_word_in_hints( $word, $result ) ) {
 					error_log( "Wordle AI Safety: Word '{$word}' found in hints. Retrying after 5s..." );
 					sleep( 5 );
-					$retry = self::execute_ai_request( $word, $primary_key, $primary_model );
+					$retry = self::execute_ai_request( $word, $primary_key, $primary_model, $context );
 
 					if ( ! is_wp_error( $retry ) && ! self::is_word_in_hints( $word, $retry ) ) {
 						return $retry;
@@ -50,7 +50,7 @@ class Wordle_AI {
 
 		// Try Fallback AI if selected or if primary failed in default mode
 		if ( $engine === 'fallback' || ( $engine === 'default' && $fallback_key ) ) {
-			$fallback_result = self::execute_ai_request( $word, $fallback_key, $fallback_model );
+			$fallback_result = self::execute_ai_request( $word, $fallback_key, $fallback_model, $context );
 			if ( ! is_wp_error( $fallback_result ) ) {
 				return $fallback_result;
 			}
@@ -77,19 +77,31 @@ class Wordle_AI {
 		return self::execute_ai_request( $word, $fallback_key, $fallback_model );
 	}
 
-	private static function execute_ai_request( $word, $api_key, $model ) {
+	private static function execute_ai_request( $word, $api_key, $model, $context = array() ) {
 		$prompt_template = get_option( 'wordle_hint_ai_prompt' );
 
 		if ( ! $api_key || ! $prompt_template ) {
 			return new WP_Error( 'ai_config_missing', 'API key or prompt missing' );
 		}
 
+		// Replace word token
 		$full_prompt = str_replace( '{{WORD}}', $word, $prompt_template );
+
+		// Replace enrichment context tokens if available
+		$full_prompt = str_replace( '{{DEFINITION}}',     ! empty( $context['definition'] )     ? $context['definition']     : 'Not available', $full_prompt );
+		$full_prompt = str_replace( '{{ETYMOLOGY}}',      ! empty( $context['etymology'] )      ? $context['etymology']      : 'Not available', $full_prompt );
+		$full_prompt = str_replace( '{{PART_OF_SPEECH}}', ! empty( $context['part_of_speech'] ) ? $context['part_of_speech'] : 'Not available', $full_prompt );
+
 		$full_prompt .= "\n\nCRITICAL: Return results in JSON format with keys: hint1, hint2, hint3, final_hint. NEVER reveal the word '{$word}' in any hint.";
+
+		$system_persona = get_option( 'wordle_hint_ai_system_prompt' );
+		if ( empty( $system_persona ) ) {
+			$system_persona = "You are an elite Wordle hint generator. Your goal is to provide helpful clues for the word '{$word}' without ever using the word itself, its synonyms, or mentioning its length. You MUST output strictly valid JSON.";
+		}
 
 		// Support for Gemini native API if key starts with AIza
 		if ( strpos( $api_key, 'AIza' ) === 0 ) {
-			return self::generate_hints_gemini( $word, $api_key, $model, $full_prompt );
+			return self::generate_hints_gemini( $word, $api_key, $model, $full_prompt, $system_persona );
 		}
 
 		// Basic support for OpenAI-compatible APIs
@@ -101,7 +113,7 @@ class Wordle_AI {
 		$body_args = array(
 			'model'    => $model,
 			'messages' => array(
-				array( 'role' => 'system', 'content' => "You are an elite Wordle hint generator. Your goal is to provide helpful clues for the word '{$word}' without ever using the word itself, its synonyms, or mentioning its length. You MUST output strictly valid JSON." ),
+				array( 'role' => 'system', 'content' => $system_persona ),
 				array( 'role' => 'user', 'content' => $full_prompt ),
 			),
 		);
@@ -150,15 +162,20 @@ class Wordle_AI {
 		return new WP_Error( 'ai_invalid_data', 'AI returned empty or invalid JSON hints' );
 	}
 
-	private static function generate_hints_gemini( $word, $api_key, $model, $prompt ) {
+	private static function generate_hints_gemini( $word, $api_key, $model, $prompt, $system_persona = '' ) {
 		$model = trim( $model );
 		$endpoint = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$api_key}";
 		
+		$final_prompt = $prompt;
+		if ( ! empty( $system_persona ) ) {
+			$final_prompt = "INSTRUCTIONS: " . $system_persona . "\n\nTASK: " . $prompt;
+		}
+
 		$body_args = array(
 			'contents' => array(
 				array(
 					'parts' => array(
-						array( 'text' => $prompt )
+						array( 'text' => $final_prompt )
 					)
 				)
 			),

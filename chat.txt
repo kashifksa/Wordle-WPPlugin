@@ -1,21 +1,29 @@
---- SESSION LOG: 2026-05-13 ---
-OBJECTIVE: Restore "On This Day" and align Engagement logic without permanent schema changes.
+# Wordle Hint Pro — Session Summary (Multi-Site Rollout)
+Date: 2026-05-14
 
-1. DB STATE: 
-   - Reverted database schema to original 'date' and 'first_letter' column names.
-   - Verified 1,800 records are fully accessible.
+## 1. Summary of Progress
+We have successfully transitioned the Wordle Hint Pro plugin from a single-site scraper into a scalable Multi-Site Network. The architecture is now "SEO-First," meaning every site in the network shares raw data but generates unique content.
 
-2. FRONTEND:
-   - Restored "Wordle On This Day" (Historical Trivia) widget.
-   - Placement: Positioned at the very bottom of the shortcode (after answer reveal).
-   - Removed all duplicate instances and fixed syntax errors.
+## 2. Key Features Implemented
+*   **Secure Master Hub**: Implemented REST API endpoints with X-Wordle-Key authentication and CORS support.
+*   **Client Satellite Mode**: Added a toggle to switch the plugin into "Client" mode, disabling the scraper and enabling the Sync Engine.
+*   **Dual AI Redundancy**: Integrated Google Gemini Pro as a fallback for Groq, with automated retry logic on rate limits.
+*   **Unique AI Personas**: Added a "System Persona" field in settings so each site can have a different voice (Riddler, Coach, etc.).
+*   **Spoiler Guard**: Built a glassmorphic overlay for future puzzles that locks content until midnight in the user's local timezone.
+*   **Network Dashboard**: Enhanced the "System Logs" with network status monitoring and a manual sync trigger.
 
-3. RECENT GIT COMMIT:
-   - Current codebase is based on: "add: monthly shortcode" (Hash: 6fec50f)
-   - Note: Unstaged changes exist for the restored Trivia logic.
+## 3. Important Files
+- `includes/class-wordle-sync.php`: Core logic for child sites to pull data.
+- `includes/class-wordle-api.php`: Secure broadcast endpoint for the Master site.
+- `includes/class-wordle-ai.php`: Refined logic for Personas and Gemini fallback.
+- `includes/class-wordle-frontend.php`: Logic for the Spoiler Guard overlay.
+- `assets/js/script.js`: Timezone-aware reveal logic.
 
-4. NEXT STEPS:
-   - Proceed to Step 26 (CORS Headers) for multi-site integration.
-   - Continue with the client plugin development.
+## 4. Deployment Checklist
+1. Set Master site to "Master Hub" and define a secret key.
+2. Set Child sites to "Client Satellite," point to Master URL, and use the secret key.
+3. Define a unique "System Persona" for each Child site to maximize SEO.
+4. Use the "Sync with Master Hub" button for the first-time setup.
 
---- END OF SESSION ---
+---
+Project Status: 100% COMPLETE

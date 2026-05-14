@@ -52,7 +52,7 @@ class Wordle_List_Table extends WP_List_Table {
 				return $status . ' ' . esc_html( $item['part_of_speech'] ?? '' );
 			case 'actions':
 				return sprintf(
-					'<a href="?page=%s&action=delete&id=%s&_wpnonce=%s" class="button button-small" onclick="return confirm(\'Are you sure?\')">Delete</a>',
+					'<a href="?page=%s&action=delete&id=%s&_wpnonce=%s" class="button wh-btn wh-btn-secondary" style="color: #d63638; border-color: #d63638; padding: 2px 8px !important; height: auto !important; line-height: 1.5 !important;" onclick="return confirm(\'Are you sure?\')"><i data-lucide="trash-2" style="width:14px; height:14px;"></i> Delete</a>',
 					$_REQUEST['page'],
 					$item['id'],
 					wp_create_nonce( 'delete_puzzle_' . $item['id'] )
@@ -95,15 +95,20 @@ class Wordle_List_Table extends WP_List_Table {
 
 		// Handle Bulk Actions
 		if ( ( isset( $_POST['action'] ) && $_POST['action'] === 'bulk-delete' ) || ( isset( $_POST['action2'] ) && $_POST['action2'] === 'bulk-delete' ) ) {
-			$delete_ids = esc_sql( $_POST['bulk-delete'] );
-			foreach ( $delete_ids as $id ) {
-				$wpdb->delete( $table_name, array( 'id' => intval( $id ) ) );
+			check_admin_referer( 'bulk-puzzles' );
+			if ( ! empty( $_POST['bulk-delete'] ) && is_array( $_POST['bulk-delete'] ) ) {
+				foreach ( $_POST['bulk-delete'] as $id ) {
+					$wpdb->delete( $table_name, array( 'id' => intval( $id ) ) );
+				}
+				if ( class_exists( 'Wordle_API' ) ) { Wordle_API::refresh_json_cache(); }
 			}
-			if ( class_exists( 'Wordle_API' ) ) { Wordle_API::refresh_json_cache(); }
 		}
 
-		$orderby = ( ! empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : 'date';
-		$order   = ( ! empty( $_GET['order'] ) ) ? $_GET['order'] : 'DESC';
+		// Whitelist to prevent SQL injection
+		$allowed_orderby = array( 'date', 'puzzle_number', 'difficulty', 'average_guesses', 'word' );
+		$allowed_order   = array( 'ASC', 'DESC' );
+		$orderby = ( ! empty( $_GET['orderby'] ) && in_array( $_GET['orderby'], $allowed_orderby, true ) ) ? $_GET['orderby'] : 'date';
+		$order   = ( ! empty( $_GET['order'] ) && in_array( strtoupper( $_GET['order'] ), $allowed_order, true ) ) ? strtoupper( $_GET['order'] ) : 'DESC';
 
 		$total_items = $wpdb->get_var( "SELECT COUNT(id) FROM $table_name" );
 		$paged = $this->get_pagenum();

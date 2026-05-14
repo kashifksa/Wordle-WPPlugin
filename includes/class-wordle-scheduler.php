@@ -30,6 +30,24 @@ class Wordle_Scheduler {
 	}
 
 	public static function run_job() {
+		$mode = get_option( 'wordle_operation_mode', 'master' );
+
+		if ( $mode === 'client' ) {
+			error_log( "Wordle Sync: Starting Client-Mode Sync from Master Hub." );
+			$sync_result = Wordle_Sync::sync();
+			
+			if ( $sync_result ) {
+				self::schedule_next_run();
+				self::send_daily_reminders();
+				return;
+			} else {
+				error_log( "Wordle Sync: Client-Mode Sync failed." );
+				// We don't retry immediately to avoid slamming the Master Hub
+				self::schedule_next_run(); 
+				return;
+			}
+		}
+
 		$attempt = get_transient( 'wordle_scrape_attempt' ) ?: 0;
 		$max_attempts = 12;
 		

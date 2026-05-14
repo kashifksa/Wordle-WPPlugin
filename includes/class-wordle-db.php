@@ -13,7 +13,7 @@ class Wordle_DB {
 
 	public static function create_table() {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'wordle_data';
+		$table_name = self::get_table_name();
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE $table_name (
@@ -21,26 +21,27 @@ class Wordle_DB {
 			date date NOT NULL,
 			puzzle_number int(11) NOT NULL,
 			word varchar(10) NOT NULL,
-			hint1 text NOT NULL,
-			hint2 text NOT NULL,
-			hint3 text NOT NULL,
-			final_hint text NOT NULL,
-			vowel_count int(11) NOT NULL,
-			consonant_count int(11) NOT NULL,
-			starts_with varchar(1) NOT NULL,
-			difficulty decimal(4,2),
-			average_guesses decimal(4,2),
-			guess_distribution text,
-			part_of_speech varchar(100),
-			definition text,
-			etymology text,
-			pronunciation varchar(255),
-			audio_url varchar(255),
-			synonyms text,
-			antonyms text,
-			example_sentence text,
-			first_known_use varchar(100),
-			definitions_json text,
+			hint1 text DEFAULT '' NOT NULL,
+			hint2 text DEFAULT '' NOT NULL,
+			hint3 text DEFAULT '' NOT NULL,
+			final_hint text DEFAULT '' NOT NULL,
+			vowel_count int(11) DEFAULT 0 NOT NULL,
+			consonant_count int(11) DEFAULT 0 NOT NULL,
+			first_letter varchar(1) DEFAULT '' NOT NULL,
+			difficulty decimal(4,2) DEFAULT 0.00,
+			average_guesses decimal(4,2) DEFAULT 0.00,
+			guess_distribution text DEFAULT '',
+			part_of_speech varchar(100) DEFAULT '',
+			definition text DEFAULT '',
+			etymology text DEFAULT '',
+			pronunciation varchar(255) DEFAULT '',
+			audio_url varchar(255) DEFAULT '',
+			synonyms text DEFAULT '',
+			antonyms text DEFAULT '',
+			example_sentence text DEFAULT '',
+			first_known_use varchar(100) DEFAULT '',
+			definitions_json text DEFAULT '',
+			entry_source varchar(50) DEFAULT 'scraper',
 			locale varchar(20) DEFAULT 'global',
 			created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 			PRIMARY KEY  (id),
@@ -61,6 +62,12 @@ class Wordle_DB {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 		dbDelta( $sql_sub );
+
+		// Migration: rename starts_with -> first_letter if old column exists
+		$cols = $wpdb->get_col( "SHOW COLUMNS FROM $table_name LIKE 'starts_with'" );
+		if ( ! empty( $cols ) ) {
+			$wpdb->query( "ALTER TABLE $table_name CHANGE starts_with first_letter varchar(1) DEFAULT '' NOT NULL" );
+		}
 	}
 
 	/**
@@ -97,8 +104,8 @@ class Wordle_DB {
 		// Check if exists by puzzle_number
 		$existing = $wpdb->get_row( $wpdb->prepare(
 			"SELECT id FROM $table_name WHERE puzzle_number = %d OR date = %s",
-			$data['puzzle_number'],
-			$data['date']
+			isset($data['puzzle_number']) ? $data['puzzle_number'] : 0,
+			isset($data['date']) ? $data['date'] : ''
 		), ARRAY_A );
 
 		if ( $existing ) {
@@ -109,7 +116,14 @@ class Wordle_DB {
 			);
 		}
 
-		return $wpdb->insert( $table_name, $data );
+		$result = $wpdb->insert( $table_name, $data );
+		if ( $result === false ) {
+			error_log( 'Wordle DB Error: ' . $wpdb->last_error );
+			if ( class_exists( 'Wordle_Admin' ) ) {
+				Wordle_Admin::log( 'DB Insert Error: ' . $wpdb->last_error, 'error' );
+			}
+		}
+		return $result;
 	}
 
 	public static function get_latest_puzzles( $limit = 3, $locale = 'global' ) {
@@ -138,48 +152,63 @@ class Wordle_DB {
 		global $wpdb;
 		$table_name = self::get_table_name();
 		$start_date = "{$year}-{$month}-01";
-		$end_date   = date( 'Y-m-t', strtotime( $start_date ) );
-		
+		$end_date = date( 'Y-m-t', strtotime( $start_date ) );
+
 		return $wpdb->get_results( $wpdb->prepare(
-			"SELECT * FROM $table_name WHERE locale = %s AND date >= %s AND date <= %s ORDER BY date ASC",
-			$locale,
+			"SELECT * FROM $table_name WHERE date BETWEEN %s AND %s AND locale = %s ORDER BY date ASC",
 			$start_date,
-			$end_date
+			$end_date,
+			$locale
 		), ARRAY_A );
 	}
 
-	public static function get_paginated_puzzles( $page = 1, $limit = 24, $locale = 'global', $max_date = null ) {
+	/**
+	 * Retrieves a paginated list of puzzles, excluding future ones.
+	 */
+	public static function get_paginated_puzzles( $page, $limit, $locale = 'global' ) {
 		global $wpdb;
 		$table_name = self::get_table_name();
 		$offset = ( $page - 1 ) * $limit;
-		
-		$query = "SELECT * FROM $table_name WHERE locale = %s";
-		$params = array( $locale );
+		$today = current_time( 'Y-m-d' );
 
-		if ( $max_date ) {
-			$query .= " AND date <= %s";
-			$params[] = $max_date;
-		}
-
-		$query .= " ORDER BY date DESC LIMIT %d OFFSET %d";
-		$params[] = $limit;
-		$params[] = $offset;
-
-		return $wpdb->get_results( $wpdb->prepare( $query, $params ), ARRAY_A );
+		return $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM $table_name WHERE locale = %s AND date <= %s ORDER BY date DESC LIMIT %d OFFSET %d",
+			$locale,
+			$today,
+			$limit,
+			$offset
+		), ARRAY_A );
 	}
 
-	public static function get_total_puzzles_count( $locale = 'global', $max_date = null ) {
+	/**
+	 * Returns the total count of non-future puzzles.
+	 */
+	public static function get_total_puzzles_count( $locale = 'global' ) {
 		global $wpdb;
 		$table_name = self::get_table_name();
-		
-		$query = "SELECT COUNT(*) FROM $table_name WHERE locale = %s";
-		$params = array( $locale );
+		$today = current_time( 'Y-m-d' );
 
-		if ( $max_date ) {
-			$query .= " AND date <= %s";
-			$params[] = $max_date;
-		}
+		return (int) $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(*) FROM $table_name WHERE locale = %s AND date <= %s",
+			$locale,
+			$today
+		) );
+	}
+	/**
+	 * Returns all unique year/month combinations that have puzzles.
+	 */
+	public static function get_available_months( $locale = 'global' ) {
+		global $wpdb;
+		$table_name = self::get_table_name();
+		$today = current_time( 'Y-m-d' );
 
-		return (int) $wpdb->get_var( $wpdb->prepare( $query, $params ) );
+		return $wpdb->get_results( $wpdb->prepare(
+			"SELECT DISTINCT YEAR(date) as year, MONTH(date) as month 
+			 FROM $table_name 
+			 WHERE locale = %s AND date <= %s 
+			 ORDER BY year DESC, month DESC",
+			$locale,
+			$today
+		), ARRAY_A );
 	}
 }
