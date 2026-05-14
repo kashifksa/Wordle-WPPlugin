@@ -423,19 +423,22 @@ class Wordle_Frontend {
 							<div class="wh-toolbar-segment wh-nav-segment">
 								<?php 
 								$is_today = ( $puzzle['date'] === date( 'Y-m-d' ) );
-								$nav_label = $is_today ? 'Yesterday' : 'Previous Day';
+								$nav_label = ( $puzzle['date'] === date( 'Y-m-d' ) ) ? 'Yesterday' : 'Previous';
 								?>
 								<button id="wh-toolbar-prev" class="wh-toolbar-btn" title="<?php echo $nav_label; ?>'s Puzzle" aria-label="View <?php echo $nav_label; ?>'s puzzle">
 									<span class="icon">←</span> <span class="label"><?php echo $nav_label; ?></span>
 								</button>
 								<button id="wh-toolbar-calendar" class="wh-toolbar-btn" title="Open Calendar" aria-label="Open calendar selector">
-									<span class="icon">📅</span>
+									<i data-lucide="calendar-days"></i>
 								</button>
 							</div>
 
 							<div class="wh-toolbar-segment wh-share-segment">
-								<button id="wh-copy-results" class="wh-share-btn" aria-label="Copy your Wordle result emoji grid">
-									<span class="icon">📋</span> <span class="label">Copy Results</span>
+								<button id="wh-copy-results" class="wh-toolbar-btn" title="Copy Emoji Results" aria-label="Copy your Wordle result emoji grid">
+									<i data-lucide="copy"></i>
+								</button>
+								<button id="wh-download-card" class="wh-share-btn" title="Download Hint Card for Social Media" data-date="<?php echo esc_attr($puzzle['date']); ?>">
+									<i data-lucide="share-2"></i> <span class="label">Share Card</span>
 								</button>
 							</div>
 
@@ -444,9 +447,6 @@ class Wordle_Frontend {
 									<span class="next-label">NEXT WORDLE</span>
 									<span class="wh-timer-val next-time">00:00:00</span>
 								</div>
-								<button id="wh-replay-reveal" class="wh-replay-btn" title="Replay Animation" aria-label="Replay the letter reveal animation">
-									<span class="icon">↻</span>
-								</button>
 							</div>
 						</div>
 					</div>

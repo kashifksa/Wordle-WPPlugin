@@ -89,6 +89,12 @@ class Wordle_API {
 				return current_user_can( 'manage_options' );
 			},
 		) );
+		
+		register_rest_route( 'wordle/v1', '/share-image/(?P<date>\d{4}-\d{2}-\d{2})', array(
+			'methods'  => 'GET',
+			'callback' => array( 'Wordle_Image_Generator', 'serve_image' ),
+			'permission_callback' => '__return_true',
+		) );
 	}
 
 	public static function check_api_key( $request ) {

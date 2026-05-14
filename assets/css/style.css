@@ -718,16 +718,18 @@ body.dark-mode .wh-toggle-knob {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: calc(100% - 30px) !important;
+    left: 15px !important;
     background: var(--wh-card);
     border: 1px solid var(--wh-border);
     border-radius: 12px;
-    padding: 10px 15px;
-    gap: 10px;
+    padding: 10px 20px;
+    gap: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
     position: absolute;
     top: 50%;
-    left: 0;
     transform: translateY(-50%);
     opacity: 0;
     visibility: hidden;
@@ -746,42 +748,69 @@ body.dark-mode .wh-toggle-knob {
     gap: 8px;
 }
 
+.wh-share-segment {
+    display: flex !important;
+    gap: 12px !important;
+    flex-shrink: 0 !important;
+}
+
+.wh-timer-segment {
+    flex-shrink: 0 !important;
+    text-align: right !important;
+    margin-right: 0 !important;
+}
+
+.wh-next-countdown {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* Centered relative to each other */
+    text-align: center !important;
+    white-space: nowrap !important;
+}
+
 .wordle-hint-container .wh-toolbar-btn, 
 .wordle-hint-container .wh-share-btn, 
 .wordle-hint-container .wh-replay-btn {
-    background: var(--wh-inner-card);
-    border: 1px solid var(--wh-border);
-    color: var(--wh-text);
-    border-radius: 8px;
+    background: #ffffff;
+    border: 1.5px solid #e3e3e3;
+    color: #1a1a1b;
+    border-radius: 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    gap: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 0.85rem;
     font-weight: 700;
-    padding: 6px 12px;
+    padding: 6px 14px;
+    height: 40px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    white-space: nowrap;
+    flex-shrink: 0 !important; /* Prevents squashing */
 }
 
 .wordle-hint-container .wh-toolbar-btn:hover, 
-.wordle-hint-container .wh-share-btn:hover, 
-.wordle-hint-container .wh-replay-btn:hover {
+.wordle-hint-container .wh-share-btn:hover {
     background: var(--wordle-yellow);
     border-color: var(--wordle-yellow);
     color: #000;
 }
 
-.wh-share-btn {
-    background: var(--wordle-green) !important;
-    color: white !important;
-    border-color: var(--wordle-green) !important;
-    padding: 8px 16px !important;
-    font-size: 0.9rem !important;
+/* Force square dimensions for icon-only buttons */
+#wh-calendar-toggle {
+    width: 40px !important;
+    min-width: 40px !important;
+    padding: 0 !important;
 }
 
-.wh-share-btn:hover {
-    background: var(--wordle-yellow-dark) !important;
-    color: #000 !important;
+.wh-share-btn .icon, .wh-toolbar-btn i, .wh-share-btn i {
+    width: 18px !important;
+    height: 18px !important;
+    stroke-width: 1.5 !important;
+    display: inline-block;
+    vertical-align: middle;
+    color: currentColor;
 }
 
 .wh-next-countdown {

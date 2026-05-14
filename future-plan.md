@@ -147,18 +147,8 @@ Add ARIA labels, keyboard focus states, and screen-reader support for the reveal
 - [x] **Step 19: WCAG Accessibility Hardening** (Keyboard nav, ARIA labels, focus rings)
 - [-] **Step 20: High-Contrast Colorblind Mode** (Skipped for now to maintain UI stability)
 - [x] **Step 21: Positional Letter Frequency Insights** (Completed: Strategy Corner cards added)
-- [ ] **Step 22: "On This Day" Historical Trivia** (New!)
-Surface "Strategy Insight" cards (e.g., *"S appears in position 1 in 15% of all Wordle words"*) for unique data value over competitors.
-
----
-
-### Step 22 — 🕰️ Frontend: "On This Day" Historical Trivia
-Widget showing the Wordle answer/hints from exactly 1 and 2 years ago today to boost internal linking and session time.
-
----
-
-### Step 23 — 📅 Frontend: Monthly Roundup Generator
-Automated tool to generate/update monthly archive pages (e.g., "Wordle Answers: May 2026") for long-tail date-based traffic.
+- [x] **Step 22: "On This Day" Historical Trivia** (Completed)
+- [x] **Step 23: Monthly Roundup Generator** (Completed)
 
 ---
 

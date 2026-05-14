@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 1.6 AJAX ARCHIVE NAVIGATION (Instant Switching) ---
+
     function navigateToDate(dateStr) {
         const $container = jQuery('.wordle-hint-container');
         if (!$container.length) return;
@@ -360,11 +361,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Dynamic Button Text (Past dates shouldn't say "Today's")
         if (puzzleDate < today) {
             $revealBtn.find('.btn-text').text('Show Answer');
-            $prevBtnLabel.text('Previous Day');
+            $prevBtnLabel.text('Previous');
         } else {
             $revealBtn.find('.btn-text').text("Show Today's Answer");
             $prevBtnLabel.text('Yesterday');
         }
+
+        // Update Download Card date for AJAX switches
+        $container.find('#wh-download-card').attr('data-date', puzzleDate);
 
         // Inject Letters into the back of each tile
         if (word && word.length === 5) {
@@ -427,6 +431,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize Game Logic
         initGameLogic($container);
+
+        // Render Lucide Icons for new content
+        if (window.lucide) lucide.createIcons();
     }
 
     function initGameLogic($container) {
@@ -465,16 +472,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.whFlatpickr) window.whFlatpickr.open();
         });
 
-        $container.off('click', '#wh-replay-reveal').on('click', '#wh-replay-reveal', function() {
-            $boxes.removeClass('revealed');
-            $toolbar.removeClass('wh-visible').addClass('wh-hidden');
-            $revealBtn.removeClass('wh-hidden').prop('disabled', false);
-            jQuery('#wh-discovery-section').addClass('wh-no-transition').removeClass('wh-visible');
-            setTimeout(() => jQuery('#wh-discovery-section').removeClass('wh-no-transition'), 100);
-            
-            // Auto-trigger reveal again for smooth UX
-            setTimeout(() => $revealBtn.trigger('click'), 400);
-        });
 
         // Copy Results Logic (Emojis)
         $container.off('click', '#wh-copy-results').on('click', '#wh-copy-results', function() {
@@ -584,6 +581,35 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        $container.off('click', '#wh-download-card').on('click', '#wh-download-card', function(e) {
+            e.preventDefault();
+            const date = jQuery(this).attr('data-date');
+            console.log("Wordle Hint Pro - Share Card requested for:", date);
+            
+            if (!date) {
+                console.error("Wordle Hint Pro - No date found on share button");
+                return;
+            }
+            
+            const $btn = jQuery(this);
+            const originalHtml = $btn.html();
+            $btn.html('<span class="icon">⏳</span> <span class="label">Preparing...</span>').prop('disabled', true);
+            
+            const imageUrl = wordleHintData.apiUrl + 'share-image/' + date;
+            
+            // Trigger download via hidden link
+            const link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = `wordle-hints-${date}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            setTimeout(() => {
+                $btn.html(originalHtml).prop('disabled', false);
+            }, 1500);
+        });
+
         // Audio Playback
         $container.off('click', '#wh-audio-btn').on('click', '#wh-audio-btn', function() {
             const audioSrc = jQuery(this).attr('data-src');
@@ -651,4 +677,6 @@ document.addEventListener('DOMContentLoaded', () => {
             jQuery(this).trigger('click');
         }
     });
+    
+    if (window.lucide) lucide.createIcons();
 });

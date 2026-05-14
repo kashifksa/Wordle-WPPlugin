@@ -62,6 +62,7 @@ class Wordle_Hint_Pro {
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-archive.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-scheduler.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-solver.php';
+		require_once WORDLE_HINT_PATH . 'includes/class-wordle-image-generator.php';
 		require_once WORDLE_HINT_PATH . 'includes/class-wordle-analyzer.php';
 	}
 
@@ -99,8 +100,8 @@ class Wordle_Hint_Pro {
 		// Use unique handles to avoid conflicts with other plugins
 		wp_enqueue_style( 'wh-flatpickr-css', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css' );
 		wp_enqueue_script( 'wh-flatpickr-js', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js', array(), '4.6.13', true );
-
-		wp_enqueue_script( 'wordle-hint-script', WORDLE_HINT_URL . 'assets/js/script.js', array( 'jquery', 'wh-flatpickr-js' ), WORDLE_HINT_VERSION, true );
+		wp_enqueue_script( 'wh-lucide-icons', 'https://unpkg.com/lucide@latest', array(), null, true );
+		wp_enqueue_script( 'wordle-hint-script', WORDLE_HINT_URL . 'assets/js/script.js', array( 'jquery', 'wh-flatpickr-js', 'wh-lucide-icons' ), WORDLE_HINT_VERSION, true );
 		
 		wp_localize_script( 'wordle-hint-script', 'wordleHintData', array(
 			'apiUrl'    => get_rest_url( null, 'wordle/v1/' ),
