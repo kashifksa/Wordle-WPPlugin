@@ -1,5 +1,5 @@
-# Wordle Hint Pro — Session Summary (Multi-Site Rollout)
-Date: 2026-05-14
+# Wordle Hint Pro — Session Summary (Stability & Solver Sync)
+Date: 2026-05-15
 
 ## 1. Summary of Progress
 We have successfully transitioned the Wordle Hint Pro plugin from a single-site scraper into a scalable Multi-Site Network. The architecture is now "SEO-First," meaning every site in the network shares raw data but generates unique content.
@@ -11,6 +11,9 @@ We have successfully transitioned the Wordle Hint Pro plugin from a single-site 
 *   **Unique AI Personas**: Added a "System Persona" field in settings so each site can have a different voice (Riddler, Coach, etc.).
 *   **Spoiler Guard**: Built a glassmorphic overlay for future puzzles that locks content until midnight in the user's local timezone.
 *   **Network Dashboard**: Enhanced the "System Logs" with network status monitoring and a manual sync trigger.
+*   **Timezone Safety**: Fixed a critical fatal error in the Scheduler and API by adding an `empty()` guard for the timezone option, preventing crashes if settings are blank.
+*   **30-Day Future Sync**: Extended the scraper logic to pull solutions 30 days in advance (verified limit of NYT API), increasing total indexed words to 1,822 and ensuring the Solver remains future-proof.
+*   **Solver Optimization**: Manually refreshed and verified the solver word list (including historical words like "SAUCY") across both Master and Client environments.
 
 ## 3. Important Files
 - `includes/class-wordle-sync.php`: Core logic for child sites to pull data.

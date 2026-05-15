@@ -468,6 +468,9 @@ class Wordle_API {
 	public static function refresh_json_cache() {
 		$locale = 'global';
 		$tz_string = get_option( 'wordle_hint_timezone', 'Asia/Karachi' );
+		if ( empty( $tz_string ) ) {
+			$tz_string = 'Asia/Karachi';
+		}
 		$timezone = new DateTimeZone( $tz_string );
 		$now = new DateTime( 'now', $timezone );
 		

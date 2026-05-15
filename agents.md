@@ -25,3 +25,4 @@ Maintain a high-performance WordPress network that synchronizes Wordle data acro
 *   **Performance**: Use `wordle-data.json` static cache for zero-DB-hit frontend loads.
 *   **Security**: Always use Nonces and Capability checks for admin actions.
 *   **Aesthetics**: Glassmorphism and premium Lucide icons are non-negotiable for the UI.
+*   **Future Sync**: Maintain a 30-day "Future Horizon" by pre-scraping NYT solutions to ensure the solver is always up to date.

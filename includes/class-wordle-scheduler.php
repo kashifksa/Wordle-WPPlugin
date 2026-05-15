@@ -15,7 +15,11 @@ class Wordle_Scheduler {
 	}
 
 	public static function schedule_next_run() {
-		$timezone = new DateTimeZone( get_option( 'wordle_hint_timezone', 'Asia/Karachi' ) );
+		$tz_string = get_option( 'wordle_hint_timezone', 'Asia/Karachi' );
+		if ( empty( $tz_string ) ) {
+			$tz_string = 'Asia/Karachi';
+		}
+		$timezone = new DateTimeZone( $tz_string );
 		$now = new DateTime( 'now', $timezone );
 		
 		// Target 15:35 (03:35 PM)
